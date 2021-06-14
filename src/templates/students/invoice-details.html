@@ -1,0 +1,118 @@
+{% extends 'students/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="col-lg-9 col-md-8 col-12">
+	<!-- Card -->
+	<div class="card border-0" id="invoice">
+	  <!-- Card body -->
+	  <div class="card-body">
+		<div class="d-flex justify-content-between mb-6">
+		  <div>
+			<!-- Img -->
+			<img
+			  src="{% static 'images/brand/logo/logo-icon.svg' %}"
+			  alt=""
+			  class="mb-4 avatar-lg"
+			/>
+			<h4 class="mb-0">READuced Courses</h4>
+			<small>INVOICE ID: #1001</small>
+		  </div>
+		  <div>
+			<a href="#" class="text-muted print-link no-print"
+			  ><i class="fe fe-printer"></i
+			></a>
+		  </div>
+		</div>
+		<!-- Row -->
+		<div class="row">
+		  <div class="col-md-8 col-12">
+			<span class="fs-6">Invoice From</span>
+			<h5 class="mb-3">Darlene Wilson</h5>
+			<p>
+			  4333 Edwards Rd <br />
+			  undefined Erie, Oklahoma <br />14355 United States
+			</p>
+		  </div>
+		  <div class="col-md-4 col-12">
+			<span class="fs-6">Invoice To</span>
+			<h5 class="mb-3">Jorge Fisher</h5>
+			<p>
+			  775 Rolling Green Rd <br />
+			  undefined Orange, Oklahoma <br />
+			  45785 United States
+			</p>
+		  </div>
+		</div>
+		<!-- Row -->
+		<div class="row mb-5">
+		  <div class="col-8">
+			<span class="fs-6">INVOICED ID</span>
+			<h6 class="mb-0">#1001</h6>
+		  </div>
+		  <div class="col-4">
+			<span class="fs-6">Due Date</span>
+			<h6 class="mb-0">20 April 2020</h6>
+		  </div>
+		</div>
+		<!-- Table -->
+		<div class="table-responsive mb-12">
+		  <table class="table mb-0 text-nowrap table-borderless">
+			<thead>
+			  <tr>
+				<th scope="col">Item</th>
+				<th scope="col">Quantity</th>
+				<th scope="col">Unit Price</th>
+				<th scope="col">Amount</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <tr class="text-dark">
+				<td class="py-2">
+				  Monthly
+				  <span class="fs-6 text-muted"
+					>(1 Jan,2020 to 1 Feb, 2020)</span
+				  >
+				</td>
+				<td class="py-2">1</td>
+				<td class="py-2">$39.00</td>
+				<td class="py-2">$39.00</td>
+			  </tr>
+			</tbody>
+			<tfoot>
+			  <tr class="text-dark">
+				<td colspan="2" class="py-2"></td>
+				<td colspan="1" class="pb-0">Total</td>
+				<td class="pb-0">$39.00</td>
+			  </tr>
+			  <tr class="text-dark">
+				<td colspan="2" class="py-2"></td>
+				<td colspan="1" class="py-0">Net Amount</td>
+				<td class="py-0">$37.00</td>
+			  </tr>
+			  <tr class="text-dark">
+				<td colspan="2" class="py-2"></td>
+				<td colspan="1" class="pt-0">Tax*</td>
+				<td class="pt-0">$2.00</td>
+			  </tr>
+			  <tr class="text-dark">
+				<td colspan="2" class="py-2"></td>
+				<td colspan="1" class="border-top py-1 fw-bold">
+				  Grand Total
+				</td>
+				<td class="border-top py-1 fw-bold">$478.50</td>
+			  </tr>
+			</tfoot>
+		  </table>
+		</div>
+		<!-- Short note -->
+		<p class="border-top pt-3 mb-0">
+		  Notes: Invoice was created on a computer and is valid without
+		  the signature and seal.
+		</p>
+	  </div>
+	</div>
+  </div>
+{% endblock content %}
+	

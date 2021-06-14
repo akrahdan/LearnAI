@@ -1,0 +1,62 @@
+{% load static %}
+{% url 'instructors:dashboard' as dashboard_url %}
+{% url 'instructors:earnings' as earnings_url %}
+{% url 'instructors:reviews' as reviews_url %}
+{% url 'instructors:payouts' as payouts_url %}
+{% url 'instructors:students' as students_url %}
+{% url 'instructors:orders' as orders_url %}
+{% url 'instructors:courses' as courses_url %}
+
+
+<div class="collapse navbar-collapse" id="sidenav">
+    <div class="navbar-nav flex-column">
+      <span class="navbar-header">Dashboard</span>
+      <ul class="list-unstyled ms-n2 mb-4">
+        <!-- Nav item -->
+        <li class="nav-item  {% if request.path == dashboard_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:dashboard' %}"
+            ><i class="fe fe-home nav-icon"></i>My Dashboard</a
+          >
+        </li>
+        <!-- Nav item -->
+        <li class="nav-item {% if request.path == courses_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:courses' %}"
+            ><i class="fe fe-book nav-icon"></i>My Courses</a
+          >
+        </li>
+        <!-- Nav item -->
+        <li class="nav-item {% if request.path == reviews_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:reviews' %}"
+            ><i class="fe fe-star nav-icon"></i>Reviews</a
+          >
+        </li>
+        <!-- Nav item -->
+        <li class="nav-item {% if request.path == earnings_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:earnings' %}"
+            ><i class="fe fe-pie-chart nav-icon"></i>Earnings</a
+          >
+        </li>
+        <!-- Nav item -->
+        <li class="nav-item {% if request.path == orders_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:orders' %}"
+            ><i class="fe fe-shopping-bag nav-icon"></i>Orders</a
+          >
+        </li>
+        <!-- Nav item -->
+        <li class="nav-item {% if request.path == students_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:students' %}"
+            ><i class="fe fe-users nav-icon"></i>Students</a
+          >
+        </li>
+        <!-- Nav item -->
+        <li class="nav-item {% if request.path == payouts_url %}active {% endif %}">
+          <a class="nav-link" href="{% url 'instructors:payouts' %}"
+            ><i class="fe fe-dollar-sign nav-icon"></i>Payouts</a
+          >
+        </li>
+      </ul>
+      <!-- Navbar header -->
+      <span class="navbar-header">Account Settings</span>
+      
+    </div>
+  </div>

@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Favicon icon-->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon/favicon.ico' %}"
+    />
+
+    {% include 'base/css.html' %}
+
+   
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    <!-- Wrapper -->
+    <div id="db-wrapper">
+      <!-- Sidebar -->
+       {% include 'dashboard/sidebar.html' %}
+      <!-- sidebar -->
+      <!-- Page Content -->
+      <div id="page-content">
+        <div class="header">
+          <!-- navbar -->
+         {% include 'dashboard/navbar.html' %}
+        </div>
+        <!-- Page Header -->
+        <!-- Container fluid -->
+        
+        {% block content %}
+            
+        {% endblock content %}
+            
+      </div>
+      
+      
+          
+    </div>
+    {% block modal %}
+          
+    {% endblock modal %}
+    {% include 'base/js.html' %}
+  </body>
+</html>

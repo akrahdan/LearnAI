@@ -1,0 +1,132 @@
+{% load static %}
+{% url 'billing:subscription' as subscription_url %}
+{% url 'billing:info' as info_url %}
+{% url 'billing:payment' as payment_url %}
+{% url 'billing:invoice' as invoice_url %}
+{% url 'account_profile' as edit_profile_url %}
+{% url 'account_security' as security_url %}
+{% url 'account_social' as social_url %}
+{% url 'account_privacy' as privacy_url %}
+{% url 'account_delete' as delete_url %}
+{% url 'account_notifications' as notifications_url %}
+{% url 'account_linked' as linked_accounts_url %}
+<nav
+class="
+  navbar navbar-expand-md navbar-light
+  shadow-sm
+  mb-4 mb-lg-0
+  sidenav
+"
+>
+<!-- Menu -->
+<a
+  class="d-xl-none d-lg-none d-md-none text-inherit fw-bold"
+  href="#"
+  >Menu</a
+>
+<!-- Button -->
+<button
+  class="
+    navbar-toggler
+    d-md-none
+    icon-shape icon-sm
+    rounded
+    bg-primary
+    text-light
+  "
+  type="button"
+  data-bs-toggle="collapse"
+  data-bs-target="#sidenav"
+  aria-controls="sidenav"
+  aria-expanded="false"
+  aria-label="Toggle navigation"
+>
+  <span class="fe fe-menu"></span>
+</button>
+<!-- Collapse navbar -->
+<div class="collapse navbar-collapse" id="sidenav">
+  <div class="navbar-nav flex-column">
+    <span class="navbar-header">Subscription</span>
+    <ul class="list-unstyled ms-n2 mb-4">
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == subscription_url %}active {% endif %}">
+        <a class="nav-link" href="{% url 'billing:subscription' %}"
+          ><i class="fe fe-calendar nav-icon"></i>My Subscriptions
+        </a>
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == info_url %}active {% endif %}">
+        <a class="nav-link" href="{% url 'billing:info' %}"
+          ><i class="fe fe-credit-card nav-icon"></i>Billing
+          Info</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == payment_url%}active{% endif %}">
+        <a class="nav-link" href="{% url 'billing:payment' %}"
+          ><i class="fe fe-credit-card nav-icon"></i>Payment</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == invoice_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'billing:invoice' %}"
+          ><i class="fe fe-clipboard nav-icon"></i>Invoice</a
+        >
+      </li>
+    </ul>
+    <!-- Navbar header -->
+    <span class="navbar-header">Account Settings</span>
+    <ul class="list-unstyled ms-n2 mb-0">
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == edit_profile_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_profile' %}"
+          ><i class="fe fe-settings nav-icon"></i>Edit Profile</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == security_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_security' %}"
+          ><i class="fe fe-user nav-icon"></i>Security</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == social_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_social' %}"
+          ><i class="fe fe-refresh-cw nav-icon"></i>Social
+          Profiles</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == notifications_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_notifications' %}"
+          ><i class="fe fe-bell nav-icon"></i>Notifications</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == privacy_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_privacy' %}"
+          ><i class="fe fe-lock nav-icon"></i>Profile Privacy</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == delete_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_delete' %}"
+          ><i class="fe fe-trash nav-icon"></i>Delete Profile</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item {% if request.path == linked_accounts_url%}active {% endif %}">
+        <a class="nav-link" href="{% url 'account_linked' %}"
+          ><i class="fe fe-user nav-icon"></i>Linked Accounts</a
+        >
+      </li>
+      <!-- Nav item -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_logout' %}"
+          ><i class="fe fe-power nav-icon"></i>Sign Out</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+</nav>

@@ -1,0 +1,280 @@
+{% extends 'students/base.html' %} 
+{% load static %} 
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="col-lg-9 col-md-8 col-12">
+  <!-- Card -->
+  <div class="card">
+    <!-- Card header -->
+    <div class="card-header">
+      <h3 class="mb-0">Profile Details</h3>
+      <p class="mb-0">
+        You have full control to manage your own account setting.
+      </p>
+    </div>
+    <!-- Card body -->
+    <div class="card-body">
+      <div class="d-lg-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center mb-4 mb-lg-0" id="uploadDiv">
+		 {% if avatar %}
+		 <img
+		   src="{{ avatar }}"
+		   id="img-uploaded"
+		   class="avatar-xl rounded-circle"
+		   alt=""
+	   />
+		 {% else %}
+          <img
+            src="{% static 'images/avatar/profile.jpg' %}"
+            id="img-uploaded"
+            class="avatar-xl rounded-circle"
+            alt=""
+          />
+		  {% endif %}
+          {% csrf_token %}
+          <input
+            name="file"
+            type="file"
+            multiple
+            id="avatar-files"
+            style="display: none"
+          />
+
+          <div class="ms-3">
+            <h4 class="mb-0">Your avatar</h4>
+          </div>
+        </div>
+        <div>
+          <a href="#" class="btn btn-outline-white btn-sm" id="upload-btn"
+            >Update</a
+          >
+          <a href="#" class="btn btn-outline-danger btn-sm">Delete</a>
+        </div>
+      </div>
+      <hr class="my-5" />
+      <div>
+        <h4 class="mb-0">Personal Details</h4>
+        <p class="mb-4">Edit your personal information and address.</p>
+        <!-- Form -->
+
+		{% if form.non_field_errors %}
+        	<div class="invalid-feedback invalid-field">
+              {{ form.non_field_errors.as_text }}
+            </div>
+        {% endif %}
+
+        <form class="row" method="POST" action="{% url 'account_profile' %}">
+			{% csrf_token %}
+          
+          <div class="mb-3 col-12 col-md-6">
+            <label class="{{ form.first_name.id_for_label }}" for="fname">First Name</label>
+			{{ form.first_name | attr:"class:form-control"  }}
+			{% if form.first_name.errors %}
+			<div class="invalid-feedback invalid-field">
+			  {{ form.first_name.errors.as_text }}
+			</div>
+			{% endif %}
+          </div>
+          <!-- Last name -->
+          <div class="mb-3 col-12 col-md-6">
+            <label class="{{ form.last_name.id_for_label }}" for="lname">Last Name</label>
+			{{ form.last_name | attr:"class:form-control"  }}
+			{% if form.last_name.errors %}
+			<div class="invalid-feedback invalid-field">
+			  {{ form.last_name.errors.as_text }}
+			</div>
+			{% endif %}
+          </div>
+          <!-- Phone -->
+          <div class="mb-3 col-12 col-md-6">
+            <label class="{{ form.phone.id_for_label }}" for="phone">Phone</label>
+			{{ form.phone | attr:"class:form-control"  }}
+			{% if form.phone.errors %}
+			<div class="invalid-feedback invalid-field">
+			  {{ form.phone.errors.as_text }}
+			</div>
+			{% endif %}
+            
+          </div>
+          <!-- Birthday -->
+          <div class="mb-3 col-12 col-md-6">
+            <label class="{{ form.birthday.id_for_label }}" for="birth">Birthday</label>
+			{{ form.birthday | attr:"class:form-control flatpickr"  }}
+
+			{% if form.birthday.errors %}
+			<div class="invalid-feedback invalid-field">
+			  {{ form.birthday.errors.as_text }}
+			</div>
+			{% endif %}
+            
+          </div>
+         
+          <div class="col-12">
+            <!-- Button -->
+            <button class="btn btn-primary" type="submit">
+              Update Profile
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %} {% block javascript %}
+<script>
+  $(document).ready(function () {
+    $("#img-uploaded").click(function () {
+      $("#avatar-files").trigger("click");
+    });
+  });
+  // $('#avatar-files').on('change', inputChanged)
+  $("#avatar-files").change(function () {
+    inputChanged(this);
+  });
+
+  $("#upload-btn").click(() => {
+    if (selectedFile) {
+      getPolicy(selectedFile);
+    }
+  });
+
+  var baseURL = "http://127.0.0.1:8000";
+  var policyURL = baseURL + "/upload/policy/";
+  var crsfToken = document.querySelector(
+    "#uploadDiv input[name=csrfmiddlewaretoken]"
+  ).value;
+  var fileInput = document.getElementById("files");
+  var selectedFile;
+  fileInput.addEventListener("change", fileInputChanged);
+
+  function validateFileType(fileItem) {
+    var fileType = fileItem.type; // image/png image/jpeg
+    var rootType = fileType.split("/")[0];
+    switch (rootType) {
+      case "image": // rootType === "image"
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function inputChanged(event) {
+    var fileList = event.files;
+    console.log(fileList);
+    var isValid = validateFileType(fileList[0]);
+    if (isValid) {
+      if (fileList && fileList.length && fileList[0]) {
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          $("#img-uploaded").attr("src", ev.target.result);
+        };
+        reader.readAsDataURL(fileList[0]);
+      }
+      this.selectedFile = fileList[0];
+    }
+  }
+
+  function getPolicy(fileItem) {
+    var data = {
+      name: fileItem.name,
+      raw_filename: fileItem.name,
+      filetype: fileItem.type,
+    };
+    var jsonData = JSON.stringify(data);
+    fetch(policyURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFTOKEN": crsfToken,
+      },
+      body: jsonData,
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        usePolicyAndUpload(fileItem, data)
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  }
+
+  function constructFormData(policy) {
+    var fd = new FormData(); // multipart form
+    var policyFields = policy.fields;
+    var objectEntries = Object.entries(policyFields);
+    for (const [key, value] of objectEntries) {
+      fd.append(key, value);
+    }
+    return fd;
+  }
+
+  
+  function usePolicyAndUpload(fileItem, policyData){
+    var fd = constructFormData(policyData)
+    fd.append('file', fileItem)
+    var awsEndpoint = policyData.url
+    var objectId = policyData.object_id
+    var awsUploadKey = policyData.fields.key
+
+    var xhr = new XMLHttpRequest()
+    fileItem.xhr = xhr
+    // fileItem.xhr.abort()
+    
+
+    xhr.open('POST', awsEndpoint, true)
+
+    xhr.upload.onloadstart = function (event) {
+        console.log("Uploading started.")
+    }
+    xhr.upload.onprogress = function (event) {
+        var loaded = event.loaded
+        var total = event.total
+        var progress = Math.floor(loaded / total * 100)
+        console.log("progress", Math.floor(loaded / total * 100))
+
+        // var listElementId = fileItem.uploadListElID
+        // var liItem = document.getElementById(listElementId)
+        // liItem.innerText = fileItem.name + " " + fileItem.size + " " + progress + "%"
+        // liItem.setAttribute('class', 'w-' + progress)
+    }
+
+    xhr.upload.onload = function() {
+        console.log(xhr.status, xhr.responseText, awsUploadKey)
+        // let django know that it's done.
+        // put request, key
+        var djHR = new XMLHttpRequest()
+        var method = 'PUT'
+        var djUpdateData = {key: awsUploadKey}
+        var djJsonUpdateData = JSON.stringify(djUpdateData)
+        djHR.open(method, policyURL, true)
+        djHR.setRequestHeader('Content-Type', 'application/json')
+        djHR.setRequestHeader('X-CSRFTOKEN', crsfToken)
+        djHR.onload = function() {
+            if (djHR.status === 200) {
+                // do something
+                var listElementId = fileItem.uploadListElID
+                // var liItem = document.getElementById(listElementId)
+                // liItem.innerText = fileItem.name + " " + fileItem.size + " done. 100%"
+                // liItem.setAttribute('class', 'w-done')
+            } else {
+                alert("Django update failed")
+            }
+        }
+        
+        djHR.send(djJsonUpdateData)
+
+    }
+
+    xhr.upload.addEventListener("error", function(event){
+        alert("An error occurred on upload.")
+    })
+    // xhr.abort()
+    xhr.upload.onabort = function (event) {
+        console.log("File aborted")
+    }
+    xhr.send(fd)
+}
+</script>
+{% endblock javascript %}

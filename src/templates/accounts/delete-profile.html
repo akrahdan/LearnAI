@@ -1,0 +1,28 @@
+{% extends 'students/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="col-lg-9 col-md-8 col-12">
+	<!-- Card -->
+	<div class="card">
+	  <!-- Card header -->
+	  <div class="card-header">
+		<h3 class="mb-0">Delete your account</h3>
+		<p class="mb-0">Delete or Close your account permanently.</p>
+	  </div>
+	  <!-- Card body -->
+	  <div class="card-body p-4">
+		<span class="text-danger h4">Warning</span>
+		<p>
+		  If you close your account, you will be unsubscribed from all
+		  your 0 courses, and will lose access forever.
+		</p>
+		<a href="/" class="btn btn-outline-danger btn-sm"
+		  >Close My Account</a
+		>
+	  </div>
+	</div>
+  </div>
+{% endblock content %}
+	

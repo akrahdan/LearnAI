@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container d-flex flex-column">
+  <div class="row align-items-center justify-content-center g-0 min-vh-100">
+    <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+      <!-- Card -->
+      <div class="card shadow">
+        <!-- Card body -->
+        <div class="card-body p-6">
+          
+
+          <div class="mb-4">
+            <a href="#"
+              ><img
+                src="{% static 'images/brand/logo/logo-icon.svg' %}"
+                class="mb-4"
+                alt=""
+            /></a>
+            <h1 class="mb-1 fw-bold">Sign in</h1>
+            {% get_providers as socialaccount_providers %}
+
+          {% if socialaccount_providers %}
+          <p>{% blocktrans with site.name as site_name %}Please sign in with one
+          of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+          for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+          
+          <div class="socialaccount_ballot">
+          
+            <ul class="socialaccount_providers">
+              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+          
+            <div class="login-or">{% trans 'or' %}</div>
+          
+          </div>
+          
+          {% include "socialaccount/snippets/login_extra.html" %}
+          
+          {% else %}
+          <span>
+             Don’t have an account?
+            <a href="{{ signup_url }}" class="ms-1"
+            >Sign up</a
+            ></span>
+          {% endif %}
+           
+          </div>
+            {% if form.non_field_errors %}
+              <div class="invalid-feedback invalid-field">
+                {{ form.non_field_errors.as_text }}
+              </div>
+            {% endif %}
+              
+      
+          <form method="POST" action="{% url 'account_login' %}"> {% csrf_token %}
+            <!-- Username -->
+            <div class="mb-3">
+              {{ form.login.errors }}
+              <label for="{{ form.login.id_for_label }}" class="form-label"
+                >Username or email</label
+              >
+              {{ form.login | attr:"class:form-control" }}
+            
+            </div>
+            <!-- Password -->
+            <div class="mb-3">
+              {{ form.password.errors }}
+              <label for="{{form.password.id_for_label}}" class="form-label">Password</label>
+              {{ form.password | attr:"class:form-control"}}
+              
+            </div>
+            <!-- Checkbox -->
+            <div
+              class="
+                d-lg-flex
+                justify-content-between
+                align-items-center
+                mb-4
+              "
+            >
+              <div class="form-check">
+                {{ form.remember.errors }}
+                {{ form.remember | attr:"class:form-check-input" }}
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="rememberme"
+                />
+                <label class="form-check-label" for="{{ form.remember.id_for_label }}"
+                  >Remember me</label
+                >
+              </div>
+              {% if redirect_field_value %}
+               <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+               {% endif %}
+              <div>
+                <a href="{% url 'account_reset_password' %}"
+                  >Forgot your password?</a
+                >
+              </div>
+            </div>
+            <div>
+              <!-- Button -->
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                  Sign in
+                </button>
+              </div>
+            </div>
+            <hr class="my-4" />
+            <div class="mt-4 text-center">
+              <!--Facebook-->
+              <a
+                href="#"
+                class="btn-social btn-social-outline btn-facebook"
+              >
+                <i class="fab fa-facebook"></i>
+              </a>
+              <!--Twitter-->
+              <a href="#" class="btn-social btn-social-outline btn-twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <!--LinkedIn-->
+              <a
+                href="#"
+                class="btn-social btn-social-outline btn-linkedin"
+              >
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <!--GitHub-->
+              <a href="#" class="btn-social btn-social-outline btn-github">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+

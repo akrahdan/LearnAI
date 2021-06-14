@@ -1,0 +1,415 @@
+{% extends 'instructors/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="col-lg-9 col-md-8 col-12">
+	<!-- Card -->
+	<div class="card mb-4">
+	  <!-- Card header -->
+	  <div class="card-header border-bottom-0">
+		<h3 class="mb-0">Orders</h3>
+		<span
+		  >Order Dashboard is a quick overview of all current
+		  orders.</span
+		>
+	  </div>
+	  <!-- Table -->
+	  <div class="table-responsive border-0">
+		<table class="table mb-0 text-nowrap">
+		  <thead>
+			<tr>
+			  <th scope="col" class="border-0">COURSES</th>
+			  <th scope="col" class="border-0">AMOUNT</th>
+			  <th scope="col" class="border-0">INVOICE</th>
+			  <th scope="col" class="border-0">DATE</th>
+			  <th scope="col" class="border-0">METHOD</th>
+			  <th scope="col" class="border-0"></th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td class="align-middle border-top-0">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Building Scalable APIs with GraphQL
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle border-top-0">$89</td>
+			  <td class="align-middle border-top-0">#10023</td>
+			  <td class="align-middle border-top-0">June 9, 2020</td>
+			  <td class="align-middle border-top-0">Amex</td>
+			  <td class="text-muted align-middle border-top-0">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown1"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown1"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					HTML5 Web Front End Development
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$129</td>
+			  <td class="align-middle">#10020</td>
+			  <td class="align-middle">June 9, 2020</td>
+			  <td class="align-middle">Mastercard</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown2"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown2"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit"
+					>Learn BasicJavaScript Courses
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$29</td>
+			  <td class="align-middle">#10018</td>
+			  <td class="align-middle">June 8, 2020</td>
+			  <td class="align-middle">PayPal</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown3"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown3"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Get Started: React Js Courses
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$59</td>
+			  <td class="align-middle">#10003</td>
+			  <td class="align-middle">June 9, 2020</td>
+			  <td class="align-middle">Visa</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown4"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown4"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Building Scalable APIs with GraphQL
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$129</td>
+			  <td class="align-middle">#10020</td>
+			  <td class="align-middle">June 7, 2020</td>
+			  <td class="align-middle">Mastercard</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown5"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown5"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Master in CSS3 Courses Online
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$29</td>
+			  <td class="align-middle">#10018</td>
+			  <td class="align-middle">June 8, 2020</td>
+			  <td class="align-middle">PayPal</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown7"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown7"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Online Angular Courses
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$59</td>
+			  <td class="align-middle">#10003</td>
+			  <td class="align-middle">June 6, 2020</td>
+			  <td class="align-middle">Visa</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown8"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown8"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Master in CSS3 Courses Online
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$29</td>
+			  <td class="align-middle">#10018</td>
+			  <td class="align-middle">June 8, 2020</td>
+			  <td class="align-middle">PayPal</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown9"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown9"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="align-middle">
+				<h5 class="mb-0">
+				  <a href="#" class="text-inherit">
+					Online Angular Courses
+				  </a>
+				</h5>
+			  </td>
+			  <td class="align-middle">$59</td>
+			  <td class="align-middle">#10003</td>
+			  <td class="align-middle">June 6, 2020</td>
+			  <td class="align-middle">Visa</td>
+			  <td class="text-muted align-middle">
+				<span class="dropdown dropstart">
+				  <a
+					class="text-muted text-decoration-none"
+					href="#"
+					role="button"
+					id="courseDropdown10"
+					data-bs-toggle="dropdown"
+					data-bs-offset="-20,20"
+					aria-expanded="false"
+				  >
+					<i class="fe fe-more-vertical"></i>
+				  </a>
+				  <span
+					class="dropdown-menu"
+					aria-labelledby="courseDropdown10"
+				  >
+					<span class="dropdown-header">Setting </span>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-edit dropdown-item-icon"></i
+					  >Edit</a
+					>
+					<a class="dropdown-item" href="#"
+					  ><i class="fe fe-trash dropdown-item-icon"></i
+					  >Remove</a
+					>
+				  </span>
+				</span>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+	  </div>
+	</div>
+  </div>
+{% endblock content %}
+	

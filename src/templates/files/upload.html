@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method='POST' id='uploadForm'>
+    {% csrf_token %}
+    <input type='file' name='file' id='files' multiple='multiple' accept="image/*, video/*, audio/*" />
+    <input type='submit' value='Upload' />
+</form>
+
+<div id='displayList'>
+    <p>Display List</p>
+    <ul>
+    </ul>
+</div>
+
+<script>
+var baseURL = 'http://127.0.0.1:8000'
+var policyURL = baseURL + '/upload/policy/'
+var crsfToken = document.querySelector('#uploadForm input[name=csrfmiddlewaretoken]').value
+var fileInput = document.getElementById('files')
+fileInput.addEventListener('change', fileInputChanged)
+
+function validateFileType(fileItem) {
+    var fileType = fileItem.type // image/png image/jpeg
+    var rootType = fileType.split("/")[0]
+    switch (rootType) {
+        case 'image':  // rootType === "image"
+            return true
+        case 'video':
+            return true
+        case 'audio':
+            return true
+        default:
+            return false
+    }
+}
+
+function fileInputChanged(){
+    // console.log('changed')
+    var fileInput = document.getElementById('files')
+    var filesList = fileInput.files
+    var displayListDiv = document.getElementById('displayList')
+
+    for (var i = 0; i < filesList.length; i++) {
+        var fileItem = filesList[i]
+        var isValid = validateFileType(fileItem) 
+        if (isValid){
+            var liItem = document.createElement("li") // <li></li>
+            var content = document.createTextNode(fileItem.name + " " + fileItem.size)
+            liItem.appendChild(content)
+            var listLength = document.querySelectorAll("#displayList li").length
+            var uploadID = listLength  + 1
+            liItem.setAttribute('id', "file-upload-id-" + uploadID)
+
+            displayListDiv.appendChild(liItem)
+            // get policy and upload file
+            fileItem.uploadID = uploadID
+            fileItem.uploadListElID = "file-upload-id-" + uploadID
+            getPolicyAndUpload(fileItem)
+        }
+    }
+}
+
+
+function getPolicyAndUpload(fileItem){
+    // data
+    var data = {
+        name: fileItem.name,
+        raw_filename: fileItem.name,
+        filetype: fileItem.type
+    }
+    var jsonData = JSON.stringify(data)
+    
+    var xhr = new XMLHttpRequest() // async request
+    // how are send it?
+
+    xhr.open("POST", policyURL, true)
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('X-CSRFTOKEN', crsfToken)
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            // do something
+            var policyResponseData = JSON.parse(xhr.responseText)
+            usePolicyAndUpload(fileItem, policyResponseData)
+            // actual perfom upload for this single file
+
+
+        } else {
+            console.log(xhr.responseText)
+            alert("File upload failed")
+        }
+    }
+    
+    xhr.send(jsonData)
+
+}
+
+function constructFormData(policy) {
+    var fd = new FormData() // multipart form
+    var policyFields = policy.fields
+    var objectEntries = Object.entries(policyFields)
+    for ( const [key, value] of  objectEntries){
+        fd.append(key, value)
+    }
+    return fd
+}
+
+function usePolicyAndUpload(fileItem, policyData){
+    var fd = constructFormData(policyData)
+    fd.append('file', fileItem)
+    var awsEndpoint = policyData.url
+    var objectId = policyData.object_id
+    var awsUploadKey = policyData.fields.key
+
+    var xhr = new XMLHttpRequest()
+    fileItem.xhr = xhr
+    // fileItem.xhr.abort()
+    
+
+    xhr.open('POST', awsEndpoint, true)
+
+    xhr.upload.onloadstart = function (event) {
+        console.log("Uploading started.")
+    }
+    xhr.upload.onprogress = function (event) {
+        var loaded = event.loaded
+        var total = event.total
+        var progress = Math.floor(loaded / total * 100)
+        console.log("progress", Math.floor(loaded / total * 100))
+
+        var listElementId = fileItem.uploadListElID
+        var liItem = document.getElementById(listElementId)
+        liItem.innerText = fileItem.name + " " + fileItem.size + " " + progress + "%"
+        liItem.setAttribute('class', 'w-' + progress)
+    }
+
+    xhr.upload.onload = function() {
+        console.log(xhr.status, xhr.responseText, awsUploadKey)
+        // let django know that it's done.
+        // put request, key
+        var djHR = new XMLHttpRequest()
+        var method = 'PUT'
+        var djUpdateData = {key: awsUploadKey}
+        var djJsonUpdateData = JSON.stringify(djUpdateData)
+        djHR.open(method, policyURL, true)
+        djHR.setRequestHeader('Content-Type', 'application/json')
+        djHR.setRequestHeader('X-CSRFTOKEN', crsfToken)
+        djHR.onload = function() {
+            if (djHR.status === 200) {
+                // do something
+                var listElementId = fileItem.uploadListElID
+                var liItem = document.getElementById(listElementId)
+                liItem.innerText = fileItem.name + " " + fileItem.size + " done. 100%"
+                liItem.setAttribute('class', 'w-done')
+            } else {
+                alert("Django update failed")
+            }
+        }
+        
+        djHR.send(djJsonUpdateData)
+
+    }
+
+    xhr.upload.addEventListener("error", function(event){
+        alert("An error occurred on upload.")
+    })
+    // xhr.abort()
+    xhr.upload.onabort = function (event) {
+        console.log("File aborted")
+    }
+    xhr.send(fd)
+}
+
+
+</script>
+
+{% endblock content %}
+    

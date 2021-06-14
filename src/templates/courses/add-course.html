@@ -1,0 +1,1643 @@
+{% load static %} {% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Favicon icon-->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon/favicon.ico' %}"
+    />
+
+    {% include 'base/css.html' %}
+    <title>Add Course | READuced</title>
+  </head>
+
+  <body>
+    {% include 'base/navbar.html' %}
+
+    <!-- Page header-->
+    <div class="py-4 py-lg-6 bg-primary">
+      <div class="container">
+        <div class="row">
+          <div class="offset-lg-1 col-lg-10 col-md-12 col-12">
+            <div class="d-lg-flex align-items-center justify-content-between">
+              <!-- Content -->
+              <div class="mb-4 mb-lg-0">
+                <h1 class="text-white mb-1">Add New Course</h1>
+                <p class="mb-0 text-white lead">
+                  Just fill the form and create your courses.
+                </p>
+              </div>
+              <div>
+                <a href="{% url 'instructors:courses' %}" class="btn btn-white"
+                  >Back to Course</a
+                >
+                <a
+                  href="{% url 'instructors:courses' %}"
+                  class="btn btn-success"
+                  >Save</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Content -->
+    <div class="pb-12">
+      <div class="container">
+        <div id="addCourseForm" class="bs-stepper">
+          <div class="row">
+            <div class="offset-lg-1 col-lg-10 col-md-12 col-12">
+              <!-- Stepper Button -->
+              <div class="bs-stepper-header shadow-sm" role="tablist">
+                <div class="step" data-target="#test-l-1">
+                  <button
+                    type="button"
+                    class="step-trigger"
+                    role="tab"
+                    id="addCourseFormtrigger1"
+                    aria-controls="test-l-1"
+                  >
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">Basic Information</span>
+                  </button>
+                </div>
+                <div class="bs-stepper-line"></div>
+                <div class="step" data-target="#test-l-2">
+                  <button
+                    type="button"
+                    class="step-trigger"
+                    role="tab"
+                    id="addCourseFormtrigger2"
+                    aria-controls="test-l-2"
+                  >
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">Courses Media</span>
+                  </button>
+                </div>
+                <div class="bs-stepper-line"></div>
+                <div class="step" data-target="#test-l-3">
+                  <button
+                    type="button"
+                    class="step-trigger"
+                    role="tab"
+                    id="addCourseFormtrigger3"
+                    aria-controls="test-l-3"
+                  >
+                    <span class="bs-stepper-circle">3</span>
+                    <span class="bs-stepper-label">Curriculum</span>
+                  </button>
+                </div>
+                <div class="bs-stepper-line"></div>
+                <div class="step" data-target="#test-l-4">
+                  <button
+                    type="button"
+                    class="step-trigger"
+                    role="tab"
+                    id="addCourseFormtrigger4"
+                    aria-controls="test-l-4"
+                  >
+                    <span class="bs-stepper-circle">4</span>
+                    <span class="bs-stepper-label">Settings</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Stepper content -->
+              <div class="bs-stepper-content mt-5">
+                <!-- Content one -->
+                <div
+                  id="test-l-1"
+                  role="tabpanel"
+                  class="bs-stepper-pane fade"
+                  aria-labelledby="addCourseFormtrigger1"
+                >
+                  <form
+                    method="POST"
+                    class="courseInfoForm"
+                    action="."
+                    data-url="{{ request.build_absolute_uri|safe }}"
+                  >
+                    {% csrf_token %}
+
+                    <!-- Card -->
+                    <div class="card mb-3">
+                      <div class="card-header border-bottom px-4 py-3">
+                        <h4 class="mb-0">Basic Information</h4>
+                      </div>
+                      <!-- Card body -->
+                      <div class="card-body">
+                        <div class="mb-3">
+                          <label
+                            for="{{ form.title.id_for_label }}"
+                            class="form-label"
+                            >Course Title</label
+                          >
+                          {{ form.title | attr:"class:form-control" }}
+
+                          <small>Write a 60 character course title.</small>
+                        </div>
+                        <div class="mb-3">
+                          <label
+                            class="form-label"
+                            for="{{ form.category.id_for_label }}"
+                            >Courses category</label
+                          >
+                          {{ form.category | attr:"class:selectpicker" | attr:'data-width:100%' }}
+
+                          <small
+                            >Help people find your courses by choosing
+                            categories that represent your course.</small
+                          >
+                        </div>
+                        <div class="mb-3">
+                          <label
+                            class="form-label"
+                            for="{{ form.level.id_for_label }}"
+                            >Courses level</label
+                          >
+                          {{ form.level | attr:"class:selectpicker" | attr:'data-width:100%' }}
+                        </div>
+                        <div class="mb-3">
+                          <label
+                            class="form-label"
+                            for="{{ form.description.id_for_label }}"
+                            >Course Description</label
+                          >
+                          {{ form.description | attr:"class:form-control" }}
+                        </div>
+
+                        <div class="mb-3">
+                          <label
+                            class="form-label"
+                            for="{{ form.price.id_for_label }}"
+                          >
+                            Course Price
+                          </label>
+                          {{ form.price | attr:"class:form-control" }}
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Button -->
+                    <button id="courseInfo" class="btn btn-primary">
+                      Next
+                    </button>
+                  </form>
+                </div>
+                <!-- Content two -->
+                <div
+                  id="test-l-2"
+                  role="tabpanel"
+                  class="bs-stepper-pane fade"
+                  aria-labelledby="addCourseFormtrigger2"
+                >
+                  <form id="uploadForm" method="POST">
+                    {% csrf_token %}
+                    <div class="card mb-3 border-0">
+                      <div class="card-header border-bottom px-4 py-3">
+                        <h4 class="mb-0">Courses Media</h4>
+                      </div>
+                      <!-- Card body -->
+                      <div class="card-body">
+                        <div
+                          class="custom-file-container"
+                          data-upload-id="courseCoverImg"
+                          id="courseCoverImg"
+                        >
+                          <label class="form-label"
+                            >Course cover image
+                            <a
+                              href="javascript:void(0)"
+                              class="custom-file-container__image-clear"
+                              title="Clear Image"
+                            ></a
+                          ></label>
+                          <label class="custom-file-container__custom-file">
+                            <input
+                              type="file"
+                              id="files"
+                              class="
+                                custom-file-container__custom-file__custom-file-input
+                              "
+                              accept="image/*"
+                            />
+                            <input type="hidden" value="10485760" />
+                            <span
+                              class="
+                                custom-file-container__custom-file__custom-file-control
+                              "
+                            ></span>
+                          </label>
+                          <small class="mt-3 d-block"
+                            >Upload your course image here. It must meet our
+                            course image quality standards to be accepted.
+                            Important guidelines: 750x440 pixels; .jpg, .jpeg,.
+                            gif, or .png. no text on the image.</small
+                          >
+
+                          <div
+                            id="imagePreview"
+                            class="custom-file-container__image-preview"
+                          >
+                            <img />
+                          </div>
+                        </div>
+                        <div>
+                          {{ form.video_url | attr:"class:form-control" | attr:"placeholder:Video URL" }}
+                          
+                        </div>
+                        <small class="mt-3 d-block"
+                          >Enter a valid video URL. Students who watch a
+                          well-made promo video are 5X more likely to enroll in
+                          your course.
+                        </small>
+                        <div
+                          class="
+                            mt-3
+                            d-flex
+                            justify-content-center
+                            position-relative
+                            rounded
+                            py-14
+                            border-white border
+                            rounded
+                            bg-cover
+                          "
+                          style="
+                            background-image: url(/static/assets/images/course/course-javascript.jpg);
+                          "
+                        >
+                          <a
+                            class="
+                              popup-youtube
+                              icon-shape
+                              rounded-circle
+                              btn-play
+                              icon-xl
+                              text-decoration-none
+                            "
+                            href="https://www.youtube.com/watch?v=JRzWRZahOVU"
+                          >
+                            <i class="fe fe-play fs-3"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="d-flex justify-content-between">
+                      <button
+                        class="btn btn-secondary"
+                        onclick="addCourseForm.previous()"
+                      >
+                        Previous
+                      </button>
+                      <button id="upload-btn" class="btn btn-primary">
+                        Next
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <!-- Content three -->
+                <div
+                  id="test-l-3"
+                  role="tabpanel"
+                  class="bs-stepper-pane fade"
+                  aria-labelledby="addCourseFormtrigger3"
+                >
+                  <form onSubmit="return false">
+                    <!-- Card -->
+                    <div class="card mb-3 border-0">
+                      <div class="card-header border-bottom px-4 py-3">
+                        <h4 class="mb-0">Curriculum</h4>
+                      </div>
+                      <!-- Card body -->
+                      <div  class="card-body">
+                         <div id="section-card"></div>
+                        <a
+                          href="#"
+                          class="btn btn-outline-primary btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#addSectionModal"
+                          >Add Section</a
+                        >
+                      </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="d-flex justify-content-between">
+                      <button
+                        class="btn btn-secondary"
+                        onclick="addCourseForm.previous()"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        class="btn btn-primary"
+                        onclick="addCourseForm.next()"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <!-- Content four -->
+                <div
+                  id="test-l-4"
+                  role="tabpanel"
+                  class="bs-stepper-pane fade"
+                  aria-labelledby="addCourseFormtrigger4"
+                >
+                  <form method="POST" id="reviewForm">
+                    {% csrf_token %}
+                    <div class="card mb-3 border-0">
+                      <div class="card-header border-bottom px-4 py-3">
+                        <h4 class="mb-0">Requirements</h4>
+                      </div>
+                      <!-- Card body -->
+                      <div class="card-body">
+                        {{ form.tags | attr:"autofocus" }}
+                        
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-22">
+                      <!-- Button -->
+                      <button
+                        class="btn btn-secondary mt-5"
+                        onclick="addCourseForm.previous()"
+                      >
+                        Previous
+                      </button>
+                      <button id="reviewBtn" type="submit" class="btn btn-danger mt-5">
+                        Submit For Review
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addSectionModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addSectionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="addSectionModalLabel">
+              Add New Section
+            </h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><i class="fe fe-x-circle"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input
+              id="sectionInput"
+              class="form-control mb-3"
+              type="text"
+              placeholder="Add new section"
+            />
+            <button id="addSection" class="btn btn-primary" type="Button">
+              Add New Section
+            </button>
+            <button
+              class="btn btn-outline-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addLectureModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addLectureModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="addLectureModalLabel">
+              Add New Lecture
+            </h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><i class="fe fe-x-circle"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input
+              id="lectureInput"
+              class="form-control mb-3"
+              type="text"
+              placeholder="Add new lecture"
+            />
+            <button id="addLectureBtn" class="btn btn-primary" type="Button">
+              Add New Lecture
+            </button>
+            <button
+              class="btn btn-outline-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div
+      class="modal fade"
+      id="uploadVideoModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="uploadVideoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-dz modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="uploadVideoModalLabel">
+              Upload Video
+            </h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><i class="fe fe-x-circle"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form method="POST"  class="dropzone mb-4 border-dashed" id="cs-dropzone">
+              {% csrf_token %}
+              <div class="fallback">
+                 <input name="file" type="file" multiple />
+              </div>
+           </form>	
+
+           <div >
+            <p class="name" data-dz-name></p>
+            <strong class="error text-danger" data-dz-errormessage></strong>
+           </div>
+           <div>
+            <p class="size" data-dz-size></p>
+            <div
+              class="progress progress-striped active"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div
+                class="progress-bar progress-bar-success"
+                style="width: 0%"
+                data-dz-uploadprogress
+              ></div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button data-dz-remove class="btn btn-warning cancel">
+              <i class="fe fe-x-circle"></i>
+              <span>Cancel</span>
+            </button>
+            <button data-dz-remove class="btn btn-danger delete">
+              <i class="fe fe-trash-2"></i>
+              <span>Delete</span>
+            </button>
+            <button
+              class="btn btn-outline-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+          </div>
+          
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="newCatgory"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="newCatgoryLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title mb-0" id="newCatgoryLabel">
+              Create New Category
+            </h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><i class="fe fe-x-circle"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3 mb-2">
+                <label class="form-label" for="title"
+                  >Title<span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Write a Category"
+                  id="title"
+                  required
+                />
+                <small>Field must contain a unique value</small>
+              </div>
+              <div class="mb-3 mb-2">
+                <label class="form-label">Slug</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="slug"
+                      >https://example.com</span
+                    >
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="basic-url"
+                    aria-describedby="slug"
+                    placeholder="designcourses"
+                    required
+                  />
+                </div>
+                <small>Field must contain a unique value</small>
+              </div>
+              <div class="mb-3 mb-2">
+                <label class="form-label">Parent</label>
+                <select class="selectpicker" data-width="100%">
+                  <option value="">Select</option>
+                  <option value="Course">Course</option>
+                  <option value="Tutorial">Tutorial</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Company">Company</option>
+                </select>
+              </div>
+              <div class="mb-3 mb-3">
+                <label class="form-label">Description</label>
+                <div id="editor">
+                  <br />
+                  <h4>One Ring to Rule Them All</h4>
+                  <br />
+                  <p>
+                    Three Rings for the
+                    <i> Elven-kingsunder</i> the sky, <br />
+                    Seven for the <u>Dwarf-lords</u> in halls of stone, Nine for
+                    Mortal Men, <br />
+                    doomed to die, One for the Dark Lord on his dark throne.
+                    <br />
+                    In the Land of Mordor where the Shadows lie.
+                    <br />
+                    <br />
+                  </p>
+                </div>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Enabled</label>
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="customSwitch1"
+                    checked
+                  />
+                  <label class="form-check-label" for="customSwitch1"></label>
+                </div>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  Add New Category
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-white"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+
+    <!-- Course Modal -->
+    <div
+      class="modal fade"
+      id="courseModal"
+      tabindex="-1"
+      aria-labelledby="courseModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header py-4 align-items-lg-center">
+            <div class="d-lg-flex">
+              <div class="mb-3 mb-lg-0">
+                <img
+                  src="{% static 'images/svg/feature-icon-1.svg' %}"
+                  alt=""
+                  class="bg-primary icon-shape icon-xxl rounded-circle"
+                />
+              </div>
+              <div class="ms-lg-4">
+                <h2 class="fw-bold mb-md-1 mb-3">
+                  Introduction to JavaScript
+                  <span class="badge bg-warning ms-2">Free</span>
+                </h2>
+                <p class="text-uppercase fs-6 fw-semi-bold mb-0">
+                  <span class="text-dark">Courses - 1</span>
+                  <span class="ms-3">6 Lessons</span>
+                  <span class="ms-3">1 Hour 12 Min</span>
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <i class="fe fe-x-circle"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h3>In this course you’ll learn:</h3>
+            <p class="fs-4">
+              Vanilla JS is a fast, lightweight, cross-platform framework for
+              building incredible, powerful JavaScript applications.
+            </p>
+            <ul class="list-group list-group-flush">
+              <!-- List group item -->
+              <li class="list-group-item ps-0">
+                <a
+                  href="#"
+                  class="
+                    d-flex
+                    justify-content-between
+                    align-items-center
+                    text-inherit text-decoration-none
+                  "
+                >
+                  <div class="text-truncate">
+                    <span
+                      class="
+                        icon-shape
+                        bg-light
+                        text-primary
+                        icon-sm
+                        rounded-circle
+                        me-2
+                      "
+                      ><i class="mdi mdi-play fs-4"></i
+                    ></span>
+                    <span>Introduction</span>
+                  </div>
+                  <div class="text-truncate">
+                    <span>1m 7s</span>
+                  </div>
+                </a>
+              </li>
+              <!-- List group item -->
+              <li class="list-group-item ps-0">
+                <a
+                  href="#"
+                  class="
+                    d-flex
+                    justify-content-between
+                    align-items-center
+                    text-inherit text-decoration-none
+                  "
+                >
+                  <div class="text-truncate">
+                    <span
+                      class="
+                        icon-shape
+                        bg-light
+                        text-primary
+                        icon-sm
+                        rounded-circle
+                        me-2
+                      "
+                      ><i class="mdi mdi-play fs-4"></i
+                    ></span>
+                    <span>Installing Development Software</span>
+                  </div>
+                  <div class="text-truncate">
+                    <span>3m 11s</span>
+                  </div>
+                </a>
+              </li>
+              <!-- List group item -->
+              <li class="list-group-item ps-0">
+                <a
+                  href="#"
+                  class="
+                    d-flex
+                    justify-content-between
+                    align-items-center
+                    text-inherit text-decoration-none
+                  "
+                >
+                  <div class="text-truncate">
+                    <span
+                      class="
+                        icon-shape
+                        bg-light
+                        text-primary
+                        icon-sm
+                        rounded-circle
+                        me-2
+                      "
+                      ><i class="mdi mdi-play fs-4"></i
+                    ></span>
+                    <span>Hello World Project from GitHub</span>
+                  </div>
+                  <div class="text-truncate">
+                    <span>2m 33s</span>
+                  </div>
+                </a>
+              </li>
+              <!-- List group item -->
+              <li class="list-group-item ps-0">
+                <a
+                  href="#"
+                  class="
+                    d-flex
+                    justify-content-between
+                    align-items-center
+                    text-inherit text-decoration-none
+                  "
+                >
+                  <div class="text-truncate">
+                    <span
+                      class="
+                        icon-shape
+                        bg-light
+                        text-primary
+                        icon-sm
+                        rounded-circle
+                        me-2
+                      "
+                      ><i class="mdi mdi-play fs-4"></i
+                    ></span>
+                    <span>Our Sample Javascript Files</span>
+                  </div>
+                  <div class="text-truncate">
+                    <span>22m 30s</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- new chat modal-->
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="newchatModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="newchatModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header align-items-center">
+            <h4 class="mb-0" id="newchatModalLabel">Create New Chat</h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <i class="fe fe-x-circle"></i>
+            </button>
+          </div>
+          <div class="modal-body px-0">
+            <!-- contact list -->
+            <ul class="list-unstyled contacts-list mb-0">
+              <!-- chat item -->
+              <li class="py-3 px-4 chat-item contacts-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="text-link contacts-link">
+                    <!-- media -->
+                    <div class="d-flex">
+                      <div
+                        class="avatar avatar-md avatar-indicators avatar-away"
+                      >
+                        <img
+                          src="{% static 'images/avatar/avatar-5.jpg' %}"
+                          alt=""
+                          class="rounded-circle"
+                        />
+                      </div>
+                      <!-- media body -->
+                      <div class="ms-2">
+                        <h5 class="mb-0">Pete Martin</h5>
+                        <p class="mb-0 text-muted">
+                          On going description of group...
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                  <div>
+                    <small class="text-muted">2/10/2021</small>
+                  </div>
+                </div>
+              </li>
+              <!-- chat item -->
+              <li class="py-3 px-4 chat-item contacts-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="text-link contacts-link">
+                    <!-- media -->
+                    <div class="d-flex">
+                      <div
+                        class="
+                          avatar avatar-md avatar-indicators avatar-offline
+                        "
+                      >
+                        <img
+                          src="{% static 'images/avatar/avatar-9.jpg' %}"
+                          alt=""
+                          class="rounded-circle"
+                        />
+                      </div>
+                      <!-- media body -->
+                      <div class="ms-2">
+                        <h5 class="mb-0">Olivia Cooper</h5>
+                        <p class="mb-0 text-muted">
+                          On going description of group...
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                  <div>
+                    <small class="text-muted">2/3/2021</small>
+                  </div>
+                </div>
+              </li>
+              <!-- chat item -->
+              <li class="py-3 px-4 chat-item contacts-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="text-link contacts-link">
+                    <!-- media -->
+                    <div class="d-flex">
+                      <div
+                        class="avatar avatar-md avatar-indicators avatar-busy"
+                      >
+                        <img
+                          src="{% static 'images/avatar/avatar-19.jpg' %}"
+                          alt=""
+                          class="rounded-circle"
+                        />
+                      </div>
+                      <!-- media body -->
+                      <div class="ms-2">
+                        <h5 class="mb-0">Jamarcus Streich</h5>
+                        <p class="mb-0 text-muted">
+                          Start design system for UI.
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                  <div>
+                    <small class="text-muted">1/24/2021</small>
+                  </div>
+                </div>
+              </li>
+              <!-- chat item -->
+              <li class="py-3 px-4 chat-item contacts-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="text-link contacts-link">
+                    <!-- media -->
+                    <div class="d-flex">
+                      <div
+                        class="avatar avatar-md avatar-indicators avatar-busy"
+                      >
+                        <img
+                          src="{% static 'images/avatar/avatar-12.jpg' %}"
+                          alt=""
+                          class="rounded-circle"
+                        />
+                      </div>
+                      <!-- media body -->
+                      <div class="ms-2">
+                        <h5 class="mb-0">Lauren Wilson</h5>
+                        <p class="mb-0 text-muted">
+                          Start design system for UI...
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                  <div>
+                    <small class="text-muted">3/3/2021</small>
+                  </div>
+                </div>
+              </li>
+              <!-- chat item -->
+              <li class="py-3 px-4 chat-item contacts-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="text-link contacts-link">
+                    <!-- media -->
+                    <div class="d-flex">
+                      <div
+                        class="avatar avatar-md avatar-indicators avatar-online"
+                      >
+                        <img
+                          src="{% static 'images/avatar/avatar-14.jpg' %}"
+                          alt=""
+                          class="rounded-circle"
+                        />
+                      </div>
+                      <!-- media body -->
+                      <div class="ms-2">
+                        <h5 class="mb-0">User Name</h5>
+                        <p class="mb-0 text-muted">
+                          On going description of group..
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                  <div>
+                    <small class="text-muted">1/5/2021</small>
+                  </div>
+                </div>
+              </li>
+              <!-- chat item -->
+              <li class="py-3 px-4 chat-item contacts-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="text-link contacts-link">
+                    <!-- media -->
+                    <div class="d-flex">
+                      <div
+                        class="avatar avatar-md avatar-indicators avatar-online"
+                      >
+                        <img
+                          src="{% static 'images/avatar/avatar-15.jpg' %}"
+                          alt=""
+                          class="rounded-circle"
+                        />
+                      </div>
+                      <!-- media body -->
+                      <div class="ms-2">
+                        <h5 class="mb-0">Rosalee Roberts</h5>
+                        <p class="mb-0 text-muted">
+                          On going description of group..
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                  <div>
+                    <small class="text-muted">1/14/2021</small>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row align-items-center g-0 border-top py-2">
+          <!-- Desc -->
+          <div class="col-md-6 col-12 text-center text-md-start">
+            <span>© 2021 READuced. All Rights Reserved.</span>
+          </div>
+          <!-- Links -->
+          <div class="col-12 col-md-6">
+            <nav
+              class="
+                nav nav-footer
+                justify-content-center justify-content-md-end
+              "
+            >
+              <a class="nav-link active ps-0" href="#">Privacy</a>
+              <a class="nav-link" href="#">Terms </a>
+              <a class="nav-link" href="#">Feedback</a>
+              <a class="nav-link" href="#">Support</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'base/js.html' %}
+
+    <script>
+      "use strict";
+      if ($("#addCourseForm").length) {
+        var addCourseForm;
+        document.addEventListener("DOMContentLoaded", function () {
+          addCourseForm = new Stepper(
+            document.querySelector("#addCourseForm"),
+            {
+              linear: false,
+              animation: true,
+            }
+          );
+        });
+      }
+
+      if ($("#courseCoverImg").length) {
+        var firstUpload = new FileUploadWithPreview("courseCoverImg", {
+          showDeleteButtonOnImages: true,
+          text: {
+            chooseFile: " No File Selected",
+            browse: "Upload File",
+          },
+        });
+        console.log("Cached: ", firstUpload.cachedFileArray);
+      }
+
+      
+      var dropzone = new Dropzone("#cs-dropzone", {url: "/courses/lecture/video_upload/"})
+
+      dropzone.on("sending", (file, xhr, formData) => {
+        formData.append('id', lectureId)
+        document.querySelector(".progress-bar").style.opacity = "1";
+      })
+
+      // dropzone.on("complete", () => {
+      //   dropzone.removeFiles()
+      // })
+
+      
+
+      // dropzone.on("complete", () => {
+      //   dropzone.removeAllFiles(true)
+      // })
+
+      dropzone.on("totaluploadprogress", function(progress) {
+        console.log("Upload: ", progress)
+        document.querySelector(".progress-bar").style.width = progress + "%";
+      });
+
+      dropzone.on("queuecomplete", function(progress) {
+        document.querySelector(".progress-bar").style.opacity = "0";
+      });
+
+    
+      document.querySelector(".cancel").onclick = function() {
+        dropzone.removeAllFiles(true);
+      };
+
+      // ......Image loading
+
+      var $uploadForm = $("#uploadForm");
+     
+      var courseId;
+      var sectionId;
+      var lectureId;
+      var policyURL = `/courses/${courseId}/upload_policy/`;
+      var updateURL = `/courses/${courseId}/edit/`;
+      var sectionURL = `/courses/section/create/`; 
+      var lectureURL = `/courses/lecture/create/`; 
+
+
+
+      var crsfToken = document.querySelector(
+        "#uploadForm input[name=csrfmiddlewaretoken]"
+      ).value;
+      // var fileInput = document.getElementById("files");
+      var selectedFile;
+
+      // $('#avatar-files').on('change', inputChanged)
+
+      // fileInput.addEventListener("change", inputChanged);
+
+      function validateFileType(fileItem) {
+        var fileType = fileItem.type; // image/png image/jpeg
+        var rootType = fileType.split("/")[0];
+        switch (rootType) {
+          case "image": // rootType === "image"
+            return true;
+          default:
+            return false;
+        }
+      }
+
+      function inputChanged(event) {
+        var fileList = event.files;
+        console.log("FileList: ", fileList);
+        var isValid = validateFileType(fileList[0]);
+        if (isValid) {
+          this.selectedFile = fileList[0];
+        }
+      }
+
+      function getPolicy(fileItem) {
+        var data = {
+          name: fileItem.name,
+          raw_filename: fileItem.name,
+          filetype: fileItem.type,
+        };
+        var jsonData = JSON.stringify(data);
+        if (courseId) {
+          policyURL = `/courses/${courseId}/upload_policy/`
+          fetch(policyURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFTOKEN": crsfToken,
+            },
+            body: jsonData,
+          })
+            .then((resp) => resp.json())
+            .then((data) => {
+              usePolicyAndUpload(fileItem, data);
+            })
+            .catch((error) => {
+              console.log("Error: ", error);
+            });
+        }
+      }
+
+      function constructFormData(policy) {
+        var fd = new FormData(); // multipart form
+        var policyFields = policy.fields;
+        var objectEntries = Object.entries(policyFields);
+        for (const [key, value] of objectEntries) {
+          fd.append(key, value);
+        }
+        return fd;
+      }
+
+      function usePolicyAndUpload(fileItem, policyData) {
+        var fd = constructFormData(policyData);
+        fd.append("file", fileItem);
+        var awsEndpoint = policyData.url;
+        var objectId = policyData.object_id;
+        var awsUploadKey = policyData.fields.key;
+
+        var xhr = new XMLHttpRequest();
+        fileItem.xhr = xhr;
+        // fileItem.xhr.abort()
+
+        xhr.open("POST", awsEndpoint, true);
+
+        xhr.upload.onloadstart = function (event) {
+          console.log("Uploading started.");
+        };
+        xhr.upload.onprogress = function (event) {
+          var loaded = event.loaded;
+          var total = event.total;
+          var progress = Math.floor((loaded / total) * 100);
+          console.log("progress", Math.floor((loaded / total) * 100));
+
+          // var listElementId = fileItem.uploadListElID
+          // var liItem = document.getElementById(listElementId)
+          // liItem.innerText = fileItem.name + " " + fileItem.size + " " + progress + "%"
+          // liItem.setAttribute('class', 'w-' + progress)
+        };
+
+        xhr.upload.onload = function () {
+          console.log(xhr.status, xhr.responseText, awsUploadKey);
+          // let django know that it's done.
+          // put request, key
+          var djHR = new XMLHttpRequest();
+          var method = "PUT";
+          var djUpdateData = { key: awsUploadKey };
+          var djJsonUpdateData = JSON.stringify(djUpdateData);
+          djHR.open(method, policyURL, true);
+          djHR.setRequestHeader("Content-Type", "application/json");
+          djHR.setRequestHeader("X-CSRFTOKEN", crsfToken);
+          djHR.onload = function () {
+            if (djHR.status === 200) {
+              // do something
+              var listElementId = fileItem.uploadListElID;
+              // var liItem = document.getElementById(listElementId)
+              // liItem.innerText = fileItem.name + " " + fileItem.size + " done. 100%"
+              // liItem.setAttribute('class', 'w-done')
+            } else {
+              alert("Django update failed");
+            }
+          };
+
+          djHR.send(djJsonUpdateData);
+        };
+
+        xhr.upload.addEventListener("error", function (event) {
+          alert("An error occurred on upload.");
+        });
+        // xhr.abort()
+        xhr.upload.onabort = function (event) {
+          console.log("File aborted");
+        };
+        xhr.send(fd);
+      }
+
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          var cookies = document.cookie.split(";");
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      var csrftoken = getCookie("csrftoken");
+
+      function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
+      }
+      $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        },
+      });
+
+      $(document).ready(function () {
+        var $courseInfoForm = $(".courseInfoForm");
+        $courseInfoForm.submit((event) => {
+          event.preventDefault();
+          var $formData = $courseInfoForm.serialize();
+          var $thisURL =
+            $courseInfoForm.attr("data-url") || window.location.href; // or set your own url
+          console.log($formData);
+          $.ajax({
+            method: "POST",
+            url: $thisURL,
+            data: $formData,
+            success: handleFormSuccess,
+            error: handleFormError,
+          });
+
+          function handleFormSuccess(data, textStatus, jqXHR) {
+            console.log(data);
+          
+            courseId = data.pk;
+            policyURL = `/courses/${courseId}/upload_policy/`;
+            updateURL = `/courses/${courseId}/edit/`;
+            console.log(textStatus);
+            console.log(courseId);
+            addCourseForm.next(); // reset form data
+          }
+
+          function handleFormError(jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+          }
+        });
+
+       
+
+
+
+        function renderSection(section) {
+          var section_html = `
+                        <div id="section-${section.id}" class="bg-light rounded p-2 mb-4">
+                          <h4>${section.title}</h4>
+
+                          <div
+                            class="list-group list-group-flush border-top-0"
+                            id="courseList-${section.id}"
+                          >
+                            <div id="lectureSection-${section.id}">
+                          
+                            </div>
+                          </div>
+                          <a
+                            href="#"
+                            id="${section.id}"
+                            class="btn btn-outline-primary btn-sm mt-3 lecture-add"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addLectureModal"
+                            >Add Lecture +</a
+                          >
+                      </div>`
+            if($(`#section-${section.id}`).length === 0) {
+              return section_html
+            }
+            
+        }
+
+
+        function renderLecture(lecture, sectionId) {
+          var lecture_item = `<div
+                                class="list-group-item rounded px-3 mb-1"
+                                id="lecture-${lecture.id}"
+                              >
+                                <div
+                                  class="
+                                    d-flex
+                                    align-items-center
+                                    justify-content-between
+                                  "
+                                >
+                                  <h5 class="mb-0">
+                                    <a href="#" class="text-inherit">
+                                      <i
+                                        class="
+                                          fe fe-menu
+                                          me-1
+                                          text-muted
+                                          align-middle
+                                        "
+                                      ></i>
+                                      <span class="align-middle"
+                                        >${lecture.title}</span
+                                      >
+                                    </a>
+                                  </h5>
+                                  <div>
+                                    <a
+                                      href="#"
+                                      class="me-1 text-inherit"
+                                      data-bs-toggle="tooltip"
+                                      data-placement="top"
+                                      title="Edit"
+                                      ><i class="fe fe-edit fs-6"></i
+                                    ></a>
+                                    <a
+                                      href="#"
+                                      class="me-1 text-inherit"
+                                      data-bs-toggle="tooltip"
+                                      data-placement="top"
+                                      title="Delete"
+                                      ><i class="fe fe-trash-2 fs-6"></i
+                                    ></a>
+                                    <a
+                                      href="#"
+                                      class="text-inherit"
+                                      aria-expanded="true"
+                                      data-bs-toggle="collapse"
+                                      data-bs-target="#collapselist-${lecture.id}"
+                                      aria-controls="collapselist-${lecture.id}"
+                                    >
+                                      <span class="chevron-arrow"
+                                        ><i class="fe fe-chevron-down"></i
+                                      ></span>
+                                    </a>
+                                  </div>
+                                </div>
+                                <div
+                                  id="collapselist-${lecture.id}"
+                                  class="collapse show"
+                                  aria-labelledby="${lecture.title}"
+                                  data-bs-parent="#courseList-${sectionId}"
+                                >
+                                  <div class="card-body">
+                                    <a href="#" class="btn btn-secondary btn-sm"
+                                      >Add Description +</a
+                                    >
+                                    <a href="#"
+                                    id="${lecture.id}" 
+                                    class="btn btn-secondary btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#uploadVideoModal"
+                                      >Upload Video +</a
+                                    >
+                                  </div>
+                                </div>
+                              </div>`
+                if($(`#lecture-${lecture.id}`).length === 0) {
+                  return lecture_item
+                }
+                
+        }
+
+        $("#uploadForm").submit((event) => {
+          event.preventDefault();
+         
+          if (firstUpload.cachedFileArray && firstUpload.cachedFileArray[0]) {
+            getPolicy(firstUpload.cachedFileArray[0]);
+
+            var $uploadFormData = $uploadForm.serialize();
+            const data = new FormData(event.target);
+
+            const formData = JSON.stringify(Object.fromEntries(data.entries()));
+
+            if (courseId) {
+              updateURL =  `/courses/${courseId}/edit/`;
+              fetch(updateURL, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFTOKEN": crsfToken,
+                },
+                body: formData,
+              })
+                .then((resp) => resp.json())
+                .then((data) => {
+                  console.log("Data", data);
+                  addCourseForm.next()
+                })
+                .catch((error) => {
+                  console.log("Error: ", error);
+                });
+            }
+          }
+
+        });
+
+
+        $("#reviewForm").submit((event) => {
+          event.preventDefault();
+         
+          var reviewFormData = $("#reviewForm").serialize();
+            const data = new FormData(event.target);
+            const obj = Object.fromEntries(data.entries())
+            obj.tags = JSON.parse(obj.tags.replace(/\\/g, "")).map(element => {
+              return element.value
+            })
+            
+            const reviewData = JSON.stringify(obj);
+            // reviewData["tags"] = Array.from(reviewData.tags).map(element => {
+            //   return element.value
+            // })
+            
+          
+
+            if (courseId) {
+              var reviewURL =  `/courses/${courseId}/review/`;
+              fetch(reviewURL, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFTOKEN": crsfToken,
+                },
+                body: reviewData,
+              })
+                .then((resp) => resp.json())
+                .then((data) => {
+                  console.log("Data", data);
+                  console.log("ReviewData: ", data)
+                })
+                .catch((error) => {
+                  console.log("Error: ", error);
+                });
+            }
+
+        });
+
+        $('#addLectureModal').on('show.bs.modal', function (event) {
+            var target = event.relatedTarget
+            sectionId = target.id
+         })
+
+         $('#uploadVideoModal').on('show.bs.modal', function (event) {
+            var target = event.relatedTarget
+            lectureId = target.id
+         })
+
+         $('#uploadVideoModal').on('hide.bs.modal', function (event) {
+            dropzone.removeAllFiles(true)
+         })
+       
+        
+        $('#addLectureBtn').click(event => {
+          const lectureValue = $("#lectureInput").val()
+          const lectureData = {
+            title: lectureValue,
+            csrftoken: crsfToken,
+            section: sectionId
+
+          }
+          const jsonLectureData = JSON.stringify(lectureData)
+          if(sectionId) {
+            fetch(lectureURL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFTOKEN": crsfToken,
+              },
+              body: jsonLectureData,
+            })
+              .then((resp) => resp.json())
+              .then((data) => {
+                console.log("Data:", data);
+                if(data.length > 0) {
+                  $.each(data, (index,object) => {
+                   $(`#lectureSection-${sectionId}`).append(renderLecture(object, sectionId))
+                  })
+                }
+              })
+              .catch((error) => {
+                console.log("Error: ", error);
+          });
+          }
+        })
+
+        $("#addSection").click((event) => {
+           
+           const sectionValue = $("#sectionInput").val()
+           
+           const sectionData = {
+             title: sectionValue,
+             csrftoken: crsfToken,
+             course: courseId
+           }
+           const jsonData = JSON.stringify(sectionData)
+
+           
+           fetch(sectionURL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFTOKEN": crsfToken,
+              },
+              body: jsonData,
+            })
+              .then((resp) => resp.json())
+              .then((data) => {
+                console.log("Data:", data);
+                if(data.length > 0) {
+                 
+                  $.each(data, (index,object) => {
+                   $('#section-card').append(renderSection(object))
+                  })
+                }
+              })
+              .catch((error) => {
+                console.log("Error: ", error);
+          });
+            
+        })
+      });
+    </script>
+  </body>
+</html>
