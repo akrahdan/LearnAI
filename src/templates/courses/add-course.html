@@ -24,7 +24,7 @@
     {% include 'base/navbar.html' %}
 
     <!-- Page header-->
-    <div class="py-4 py-lg-6 bg-primary">
+    <div class="py-4 py-lg-6 bg-dark">
       <div class="container">
         <div class="row">
           <div class="offset-lg-1 col-lg-10 col-md-12 col-12">
@@ -1544,8 +1544,7 @@
               })
                 .then((resp) => resp.json())
                 .then((data) => {
-                  console.log("Data", data);
-                  console.log("ReviewData: ", data)
+                  window.location.replace("/instructors/courses/")
                 })
                 .catch((error) => {
                   console.log("Error: ", error);

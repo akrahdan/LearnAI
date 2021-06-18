@@ -72,3 +72,17 @@ def unique_purchase_id_generator(instance):
     if qs_exists:
         return get_unique_slug(instance)
     return purchase_new_id
+
+
+def unique_order_id_generator(instance):
+    """
+    This is for a Django project with an order_id field
+    """
+    order_new_id = get_random_string()
+
+    Klass = instance.__class__
+    qs_exists = Klass.objects.filter(order_id=order_new_id).exists()
+    if qs_exists:
+        return get_unique_slug(instance)
+    return order_new_id
+

@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import widgets
+from taggit.forms import TagWidget
 
 from .models import Course
 
@@ -28,3 +30,13 @@ class UpdateCourseForm(forms.ModelForm):
             'video_url',
 
         ]
+    
+class FormRequirements(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = [
+            'tags'
+        ]
+        widgets = {
+            'tags': TagWidget
+        }

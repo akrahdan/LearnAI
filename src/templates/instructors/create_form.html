@@ -1,0 +1,542 @@
+{% load static %} {% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Favicon icon-->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon/favicon.ico' %}"
+    />
+
+    {% include 'base/css.html' %}
+    <title>Create Instructor Profile | READuced</title>
+  </head>
+
+  <body>
+    <!-- Page Content -->
+    {% include 'base/navbar.html' %}
+    <div class="py-4 py-lg-6 bg-dark">
+      <div class="container">
+        <div class="row">
+          <div class="offset-lg-1 col-lg-10 col-md-12 col-12">
+            <div class="d-lg-flex align-items-center justify-content-between">
+              <!-- Content -->
+              <div class="mb-4 mb-lg-0">
+                <h1 class="text-white mb-1">Onboarding</h1>
+                <p class="mb-0 text-white lead">
+                  Just fill the form and create your courses.
+                </p>
+              </div>
+              <div>
+                <a
+                  href="{% url 'instructors:courses' %}"
+                  class="btn btn-success"
+                  >Save</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pt-5 pb-5">
+      <div class="container">
+        <div id="addInfoForm" class="bs-stepper">
+          <div class="row">
+            <div class="offset-lg-1 col-lg-10 col-md-12 col-12">
+              <!-- Stepper Button -->
+              <div class="bs-stepper-header shadow-sm" role="tablist">
+                <div class="step" data-target="#personalInfo">
+                  <button
+                    type="button"
+                    class="step-trigger"
+                    role="tab"
+                    id="addInfoFormtrigger1"
+                    aria-controls="personalInfo"
+                  >
+                    <span class="bs-stepper-circle">1</span>
+                    <span class="bs-stepper-label">Personal Info</span>
+                  </button>
+                </div>
+                <div class="bs-stepper-line"></div>
+                <div class="step" data-target="#linkedAccounts">
+                  <button
+                    type="button"
+                    class="step-trigger"
+                    role="tab"
+                    id="addInfoFormtrigger2"
+                    aria-controls="linkedAccounts"
+                  >
+                    <span class="bs-stepper-circle">2</span>
+                    <span class="bs-stepper-label">Linked Accounts</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Card -->
+              <div class="bs-stepper-content mt-5">
+                <div class="card bs-stepper-pane fade" id="personalInfo"
+                  role="tabpanel"
+                  
+                  aria-labelledby="addInfoFormtrigger1">
+                    <!-- Card header -->
+                    <div class="card-header">
+                      <h3 class="mb-0">Instructor onboarding steps</h3>
+                      <p class="mb-0">
+                        You have full control to manage your own account
+                        setting.
+                      </p>
+                    </div>
+                    <!-- Card body -->
+                    <div class="card-body">
+                      <div
+                        class="
+                          d-lg-flex
+                          align-items-center
+                          justify-content-between
+                        "
+                      >
+                        <div
+                          class="d-flex align-items-center mb-4 mb-lg-0"
+                          id="uploadDiv"
+                        >
+                          {% if avatar %}
+                          <img
+                            src="{{ avatar }}"
+                            id="img-uploaded"
+                            class="avatar-xl rounded-circle"
+                            alt=""
+                          />
+                          {% else %}
+                          <img
+                            src="{% static 'images/avatar/profile.jpg' %}"
+                            id="img-uploaded"
+                            class="avatar-xl rounded-circle"
+                            alt=""
+                          />
+                          {% endif %} 
+                          {% csrf_token %}
+                          <input
+                            name="file"
+                            type="file"
+                            multiple
+                            id="avatar-files"
+                            style="display: none"
+                          />
+
+                          <div class="ms-3">
+                            <h4 class="mb-0">Your avatar</h4>
+                          </div>
+                        </div>
+                        <div>
+                          <a
+                            href="#"
+                            class="btn btn-outline-white btn-sm"
+                            id="upload-btn"
+                            >Update</a
+                          >
+                          <a href="#" class="btn btn-outline-danger btn-sm"
+                            >Delete</a
+                          >
+                        </div>
+                      </div>
+                      <hr class="my-5" />
+                      <div>
+                        <h4 class="mb-0">Personal Details</h4>
+                        <p class="mb-4">
+                          Edit your personal information and address.
+                        </p>
+                        <!-- Form -->
+
+                        {% if form.non_field_errors %}
+                        <div class="invalid-feedback invalid-field">
+                          {{ form.non_field_errors.as_text }}
+                        </div>
+                        {% endif %}
+
+                        <form
+                          class="row"
+                          method="POST"
+                          action="{% url 'instructors:onboard' %}"
+                        >
+                          {% csrf_token %}
+
+                          <div class="mb-3 col-12 col-md-6">
+                            <label
+                              class="form-label"
+                              for="{{ form.first_name.id_for_label }}"
+                              >First Name</label
+                            >
+                            {{ form.first_name | attr:"class:form-control" }} 
+                            
+                            {% if form.first_name.errors %}
+                            <div class="invalid-feedback invalid-field">
+                              {{ form.first_name.errors.as_text }}
+                            </div>
+                            {% endif %}
+                          </div>
+                          <!-- Last name -->
+                          <div class="mb-3 col-12 col-md-6">
+                            <label
+                              class="form-label"
+                              for="{{ form.last_name.id_for_label }}"
+                              >Last Name</label
+                            >
+                            {{ form.last_name | attr:"class:form-control" }} 
+                            {% if form.last_name.errors %}
+                            <div class="invalid-feedback invalid-field">
+                              {{ form.last_name.errors.as_text }}
+                            </div>
+                            {% endif %}
+                          </div>
+                          <!-- Phone -->
+                          <div class="mb-3">
+                            <label
+                              class="form-label"
+                              for="{{ form.phone.id_for_label }}"
+                              >Phone</label
+                            >
+                            {{ form.phone | attr:"class:form-control" }} 
+                            {% if form.phone.errors %}
+                            <div class="invalid-feedback invalid-field">
+                              {{ form.phone.errors.as_text }}
+                            </div>
+                            {% endif %}
+                          </div>
+                          <!-- Profile -->
+                          <div class="mb-3">
+                            <label
+                              class="form-label"
+                              for="{{ form.about_me.id_for_label }}"
+                              >About me</label
+                            >
+                            {{ form.about_me | attr:"class:form-control" }} 
+                            
+                            {% if form.about_me.errors %}
+                            <div class="invalid-feedback invalid-field">
+                              {{ form.about_me.errors.as_text }}
+                            </div>
+                            {% endif %}
+                          </div>
+
+                          <!-- Profile -->
+                          <div class="mb-3">
+                            <label
+                              class="form-label"
+                              for="{{ form.tags.id_for_label }}"
+                              >Add skills</label
+                            >
+                            {{ form.tags | attr:"autofocus" }} 
+                            
+                            {% if form.tags.errors %}
+                            <div class="invalid-feedback invalid-field">
+                              {{ form.tags.errors.as_text }}
+                            </div>
+                            {% endif %}
+                          </div>
+
+                          <div class="col-12">
+                            <!-- Button -->
+                            <button class="btn btn-primary" type="submit" >
+                              Enroll as Instructor
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+                <div aria-labelledby="addInfoFormtrigger2" class="card bs-stepper-pane fade" id="linkedAccounts"
+                role="tabpanel">
+                <!-- Card header -->
+                <div class="card-header">
+                    <h3 class="mb-2">Linked Accounts</h3>
+                    <p class="mb-0">
+                    Link your social accounts into your Readuced
+                    accounts & also access your history of linked accounts
+                    and manage your accounts in this sections.
+                    </p>
+                </div>
+                <!-- Card body -->
+                <div class="card-body">
+                    <div class="mb-5 d-md-flex">
+                    <!-- facebook -->
+                    <div>
+                        <i
+                        class="mdi mdi-facebook h1 me-3 color-facebook"
+                        ></i>
+                    </div>
+                    <div class="mt-1">
+                        <h3 class="mb-0">Facebook</h3>
+                        <p>
+                        Enable one-click login and receive more personalized
+                        course recommendations.
+                        </p>
+                        <a href="#" class="btn btn-primary btn-sm"
+                        >Remove my Facebook Account</a
+                        >
+                    </div>
+                    </div>
+                    <!-- Google -->
+                    <div class="mb-5 d-md-flex border-top pt-5">
+                    <div>
+                        <i class="mdi mdi-google color-google h1 me-3"></i>
+                    </div>
+                    <div class="mt-1">
+                        <h3 class="mb-0">Google</h3>
+                        <p>
+                        Enable one-click login and receive more personalized
+                        course recommendations.
+                        </p>
+                        <a href="#" class="btn btn-outline-secondary btn-sm"
+                        >Link my Google Account</a
+                        >
+                    </div>
+                    </div>
+
+                    <!-- github -->
+                    <div class="mb-5 d-md-flex border-top pt-5">
+                    <div>
+                        <i class="mdi mdi-github color-github h1 me-3"></i>
+                    </div>
+                    <div class="mt-1">
+                        <h3 class="mb-0">Github</h3>
+                        <p>
+                        Enable one-click login and receive more personalized
+                        course recommendations.
+                        </p>
+                        <a href="#" class="btn btn-outline-secondary btn-sm"
+                        >Link my Github Account</a
+                        >
+                    </div>
+                    </div>
+
+                    <!-- twitter -->
+                    <div class="mb-5 d-md-flex border-top pt-5">
+                    <div>
+                        <i class="mdi mdi-twitter color-twitter h1 me-3"></i>
+                    </div>
+                    <div class="mt-1">
+                        <h3 class="mb-0">Twitter</h3>
+                        <p>
+                        Enable one-click login and receive more personalized
+                        course recommendations.
+                        </p>
+                        <a href="#" class="btn btn-outline-secondary btn-sm"
+                        >Link my Twitter Account</a
+                        >
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row align-items-center g-0 border-top py-2">
+          <!-- Desc -->
+          <div class="col-md-6 col-12 text-center text-md-start">
+            <span>© 2021 READuced. All Rights Reserved.</span>
+          </div>
+          <!-- Links -->
+          <div class="col-12 col-md-6">
+            <nav
+              class="
+                nav nav-footer
+                justify-content-center justify-content-md-end
+              "
+            >
+              <a class="nav-link active ps-0" href="#">Privacy</a>
+              <a class="nav-link" href="#">Terms </a>
+              <a class="nav-link" href="#">Feedback</a>
+              <a class="nav-link" href="#">Support</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'base/js.html' %}
+
+    <script>
+      "use strict";
+      if ($("#addInfoForm").length) {
+        var addInfoForm;
+        document.addEventListener("DOMContentLoaded", function () {
+            addInfoForm = new Stepper(
+            document.querySelector("#addInfoForm"),
+            {
+              linear: false,
+              animation: true,
+            }
+          );
+        });
+      }
+
+      $(document).ready(function () {
+        $("#img-uploaded").click(function () {
+          $("#avatar-files").trigger("click");
+        });
+      });
+      // $('#avatar-files').on('change', inputChanged)
+      $("#avatar-files").change(function () {
+        inputChanged(this);
+      });
+
+      $("#upload-btn").click(() => {
+        if (selectedFile) {
+          getPolicy(selectedFile);
+        }
+      });
+
+      var baseURL = "http://127.0.0.1:8000";
+      var policyURL = baseURL + "/upload/policy/";
+      var crsfToken = document.querySelector(
+        "#uploadDiv input[name=csrfmiddlewaretoken]"
+      ).value;
+      var fileInput = document.getElementById("files");
+      var selectedFile;
+      fileInput.addEventListener("change", fileInputChanged);
+
+      function validateFileType(fileItem) {
+        var fileType = fileItem.type; // image/png image/jpeg
+        var rootType = fileType.split("/")[0];
+        switch (rootType) {
+          case "image": // rootType === "image"
+            return true;
+          default:
+            return false;
+        }
+      }
+
+      function inputChanged(event) {
+        var fileList = event.files;
+        console.log(fileList);
+        var isValid = validateFileType(fileList[0]);
+        if (isValid) {
+          if (fileList && fileList.length && fileList[0]) {
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+              $("#img-uploaded").attr("src", ev.target.result);
+            };
+            reader.readAsDataURL(fileList[0]);
+          }
+          this.selectedFile = fileList[0];
+        }
+      }
+
+      function getPolicy(fileItem) {
+        var data = {
+          name: fileItem.name,
+          raw_filename: fileItem.name,
+          filetype: fileItem.type,
+        };
+        var jsonData = JSON.stringify(data);
+        fetch(policyURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFTOKEN": crsfToken,
+          },
+          body: jsonData,
+        })
+          .then((resp) => resp.json())
+          .then((data) => {
+            usePolicyAndUpload(fileItem, data);
+          })
+          .catch((error) => {
+            console.log("Error: ", error);
+          });
+      }
+
+      function constructFormData(policy) {
+        var fd = new FormData(); // multipart form
+        var policyFields = policy.fields;
+        var objectEntries = Object.entries(policyFields);
+        for (const [key, value] of objectEntries) {
+          fd.append(key, value);
+        }
+        return fd;
+      }
+
+      function usePolicyAndUpload(fileItem, policyData) {
+        var fd = constructFormData(policyData);
+        fd.append("file", fileItem);
+        var awsEndpoint = policyData.url;
+        var objectId = policyData.object_id;
+        var awsUploadKey = policyData.fields.key;
+
+        var xhr = new XMLHttpRequest();
+        fileItem.xhr = xhr;
+        // fileItem.xhr.abort()
+
+        xhr.open("POST", awsEndpoint, true);
+
+        xhr.upload.onloadstart = function (event) {
+          console.log("Uploading started.");
+        };
+        xhr.upload.onprogress = function (event) {
+          var loaded = event.loaded;
+          var total = event.total;
+          var progress = Math.floor((loaded / total) * 100);
+          console.log("progress", Math.floor((loaded / total) * 100));
+
+          // var listElementId = fileItem.uploadListElID
+          // var liItem = document.getElementById(listElementId)
+          // liItem.innerText = fileItem.name + " " + fileItem.size + " " + progress + "%"
+          // liItem.setAttribute('class', 'w-' + progress)
+        };
+
+        xhr.upload.onload = function () {
+          console.log(xhr.status, xhr.responseText, awsUploadKey);
+          // let django know that it's done.
+          // put request, key
+          var djHR = new XMLHttpRequest();
+          var method = "PUT";
+          var djUpdateData = { key: awsUploadKey };
+          var djJsonUpdateData = JSON.stringify(djUpdateData);
+          djHR.open(method, policyURL, true);
+          djHR.setRequestHeader("Content-Type", "application/json");
+          djHR.setRequestHeader("X-CSRFTOKEN", crsfToken);
+          djHR.onload = function () {
+            if (djHR.status === 200) {
+              // do something
+              var listElementId = fileItem.uploadListElID;
+              // var liItem = document.getElementById(listElementId)
+              // liItem.innerText = fileItem.name + " " + fileItem.size + " done. 100%"
+              // liItem.setAttribute('class', 'w-done')
+            } else {
+              alert("Django update failed");
+            }
+          };
+
+          djHR.send(djJsonUpdateData);
+        };
+
+        xhr.upload.addEventListener("error", function (event) {
+          alert("An error occurred on upload.");
+        });
+        // xhr.abort()
+        xhr.upload.onabort = function (event) {
+          console.log("File aborted");
+        };
+        xhr.send(fd);
+      }
+    </script>
+  </body>
+</html>

@@ -15,6 +15,22 @@
           d-lg-none d-flex
           nav-top-wrap
         ">
+        <li class="d-inline-block">
+          <a
+            class="
+              btn btn-light btn-icon
+              rounded-circle
+              text-muted
+               indicator-primary
+            "
+            href="{% url 'cart_home' %}"
+            role="button"
+            
+          >
+            <i class="fe fe-shopping-cart"> </i>
+          </a>
+         
+        </li>
         <li class="dropdown stopevent">
           <a
             class="
@@ -369,6 +385,22 @@
         </form>
         {% if user.is_authenticated %}
         <ul class="navbar-nav navbar-right-wrap ms-auto d-none d-lg-block">
+          <li class="d-inline-block">
+            <a
+              class="
+                btn btn-light btn-icon
+                rounded-circle
+                text-muted
+                 indicator-primary
+              "
+              href="{% url 'cart_home' %}"
+              role="button"
+              
+            >
+              <i class="fe fe-shopping-cart"> </i>
+            </a>
+           
+          </li>
           <li class="dropdown d-inline-block stopevent">
             <a
               class="
@@ -613,11 +645,10 @@
                  class="rounded-circle"
                 />
                {% else %}
-               <img
-                   alt="avatar"
-                   src='{% static "images/avatar/profile.jpg"%}'
-                   class="rounded-circle"
-                 />
+               
+                 <span class="avatar avatar-md avatar-primary">
+                  <span class="avatar-initials rounded-circle">{{ user.username | upper | slice:":2" }} </span>
+                </span>
                {% endif %}
               </div>
             </a>
@@ -634,11 +665,9 @@
                     class="rounded-circle"
                    />
                   {% else %}
-                  <img
-                      alt="avatar"
-                      src='{% static "images/avatar/profile.jpg"%}'
-                      class="rounded-circle"
-                    />
+                  <span class="avatar avatar-md avatar-primary">
+                    <span class="avatar-initials rounded-circle">{{ user.username | upper | slice:":2" }} </span>
+                  </span>
                   {% endif %}
                     
                   </div>

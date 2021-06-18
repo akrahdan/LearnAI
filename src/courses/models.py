@@ -63,7 +63,7 @@ class Course(models.Model):
     title = models.CharField(max_length=220)
     description = models.TextField(blank=True, null=True)
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
-    instructor = models.ForeignKey(Instructor, null=True, blank=True, on_delete=models.SET_NULL)
+    instructor = models.ForeignKey(Instructor, null=True, blank=True, related_name='courses', on_delete=models.SET_NULL)
     order = models.IntegerField(default=1, blank=True, null=True)
     level = models.CharField(max_length=120, choices=CourseLevelOptions.choices, default=CourseLevelOptions.BASIC)
     video_url = models.URLField(max_length=200, null=True, blank=True)
@@ -87,6 +87,16 @@ class Course(models.Model):
 
     def get_related_items(self):
         return self.courserelated_set.all()
+    
+    def get_status_css(self):
+        if self.state == PublishStateOptions.LIVE:
+            return 'bg-success'
+        if self.state == PublishStateOptions.PENDING:
+            return 'bg-warning'
+        
+        if self.state == PublishStateOptions.DRAFT:
+            return 'bg-info'
+        return 'bg-danger'
     
     def get_absolute_url(self):
         if self.is_basic:

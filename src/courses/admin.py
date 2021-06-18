@@ -28,6 +28,7 @@ class CourseAdmin(admin.ModelAdmin):
         'slug',
         'state',
         'active',
+        'price',
         'category',
         'instructor',
         'video_url',

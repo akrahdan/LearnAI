@@ -16,11 +16,18 @@ from readux.db.models import PublishStateOptions
 # Create your views here.
 from .mixins import CourseMixin, AjaxFormMixin
 from instructors.models import Instructor
+from carts.models import Cart
 
 class CourseDetailView(CourseMixin, DetailView):
     template_name = 'courses/detail.html'
     model = Course
     queryset = Course.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CourseDetailView, self).get_context_data(*args, **kwargs)
+        cart_obj, new_obj = Cart.objects.new_or_get(self.request)
+        context['cart'] = cart_obj
+        return context
     # print(queryset)
 
 class CreateCourseView(LoginRequiredMixin, AjaxFormMixin, CreateView):
@@ -127,11 +134,22 @@ class CourseLectureDetailView(DetailView):
         except Lecture.DoesNotExist:
             raise Http404("Course Does Not Exist")
 
-        
-        vimeo_data = v.get(lecture.video_url, jsonify=True).json()
-        print("VAL:", vimeo_data)
-        context['current_url'] =  vimeo_data.get('embed')
+        context['current_lecture'] = lecture
         return context
+
+class CourseCheckoutView(LoginRequiredMixin, DetailView):
+    template_name = 'courses/course-checkout.html'
+    model = Course
+    queryset = Course.objects.all()
+
+    def get_object(self):
+        kwargs = self.kwargs 
+        slug = kwargs["slug"]
+        try: 
+            obj = Course.objects.get(slug=slug)
+        except Course.DoesNotExist():
+            raise Http404
+        return obj
 
   
 

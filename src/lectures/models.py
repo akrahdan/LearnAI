@@ -4,7 +4,9 @@ from django.db.models.fields import related
 from django.utils import timezone
 from django.db.models.signals import pre_save
 from courses.models import Course
-
+from django.conf import settings
+import datetime
+import vimeo
 from readux.db.models import PublishStateOptions
 from readux.db.receivers import publish_state_pre_save, slugify_pre_save, unique_slugify_pre_save
 from readux.db.utils import generate_lecture_id
@@ -54,7 +56,7 @@ class Lecture(models.Model):
     video_url = models.CharField(max_length=300, blank=True, null=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
 
-
+    
     objects = LectureManager()
 
     def __str__(self) -> str:
@@ -64,6 +66,33 @@ class Lecture(models.Model):
         if not self.is_published:
             return None
         return self.lecture_id
+    
+    def get_duration(self):
+        vimeo_data = self.vimeo_data()
+        seconds = vimeo_data["duration"]
+        converted_time = datetime.timedelta(seconds=seconds)
+        return converted_time
+    
+    def vimeo_data(self):
+        v = vimeo.VimeoClient(
+            token= settings.VIMEO_ACCESS_TOKEN,
+            key= settings.VIMEO_CLIENT_ID,
+            secret= settings.VIMEO_SECRET_KEY
+        )
+        
+        video_url = self.video_url
+        if video_url is None:
+            return
+
+        data = v.get(video_url, jsonify=True).json()
+        return data
+
+    def get_vimeo_url(self):
+        vimeo_data = self.vimeo_data()
+        return vimeo_data.get("embed")
+    
+   
+
 
 
 

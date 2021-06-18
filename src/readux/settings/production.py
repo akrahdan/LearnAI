@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'ratings',
     'billing',
     'categories',
-    'purchases',
+    'orders',
     'marketing',
     'addresses',
     'carts',
@@ -96,6 +96,10 @@ MAILCHIMP_DATA_CENTER = "us6"
 MAILCHIMP_EMAIL_LIST_ID = "937229c102"
 
 
+
+PAYPAL_ACCOUNT_ID = "support@readuced.com"
+PAYPAL_CLIENT_ID = "AUj_QTk083Xh7ncvSyMDik4La6zALHWM83BEM5SLLkR5ME2nhANowpy1Xm7xc5GUzLXy7b0Wg8NawuPm"
+PAYPAL_SECRET_KEY = "EBqXgnp3v_lGVfYLQnk8MutLwr9-kv5bDAwerrEYvALztz-O-5aTC-_0V5qVu1zyLdLXrVkZv5PCKJv_"
 
 
 

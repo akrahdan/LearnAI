@@ -62,16 +62,31 @@
                     mt-n5
                   "
                 >
+                 
+                  {% if avatar %}
                   <img
-                    src="{% static 'images/avatar/avatar-1.jpg' %}"
+                    src="{{ avatar }}"
                     class="
                       avatar-xl
+                      position-relative
                       rounded-circle
                       border border-4 border-white
-                      position-relative
                     "
                     alt=""
                   />
+                  {% else %}
+
+                  <img
+                    src="{% static 'images/avatar/profile.jpg' %}"
+                    class="
+                      avatar-xl
+                      position-relative
+                      rounded-circle
+                      border border-4 border-white
+                    "
+                    alt=""
+                  />
+                  {% endif %}
                   <a
                     href="#"
                     class="position-absolute top-0 end-0"
@@ -89,8 +104,8 @@
                   </a>
                 </div>
                 <div class="lh-1">
-                  <h2 class="mb-0">Jenny Wilson</h2>
-                  <p class="mb-0 d-block">@Jennywilson</p>
+                  <h2 class="mb-0">{{ object.get_fullname }}</h2>
+                  <p class="mb-0 d-block">@{{ object.user.username}}</p>
                 </div>
               </div>
               <div>

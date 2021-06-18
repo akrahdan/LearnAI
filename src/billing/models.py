@@ -18,7 +18,7 @@ class BillingProfileManager(models.Manager):
         user = request.user
         created = False
         obj = None
-        if user.is_authenticated():
+        if user.is_authenticated:
             'logged in user checkout; remember payment stuff'
             obj, created = self.model.objects.get_or_create(
                             user=user, email=user.email)
@@ -29,6 +29,7 @@ class BillingProfileManager(models.Manager):
 class BillingProfile(models.Model):
     user        = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     email       = models.EmailField()
+    full_name =  models.CharField(max_length=220, blank=True, null=True)
     active      = models.BooleanField(default=True)
     update      = models.DateTimeField(auto_now=True)
     timestamp   = models.DateTimeField(auto_now_add=True)
@@ -75,7 +76,7 @@ def billing_profile_created_receiver(sender, instance, *args, **kwargs):
         print(customer)
         instance.customer_id = customer.id
 
-pre_save.connect(billing_profile_created_receiver, sender=BillingProfile)
+# pre_save.connect(billing_profile_created_receiver, sender=BillingProfile)
 
 
 def user_created_receiver(sender, instance, created, *args, **kwargs):

@@ -2,22 +2,23 @@ from django.db import models
 from django.urls import reverse
 from billing.models import BillingProfile
 
-ADDRESS_TYPES = (
-    ('billing', 'Billing address'),
-    ('shipping', 'Shipping address'),
-)
+class ADDRESS_TYPES(models.TextChoices):
+   BILLING =  ('billing', 'Billing address'),
+   SHIPPING =  ('shipping', 'Shipping address'),
+
 
 class Address(models.Model):
     billing_profile = models.ForeignKey(BillingProfile, on_delete=models.CASCADE)
     name            = models.CharField(max_length=120, null=True, blank=True, help_text='Shipping to? Who is it for?')
     nickname        = models.CharField(max_length=120, null=True, blank=True, help_text='Internal Reference Nickname')
-    address_type    = models.CharField(max_length=120, choices=ADDRESS_TYPES)
+    address_type    = models.CharField(max_length=120, choices=ADDRESS_TYPES.choices, default=ADDRESS_TYPES.BILLING)
     address_line_1  = models.CharField(max_length=120)
     address_line_2  = models.CharField(max_length=120, null=True, blank=True)
-    city            = models.CharField(max_length=120)
+    city            = models.CharField(max_length=120, null=True, blank=True)
+    country_code    = models.CharField(max_length=120, null=True, blank=True)
     country         = models.CharField(max_length=120, default='United States of America')
-    state           = models.CharField(max_length=120)
-    postal_code     = models.CharField(max_length=120)
+    state           = models.CharField(max_length=120, null=True, blank=True)
+    postal_code     = models.CharField(max_length=120, null=True, blank=True)
 
     def __str__(self):
         if self.nickname:

@@ -71,7 +71,6 @@ INSTALLED_APPS = [
     'ratings',
     'billing',
     'categories',
-    'purchases',
     'marketing',
     'addresses',
     'carts',
@@ -80,6 +79,7 @@ INSTALLED_APPS = [
     'instructors',
     'accounts',
     'blogs',
+    'orders',
     'files',
 
 ]
@@ -97,12 +97,19 @@ MAILCHIMP_API_KEY = "629b4f097db6f6223ce8fb689dab8048-us6"
 MAILCHIMP_DATA_CENTER = "us6"
 MAILCHIMP_EMAIL_LIST_ID = "937229c102"
 
+PAYPAL_ACCOUNT_ID = "support@readuced.com"
+PAYPAL_CLIENT_ID = "AUj_QTk083Xh7ncvSyMDik4La6zALHWM83BEM5SLLkR5ME2nhANowpy1Xm7xc5GUzLXy7b0Wg8NawuPm"
+PAYPAL_SECRET_KEY = "EBqXgnp3v_lGVfYLQnk8MutLwr9-kv5bDAwerrEYvALztz-O-5aTC-_0V5qVu1zyLdLXrVkZv5PCKJv_"
+
+
 
 
 
 
 STRIPE_SECRET_KEY = "sk_test_51IuiBEEGT3FsopRecguN7VzWd4iLmEnz0OAJsoJpecdsoZIDPawMMBVgdwbIO7o2QRMqXG22AWLCA0d7VU1vl4um00y0F26TVT"
 STRIPE_PUB_KEY = 'pk_test_51IuiBEEGT3FsopReEwvQT7so89xIHyGsrQ1vPkFpSussBn31dBzm6K6lEccpTmPrT6YMBgSpr9aWUlBSYN6Fh4yX0089dFARIb'
+
+
 
 AUTHENTICATION_BACKENDS = [
    

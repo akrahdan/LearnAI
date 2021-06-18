@@ -1,0 +1,355 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!-- Page header -->
+<div class="bg-dark py-4 py-lg-6">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+        <div>
+          <h1 class="mb-0 text-white display-4">Shopping Cart</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Content -->
+<div class="py-6">
+  <div class="container">
+    <div class="row">
+      <!-- Tab content -->
+      
+      
+     {% if cart.courses.all %}
+      <div class="col-xl-8 col-lg-8 col-md-8 col-12">
+        <div class="card-header">
+          <h3 class="mb-0 navbar-cart-count" >
+            {{ cart.courses.count }} {% if cart.courses.count == 1 %} Course {%
+            else %} Courses {% endif %} in Cart
+          </h3>
+        </div>
+        <div class="card mb-4">
+          <div class="table-responsive border-0 overflow-y-hidden">
+            <table class="table mb-0 text-nowrap">
+              <thead>
+                <tr>
+                  <th scope="col" class="border-0">Courses</th>
+                  <th scope="col" class="border-0">Students</th>
+                  <th scope="col" class="border-0">Rating</th>
+
+                  <th scope="col" class="border-0"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for course in cart.courses.all %}
+                <tr>
+                  <td class="border-top-0">
+                    <div class="d-lg-flex">
+                      <div>
+                        <a href="#">
+                          <img
+                            src="{{ course.files.last.get_download_url }}"
+                            alt=""
+                            class="rounded img-4by3-lg"
+                        /></a>
+                      </div>
+                      <div class="ms-lg-3 mt-2 mt-lg-0">
+                        <h4 class="mb-1 h5">
+                          <a href="#" class="text-inherit">
+                            {{ course.title }}
+                          </a>
+                        </h4>
+                        <ul class="list-inline fs-6 mb-0">
+                          <li class="list-inline-item">
+                            <i class="far fa-clock me-1"></i>1h 30m
+                          </li>
+                          <li class="list-inline-item">
+                            <svg
+                              class="me-1 mt-n1"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <rect
+                                x="3"
+                                y="8"
+                                width="2"
+                                height="6"
+                                rx="1"
+                                fill="#754FFE"
+                              ></rect>
+                              {% if course.level == 'basic' %}
+                              <rect
+                                x="7"
+                                y="5"
+                                width="2"
+                                height="9"
+                                rx="1"
+                                fill="#DBD8E9"
+                              ></rect>
+                              <rect
+                                x="11"
+                                y="2"
+                                width="2"
+                                height="12"
+                                rx="1"
+                                fill="#DBD8E9"
+                              ></rect>
+
+                              {% elif course.level == 'intermediate' %}
+                              <rect
+                                x="7"
+                                y="5"
+                                width="2"
+                                height="9"
+                                rx="1"
+                                fill="#754FFE"
+                              ></rect>
+                              <rect
+                                x="11"
+                                y="2"
+                                width="2"
+                                height="12"
+                                rx="1"
+                                fill="#DBD8E9"
+                              ></rect>
+
+                              {% else %}
+                              <rect
+                                x="7"
+                                y="5"
+                                width="2"
+                                height="9"
+                                rx="1"
+                                fill="#754FFE"
+                              ></rect>
+                              <rect
+                                x="11"
+                                y="2"
+                                width="2"
+                                height="12"
+                                rx="1"
+                                fill="#754FFE"
+                              ></rect>
+                              {% endif %}</svg>
+                              {{ course.get_level_display }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="border-top-0">11,200</td>
+                  <td class="border-top-0">
+                    <span class="text-warning"
+                      >4.5<i class="mdi mdi-star"></i></span
+                    >(3,250)
+                  </td>
+
+                  <td class="border-top-0">
+                    <form class='form-product-ajax' method='POST' action='{% url "cart_update" %}' data-endpoint='{% url "cart_update" %}' class="form"> {% csrf_token %}
+                        <input class='cart-item-course-id' type='hidden' name='course_id' value='{{ course.id }}' />
+                         
+                          <button type='submit' class='btn btn-link btn-icon' style="padding:0px;cursor: pointer;">
+                            <h6 class="mb-1 text-info">
+                                Remove
+                              </h6>
+                          </button>
+                         
+                        
+                    </form>
+                  </td>
+
+                  
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-12">
+        <!-- Card -->
+        <div class="card border-0 mb-3">
+          <div class="p-5 text-center">
+            <h4 class="mb-1 h5">
+              <a href="#" class="text-inherit"> Subtotal: </a>
+            </h4>
+            <div class="d-flex justify-content-center">
+              <span class="h3 mb-0 fw-bold text-primary">$</span>
+              <div class="display-4 fw-bold text-primary">
+                {{ cart.subtotal | floatformat:"0"}}
+              </div>
+            </div>
+            <div class="d-grid">
+              <!-- <a href="#" class="btn btn-primary mb-2">Start Free Month</a> -->
+              <a href="" class="btn btn-outline-primary">Checkout</a>
+            </div>
+          </div>
+          <hr class="m-0" />
+        </div>
+      </div>
+    {% else %}
+     <div class="col-xl-12 col-lg-12 col-md-12 col-12 card">
+         <div class="mb-6 mt-12  text-center">
+           <i class="fa fa-shopping-cart fa-6x mb-3" style="color: #e8e9eb"></i>
+           <p class="text-dark">Your cart is empty. Keep on shopping</p>
+           <a href="/" class="btn btn-dark">Continue Shopping</a>
+         </div>
+     </div>
+    {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %} 
+
+{% block extra_body %}
+<script>
+  $(document).ready(function () {
+    var courseForm = $(".form-course-ajax"); // #form-course-ajax
+
+    function getOwnedProduct(courseId, submitSpan) {
+      var actionEndpoint = "/orders/endpoint/verify/ownership/";
+      var httpMethod = "GET";
+      var data = {
+        course_id: courseId,
+      };
+
+      var isOwner;
+      $.ajax({
+        url: actionEndpoint,
+        method: httpMethod,
+        data: data,
+        success: function (data) {
+          console.log(data);
+          console.log(data.owner);
+          if (data.owner) {
+            isOwner = true;
+            submitSpan.html(
+              "<a class='btn btn-warning' href='/library/'>In Library</a>"
+            );
+          } else {
+            isOwner = false;
+          }
+        },
+        error: function (erorr) {
+          console.log(error);
+        },
+      });
+      return isOwner;
+    }
+
+    $.each(courseForm, function (index, object) {
+      var $this = $(this);
+      var isUser = $this.attr("data-user");
+      var submitSpan = $this.find(".submit-span");
+      var courseInput = $this.find("[name='course_id']");
+      var courseId = courseInput.attr("value");
+     
+
+      if (isUser) {
+        var isOwned = getOwnedProduct(courseId, submitSpan);
+      }
+    });
+
+    courseForm.submit(function (event) {
+      event.preventDefault();
+      // console.log("Form is not sending")
+      var thisForm = $(this);
+      // var actionEndpoint = thisForm.attr("action"); // API Endpoint
+      var actionEndpoint = thisForm.attr("data-endpoint");
+      var httpMethod = thisForm.attr("method");
+      var formData = thisForm.serialize();
+
+      $.ajax({
+        url: actionEndpoint,
+        method: httpMethod,
+        data: formData,
+        success: function (data) {
+        //   var submitSpan = thisForm.find(".submit-span");
+        //   if (data.added) {
+        //     submitSpan.html(
+        //       "<div class='btn-group'> <a class='btn btn-link' href='/cart/'>In cart</a> <button type='submit' class='btn btn-link'>Remove?</button></div>"
+        //     );
+        //   } else {
+        //     submitSpan.html(
+        //       "<button type='submit'  class='btn btn-success'>Add to cart</button>"
+        //     );
+        //   }
+          var navbarCount = $(".navbar-cart-count");
+          navbarCount.text(data.cartItemCount);
+          var currentPath = window.location.href;
+
+          if (currentPath.indexOf("cart") != -1) {
+            refreshCart();
+          }
+        },
+        error: function (errorData) {
+          $.alert({
+            title: "Oops!",
+            content: "An error occurred",
+            theme: "modern",
+          });
+        },
+      });
+    });
+
+    function refreshCart() {
+      console.log("in current cart");
+      var cartTable = $(".cart-table");
+      var cartBody = cartTable.find(".cart-body");
+      //cartBody.html("<h1>Changed</h1>")
+      var courseRows = cartBody.find(".cart-course");
+      var currentUrl = window.location.href;
+
+      var refreshCartUrl = "/api/cart/";
+      var refreshCartMethod = "GET";
+      var data = {};
+      $.ajax({
+        url: refreshCartUrl,
+        method: refreshCartMethod,
+        data: data,
+        success: function (data) {
+          var hiddenCartItemRemoveForm = $(".cart-item-remove-form");
+          if (data.courses.length > 0) {
+            courseRows.html(" ");
+            i = data.courses.length;
+            $.each(data.courses, function (index, value) {
+              console.log(value);
+              var newCartItemRemove = hiddenCartItemRemoveForm.clone();
+              newCartItemRemove.css("display", "block");
+              // newCartItemRemove.removeClass("hidden-class")
+              newCartItemRemove.find(".cart-item-course-id").val(value.id);
+              cartBody.prepend(
+                '<tr><th scope="row">' +
+                  i +
+                  "</th><td><a href='" +
+                  value.url +
+                  "'>" +
+                  value.name +
+                  "</a>" +
+                  newCartItemRemove.html() +
+                  "</td><td>" +
+                  value.price +
+                  "</td></tr>"
+              );
+              i--;
+            });
+
+            cartBody.find(".cart-subtotal").text(data.subtotal);
+            cartBody.find(".cart-total").text(data.total);
+          } else {
+            window.location.href = currentUrl;
+          }
+        },
+        error: function (errorData) {
+          $.alert({
+            title: "Oops!",
+            content: "An error occurred",
+            theme: "modern",
+          });
+        },
+      });
+    }
+  });
+</script>
+{% endblock extra_body %}

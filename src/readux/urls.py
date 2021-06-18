@@ -36,6 +36,10 @@ urlpatterns = [
     path('upload/', UploadView.as_view()),
     path('upload/policy/', UploadPolicyView.as_view()),
     path('files/<int:id>/download/', DownloadView.as_view()),
+    path('orders/', include('orders.urls')),
+
+    path('cart/', include('carts.urls')),
+
    
 ]
 
