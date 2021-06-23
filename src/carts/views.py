@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.views.generic.detail import DetailView
+from rest_framework.views import APIView
 
 
 from addresses.models import Address
@@ -10,8 +12,18 @@ from orders.models import Order
 from courses.models import Course
 from .models import Cart
 
+from django.http import Http404, JsonResponse
+from rest_framework import authentication, permissions, serializers, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
+from addresses.models import Address
+from billing.models import BillingProfile
+from orders.models import Order, CourseOrder
+from orders.payments.order import CaptureOrder
+from orders.payments.paypal import PayPalClient
 
-
+from orders.serializers import CreateOrderSerializer
 
 def cart_detail_api_view(request):
     cart_obj, new_obj = Cart.objects.new_or_get(request)
@@ -80,7 +92,7 @@ def checkout_home(request):
         order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
        
         if billing_address_id:
-            order_obj.billing_address = Address.objects.get(id=billing_address_id) 
+            order_obj.address = Address.objects.get(id=billing_address_id) 
             del request.session["billing_address_id"]
         if billing_address_id:
             order_obj.save()
@@ -114,11 +126,69 @@ def checkout_home(request):
 
 
 
+class CheckoutView(DetailView):
+    template_name = 'carts/checkout.html'
+    model = Cart
+
+    def get_object(self):
+        cart_obj, cart_created = Cart.objects.new_or_get(self.request)
+        if cart_created:
+            return
+        return cart_obj
+
+
+
+class CheckoutPayView(APIView):
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, format=None):
+        cart_obj, cart_created = Cart.objects.new_or_get(request)
+        order_obj = None
+        if cart_created or cart_obj.courses.count() == 0:
+            return Response({'detail': 'Error'}, status=status.HTTP_403_FORBIDDEN)
+
+     
+   
+        resp = CaptureOrder().capture_order(order_id= request.data.get('orderID'))
+
+        billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
+       
+        billing_address_id = request.session.get("address_id", None)
+        if billing_profile is not None:
+           
+            order_obj, order_obj_created = Order.objects.new_or_get(billing_profile, cart_obj)
+
+            if billing_address_id:
+                order_obj.address = Address.objects.get(id=billing_address_id) 
+            else: 
+                billingAddress, address_created = Address.objects.get_or_create(
+                    billing_profile = billing_profile,
+                    address_line_1= resp.result.purchase_units[0].shipping.address.address_line_1,
+                    address_line_2= resp.result.purchase_units[0].shipping.address.admin_area_2,
+                    postal_code = resp.result.purchase_units[0].shipping.address.postal_code,
+                    country_code = resp.result.purchase_units[0].shipping.address.country_code
+                )
+
+                order_obj.address = billingAddress
+
+                request.session["address_id"] = billingAddress.id
+
+       
+        order_obj.total = resp.result.purchase_units[0].payments.captures[0].amount.value
+        order_obj.save()
+        serializer = CreateOrderSerializer(instance=order_obj)
+
+        return Response(data= serializer.data, status=status.HTTP_200_OK)
+
+       
 
 
 
 
 def checkout_done_view(request):
+    cart_obj, cart_created = Cart.objects.new_or_get(request)
+    cart_obj.delete()
     return render(request, "carts/checkout-done.html", {})
 
 

@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -42,7 +43,7 @@
         <div class="row">
           <div class="col-xl-8 col-lg-8 col-md-12 col-12">
             <!-- Card -->
-            <div class="card mb-3 mb-lg-0">
+            <div class="card mb-3  mb-lg-0">
               <!-- Card header -->
               <div class="card-header">
                 <h3 class="mb-0">Payment Method</h3>
@@ -50,30 +51,38 @@
               <!-- Card body -->
               <div class="card-body">
                 <div class="d-inline-flex">
-                  <div class="form-check me-3">
-                    <input
-                      type="radio"
-                      id="cardRadioone"
-                      name="cardRadioone"
-                      class="form-check-input"
-                      checked
-                    />
-                    <label class="form-check-label" for="cardRadioone"
-                      >Credit or Debit card</label
-                    >
-                  </div>
-                  <!-- Radio -->
+                   <!-- Radio -->
                   <div class="form-check">
                     <input
                       type="radio"
                       id="cardRadioTwo"
                       name="cardRadioone"
                       class="form-check-input"
+                      checked
                     />
                     <img src="{% static 'images/brand/paypal.svg' %}" />
                   </div>
+                  <div class="form-check me-3">
+                    <input
+                      type="radio"
+                      id="cardRadioone"
+                      name="cardRadioone"
+                      class="form-check-input"
+                      
+                    />
+                    <label class="form-check-label" for="cardRadioone"
+                      >Credit or Debit card</label
+                    >
+                  </div>
+                 
                 </div>
                 <!-- Form -->
+                <!-- Paypal -->
+                <form id="internetpayment">
+                  <div class="mb-3 mt-4 col-lg-4 col-md-4, col-sm-6 col-6">
+                    <div id="paypal-button-container"></div>
+                  </div>
+                </form>
                 <form class="row" id="cardpayment">
                   <!-- Card number -->
                   <div class="mb-3 mt-4 col-12">
@@ -234,66 +243,186 @@
                     >
                   </div>
                 </form>
-                <!-- Paypal -->
-                <form id="internetpayment">
-                  <div class="mb-3 mt-4 col-lg-4 col-md-4, col-sm-6 col-6">
-                    <div id="paypal-button-container"></div>
-                  </div>
-                </form>
+                
+              </div>
+            </div>
+            
+            <div class="card-header mt-5">
+              <h3 class="mb-0 navbar-cart-count" >
+                Order details 
+                
+              </h3>
+            </div>
+            <div class="card mb-4">
+              <div class="table-responsive border-0 overflow-y-hidden">
+                <table class="table mb-0 text-nowrap">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="border-0">Courses</th>
+                      <th scope="col" class="border-0">Students</th>
+                      <th scope="col" class="border-0">Rating</th>
+                      <th scope="col" class="border-0">Price</th>
+                      <th scope="col" class="border-0"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for course in object.courses.all %}
+                    <tr>
+                      <td class="border-top-0">
+                        <div class="d-lg-flex">
+                          <div>
+                            <a href="#">
+                              <img
+                                src="{{ course.files.last.get_download_url }}"
+                                alt=""
+                                class="rounded img-4by3-lg"
+                            /></a>
+                          </div>
+                          <div class="ms-lg-3 mt-2 mt-lg-0">
+                            <h4 class="mb-1 h5">
+                              <a href="#" class="text-inherit">
+                                {{ course.title }}
+                              </a>
+                            </h4>
+                            <ul class="list-inline fs-6 mb-0">
+                              <li class="list-inline-item">
+                                <i class="far fa-clock me-1"></i>1h 30m
+                              </li>
+                              <li class="list-inline-item">
+                                <svg
+                                  class="me-1 mt-n1"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <rect
+                                    x="3"
+                                    y="8"
+                                    width="2"
+                                    height="6"
+                                    rx="1"
+                                    fill="#754FFE"
+                                  ></rect>
+                                  {% if course.level == 'basic' %}
+                                  <rect
+                                    x="7"
+                                    y="5"
+                                    width="2"
+                                    height="9"
+                                    rx="1"
+                                    fill="#DBD8E9"
+                                  ></rect>
+                                  <rect
+                                    x="11"
+                                    y="2"
+                                    width="2"
+                                    height="12"
+                                    rx="1"
+                                    fill="#DBD8E9"
+                                  ></rect>
+    
+                                  {% elif course.level == 'intermediate' %}
+                                  <rect
+                                    x="7"
+                                    y="5"
+                                    width="2"
+                                    height="9"
+                                    rx="1"
+                                    fill="#754FFE"
+                                  ></rect>
+                                  <rect
+                                    x="11"
+                                    y="2"
+                                    width="2"
+                                    height="12"
+                                    rx="1"
+                                    fill="#DBD8E9"
+                                  ></rect>
+    
+                                  {% else %}
+                                  <rect
+                                    x="7"
+                                    y="5"
+                                    width="2"
+                                    height="9"
+                                    rx="1"
+                                    fill="#754FFE"
+                                  ></rect>
+                                  <rect
+                                    x="11"
+                                    y="2"
+                                    width="2"
+                                    height="12"
+                                    rx="1"
+                                    fill="#754FFE"
+                                  ></rect>
+                                  {% endif %}</svg>
+                                  {{ course.get_level_display }}
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="border-top-0">11,200</td>
+                      <td class="border-top-0">
+                        <span class="text-warning"
+                          >4.5<i class="mdi mdi-star"></i></span
+                        >(3,250)
+                      </td>
+    
+                      <td class="border-top-0">
+                        <h6 class="mb-1 display-6 text-danger">
+                          ${{ course.price | floatformat:"0" }}
+                        </h6>
+                      </td>
+    
+                      
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
-         
           <div class="col-lg-4 col-md-12 col-12">
             <!-- Card -->
             <div class="card border-0 mb-3">
-              <!-- Card body -->
-              <div class="card mb-3 mb-4">
-                <div class="p-1">
-                  <div
-                    class="
-                      d-flex
-                      justify-content-center
-                      position-relative
-                      rounded
-                      py-10
-                      border-white border
-                      rounded-3
-                      bg-cover
-                    "
-                    style="background-image: url('{{ object.files.last.get_download_url }}')"
-                  >
-                    <a
-                      class="
-                        popup-youtube
-                        icon-shape
-                        rounded-circle
-                        btn-play
-                        icon-xl
-                        text-decoration-none
-                      "
-                      href="{{ object.video_url }}"
-                    >
-                      <i class="fe fe-play"></i>
-                    </a>
-                  </div>
-                </div>
+              <div class="card-header">
+                <h3 class="mb-0">Summary</h3>
               </div>
-              <div class="p-5 text-center">
-                <span class="badge bg-warning">Selected Course</span>
-                <div class="mb-5 mt-3">
-                  <h1 class="fw-bold">{{ object.title }}</h1>
-                  <p class="mb-0">
-                    {{ object.description | truncatewords:20 }}
-                  </p>
-                </div>
-                <div class="d-flex justify-content-center">
-                  <span class="h3 mb-0 fw-bold text-primary">$</span>
-                  <div class="display-4 fw-bold text-primary">
-                    {{ object.price | floatformat:"0"}}
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-6">
+                    <label class="form-label">Subtotal:</label>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">${{ object.subtotal }}</label>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <label class="form-label">Estimated Tax:</label>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">$0</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="display-6 text-primary">Total</div>
+                  </div>
+                  <div class="col-6">
+                    <div class="display-4 display-6 text-primary">
+                      ${{ object.total | floatformat:"0"}}
+                    </div>
+                  </div>
+                </div>
+
               </div>
               <hr class="m-0" />
             </div>
@@ -331,8 +460,7 @@
     {% include 'base/js.html' %}
 
     <script>
-      var courseId = '{{ object.id }}'
-
+      var courseId = "{{ object.id }}";
 
       function getCookie(name) {
         var cookieValue = null;
@@ -353,26 +481,25 @@
       }
 
       var csrftoken = getCookie("csrftoken");
-      const url = "{% url 'complete_order' %}"
+      const url = "{% url 'cart_checkout_api' %}";
+      const redirectURL =  "{% url 'checkout_done' %}";
       function completeOrder(data) {
-        
         return fetch(url, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-type': 'application/json',
-            'X-CSRFToken': csrftoken
+            "Content-type": "application/json",
+            "X-CSRFToken": csrftoken,
           },
           body: JSON.stringify({
             orderID: data.orderID,
-            courseId: courseId
-          })
-           
-        }).then(res => res.json())
-        .then(details => {
-          console.log('Details: ', details)
-          //alert('Transaction funds captured from ' + details.payer_given_name);
+          }),
         })
-       
+          .then((res) => res.json())
+          .then((details) => {
+            console.log("Details: ", details);
+            window.location.replace(redirectURL)
+            //alert('Transaction funds captured from ' + details.payer_given_name);
+          });
       }
       var FUNDING_SOURCES = [paypal.FUNDING.PAYPAL];
 
@@ -391,14 +518,14 @@
               purchase_units: [
                 {
                   amount: {
-                    value: "{{ object.price  }}",
+                    value: "{{ object.total  }}",
                   },
                 },
               ],
             });
           },
           onApprove: function (data, actions) {
-            return completeOrder(data)
+            return completeOrder(data);
           },
         });
         if (button.isEligible()) {

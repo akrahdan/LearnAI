@@ -32,7 +32,8 @@ class CourseAdmin(admin.ModelAdmin):
         'category',
         'instructor',
         'video_url',
-        'tags'
+        'tags',
+        'lead',
     ]
     class Meta:
         model = Course

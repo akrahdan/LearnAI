@@ -1,0 +1,65 @@
+fieldset,
+label {
+ margin: 0;
+ padding: 0
+ }
+ .rating {
+     border: none;
+     margin-right: 49px
+ }
+
+ .myratings {
+     font-size: 85px;
+     color: green
+ }
+
+ .rating>[id^="star"] {
+     display: none
+ }
+
+ .rating>label:before {
+     
+     font-size: 2.25em;
+     font-family: "Font Awesome 5 Free";
+     display: inline-block;
+     margin: 5px;
+     padding: 0.3rem 0.2rem;
+     content: "\f005"
+ }
+
+ .rating>.half:before {
+     content: "\f089";
+     position: absolute
+ }
+
+ .rating>label {
+     color: rgb(138, 132, 132);
+     float: right
+ }
+
+ .rating>[id^="star"]:checked~label,
+ .rating:not(:checked)>label:hover,
+ .rating:not(:checked)>label:hover~label {
+     color: #FFB503
+ }
+
+ .rating>[id^="star"]:checked+label:hover,
+ .rating>[id^="star"]:checked~label:hover,
+ .rating>label:hover~[id^="star"]:checked~label,
+ .rating>[id^="star"]:checked~label:hover~label {
+     color: #FFED85
+ }
+
+ .reset-option {
+     display: none
+ }
+
+ .reset-button {
+     margin: 6px 12px;
+     background-color: rgb(255, 255, 255);
+     text-transform: uppercase
+ }
+
+ .mt-100 {
+     margin-top: 100px
+ }

@@ -1,4 +1,7 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %}
+{% load i18n %}
+ {% block content %}
 <!-- Page header -->
 <div class="bg-dark py-4 py-lg-6">
   <div class="container">
@@ -22,8 +25,12 @@
       <div class="col-xl-8 col-lg-8 col-md-8 col-12">
         <div class="card-header">
           <h3 class="mb-0 navbar-cart-count" >
-            {{ cart.courses.count }} {% if cart.courses.count == 1 %} Course {%
-            else %} Courses {% endif %} in Cart
+            {% blocktranslate count counter=cart.courses.count %}
+               {{ counter }} Course in Cart.
+                {% plural %}
+              {{ counter }} Courses in Cart.
+            {% endblocktranslate %}
+            
           </h3>
         </div>
         <div class="card mb-4">
@@ -182,7 +189,7 @@
             </div>
             <div class="d-grid">
               <!-- <a href="#" class="btn btn-primary mb-2">Start Free Month</a> -->
-              <a href="" class="btn btn-outline-primary">Checkout</a>
+              <a href="{% url 'cart_checkout' %}" class="btn btn-outline-primary">Checkout</a>
             </div>
           </div>
           <hr class="m-0" />

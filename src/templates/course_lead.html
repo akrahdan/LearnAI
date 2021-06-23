@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load widget_tweaks %}
+{% load i18n %}
+{% load account socialaccount %}
 
 {% block content %}
 
@@ -14,7 +16,7 @@
           <div class="mb-4 mb-xl-0 text-center text-md-start">
             <!-- Caption -->
             <h1 class="display-2 fw-bold mb-3 text-white ls-sm">
-              Become a Vanilla JavaScript Developer
+              {{ lead.title }}
             </h1>
             <p class="mb-4 lead text-white-50">
               In this tutorial, we are going to learn about JavaScript
@@ -22,6 +24,7 @@
               applications.
             </p>
             <!-- List -->
+            {% get_providers as socialaccount_providers %}
             <div class="mb-6 mb-0">
               <ul class="list-unstyled fs-4">
                 <li class="mb-2 text-white-50">
@@ -53,49 +56,11 @@
           <div class="card" style="z-index: 1">
             <!-- Card body -->
             <div class="card-body p-6">
+              {% if socialaccount_providers %}
               <div class="mb-4">
-                <h1 class="mb-4 lh-1 fw-bold h2">Create Free Account</h1>
+                <h1 class="mb-4 lh-1 fw-bold h2">Create  Account</h1>
                 <div class="mt-3 mb-5 d-grid d-md-block">
-                  <!-- btn group -->
-                  <div
-                    class="btn-group mb-2 mb-md-0"
-                    role="group"
-                    aria-label="socialButton"
-                  >
-                    <button
-                      type="button"
-                      class="btn btn-outline-white shadow-sm"
-                    >
-                      <i class="mdi mdi-google me-2 text-danger"></i>Google
-                    </button>
-                  </div>
-                  <!-- btn group -->
-                  <div
-                    class="btn-group mb-2 mb-md-0"
-                    role="group"
-                    aria-label="socialButton"
-                  >
-                    <button
-                      type="button"
-                      class="btn btn-outline-white shadow-sm"
-                    >
-                      <i class="mdi mdi-twitter text-info me-2"></i>Twitter
-                    </button>
-                  </div>
-                  <!-- btn group -->
-                  <div
-                    class="btn-group"
-                    role="group"
-                    aria-label="socialButton"
-                  >
-                    <button
-                      type="button"
-                      class="btn btn-outline-white shadow-sm"
-                    >
-                      <i class="mdi mdi-facebook text-primary me-2"></i
-                      >Facebook
-                    </button>
-                  </div>
+                  {% include "socialaccount/snippets/provider_list.html" with process="login" %}
                 </div>
               </div>
               <div class="mb-4">
@@ -104,38 +69,67 @@
                   <span class="bg-white px-2 fs-6">OR</span>
                 </div>
               </div>
+              {% endif %}
               <!-- Form -->
-              <form>
-                <!-- Username -->
+              <form class="signup" id="signup_form" method="post" action="{% url 'course_signup' %}">{% csrf_token %}
+                    <!-- Username -->
                 <div class="mb-3">
-                  <label for="email" class="form-label sr-only">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    class="form-control"
-                    name="email"
-                    placeholder="Email"
-                    required=""
-                  />
+                  
+                
+                  {{ form.username | attr:"class:form-control" }}
+                  {% if form.username.errors %}
+                  <div class="invalid-feedback invalid-field">
+                    {{ form.username.errors.as_text }}
+                  </div>
+                  {% endif %}
+                  
                 </div>
-                <!-- Password -->
+                <!-- Email -->
                 <div class="mb-3">
-                  <label for="password" class="form-label sr-only"
-                    >Password</label
-                  >
-                  <input
-                    type="password"
-                    id="password"
-                    class="form-control"
-                    name="password"
-                    placeholder="Password"
-                    required=""
-                  />
+                  
+                
+                  {{ form.email | attr:"class:form-control" }}
+
+                  {% if form.email.errors %}
+                  <div class="invalid-feedback invalid-field">
+                    {{ form.email.errors.as_text }}
+                  </div>
+                  {% endif %}
+              
+                </div>
+                <!-- Password1 -->
+                <div class="mb-3">
+                  
+                  
+                  {{ form.password1 | attr:"class:form-control"  }}
+
+                  {% if form.password1.errors %}
+                  <div class="invalid-feedback invalid-field">
+                    {{ form.password1.errors.as_text }}
+                  </div>
+                  {% endif %}
+                </div>
+                <!-- Password2 -->
+                <div class="mb-3">
+                
+                
+                  {{ form.password2 | attr:"class:form-control" }}
+
+                  {% if form.password2.errors %}
+                  <div class="invalid-feedback invalid-field">
+                    {{ form.password2.errors.as_text }}
+                  </div>
+
+                  {% endif %}
+                 
+                  <input type="hidden" name="course_id" value="{{ lead.id }}" />
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'checkout' lead.slug %}" />
+                 
                 </div>
                 <!-- Button -->
                 <div class="d-grid">
                   <button type="submit" class="btn btn-primary">
-                    Start Courses for Free
+                    Join the Class
                   </button>
                 </div>
               </form>

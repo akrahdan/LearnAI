@@ -1,5 +1,7 @@
+
+from django.contrib import messages
 from django.http.response import JsonResponse, Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
@@ -9,6 +11,7 @@ from rest_framework.response import Response
 from django.conf import settings
 import vimeo
 from lectures.models import Lecture
+
 from .serializers import CreateCourseSerializer, ReviewCourseSerializer
 from courses.forms import CreateCourseForm, UpdateCourseForm
 from .models import Course
@@ -107,7 +110,7 @@ class CourseEditView(APIView):
   
 
 class CourseLectureDetailView(DetailView):
-    template_name = 'courses/course-resume.html'
+    template_name = 'courses/course-active.html'
     model = Course
     queryset = Course.objects.all()
     # print(queryset)
@@ -151,6 +154,10 @@ class CourseCheckoutView(LoginRequiredMixin, DetailView):
             raise Http404
         return obj
 
+
+
+
+        
   
 
       

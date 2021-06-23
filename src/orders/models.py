@@ -116,7 +116,7 @@ class OrderManager(models.Manager):
 class Order(models.Model):
     billing_profile     = models.ForeignKey(BillingProfile, null=True, blank=True, on_delete=models.SET_NULL)
     order_id            = models.CharField(max_length=120, blank=True) # AB31DE3
-    cart                = models.ForeignKey(Cart, blank=True, null=True, on_delete=models.CASCADE)
+    cart                = models.ForeignKey(Cart, blank=True, null=True, on_delete=models.SET_NULL)
     address             = models.ForeignKey(Address, related_name='billing_address', blank=True, null=True, on_delete=models.SET_NULL)
     address_final  = models.TextField(blank=True, null=True)
     status              = models.CharField(max_length=120, default=OrderStatusChoices.CREATED, choices=OrderStatusChoices.choices)

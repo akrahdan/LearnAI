@@ -27,6 +27,15 @@ class CourseQuerySet(models.QuerySet):
             state=PublishStateOptions.LIVE,
             publish_timestamp__lte=now
         )
+
+    
+    def lead(self):
+       
+        query = self.filter(
+            lead=True
+        )
+        return query.first()
+
     
     def search(self, query=None):
         if query is None:
@@ -45,6 +54,9 @@ class CourseManager(models.Manager):
     
     def published(self):
         return self.get_queryset().published()
+    
+    def lead_course(self):
+        return self.get_queryset().filter(lead=True)
 
     
     def featured_courses(self):
@@ -61,6 +73,8 @@ class Course(models.Model):
        
 
     title = models.CharField(max_length=220)
+    lead = models.BooleanField(default=False)
+    summary = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
     instructor = models.ForeignKey(Instructor, null=True, blank=True, related_name='courses', on_delete=models.SET_NULL)
@@ -111,7 +125,8 @@ class Course(models.Model):
             return f"/featured/{self.slug}"
         
         return f"/courses/{self.slug}"
-       
+    
+
 
     def get_rating_avg(self):
         return Course.objects.filter(id=self.id).aggregate(Avg("ratings__value"))

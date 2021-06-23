@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    {% include 'base/css.html' %}
+    <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+    <style>.modal-backdrop.show {
+      opacity: 0.8;}</style>
+    <style>
+      .myratings {
+       font-size: 85px;
+        color: green
+       }
+      .rating > input {
+          display: none;
+      }
+
+      .rating {
+          display: inline-block;
+          border: 0;
+      }
+
+      .rating > label {
+          float: right;
+      }
+
+      .rating > label:before {
+          display: inline-block;
+          font-size: 2.5rem;
+          font-family: "Font Awesome 5 Free";
+          content: "\f005";
+          cursor: pointer;
+          margin: 0;
+          padding: 0.3rem 0.2rem;
+
+      }
+
+      .rating .half:before {
+          content: "\f089";
+          position: absolute;
+          padding-right: 0;
+      }
+
+      input:checked ~ label, label:hover ~ label{
+          color: #ffb503
+      }
+
+      input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label,
+      label:hover ~ input:checked ~ label{
+          color: #cc9000
+      }
+
+
+      .reset-option {
+         display: none
+       }
+
+      .reset-button {
+          margin: 6px 12px;
+          background-color: rgb(255, 255, 255);
+          text-transform: uppercase
+      }
+
+      .mt-100 {
+          margin-top: 100px
+      }
+    </style>
+    <!-- Favicon icon-->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon/favicon.ico' %}"
+    />
+    
+    
+    <title>READuced| {{ object.title }}</title>
+  </head>
+
+  <body>
+    <!-- Page content -->
+    <nav class="navbar navbar-expand-lg navbar-default bg-dark">
+      <div class="container-fluid px-0">
+        <a class="navbar-brand" href="/"
+          ><img src='{% static "images/brand/logo/logo_wt.svg" %}' alt=""
+        /></a>
+
+        <div class="horizontal_separator"></div>
+    
+        <div class="collapse navbar-collapse">
+          <h3 class="navbar-nav mb-0 text-white">{{object.title}}</h3>
+        </div>
+        <div>
+          <a class="btn btn-primary" href="#" data-bs-toggle="modal"
+          data-bs-target="#newCatgory">
+          <i class="fa fa-star-half-alt"></i>
+         Leave a rating
+       </a>
+        </div>
+        
+      </div>
+    </nav>
+
+    <div class="mt-2 course-container">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12 col-xl-3 col-lg-3 col-md-12">
+            <div class="card course-sidebar" id="courseAccordion">
+              <!-- List group -->
+              <ul class="list-group list-group-flush course-list">
+                <li class="list-group-item">
+                  <h4 class="mb-0">Course Content</h4>
+                </li>
+                <!-- List group item -->
+             {% for section in object.sections.all %}
+              <li class="list-group-item">
+                <!-- Toggle -->
+                <a
+                class="
+                  d-flex
+                  align-items-center
+                  text-inherit text-decoration-none
+                  h4
+                  mb-0
+                  active
+                "
+                data-bs-toggle="collapse"
+                href="#course-{{ section.id }}"
+                role="button"
+                aria-expanded="true"
+                aria-controls="course-{{ section.id }}"
+                >
+                <div class="me-auto">{{section.title }}</div>
+                <!-- Chevron -->
+                <span class="chevron-arrow ms-4">
+                  <i class="fe fe-chevron-down fs-4"></i>
+                </span>
+                </a>
+                <!-- Row -->
+                <!-- Collapse -->
+                <div
+                class="collapse {% if forloop.first %} show {% endif %}"
+                id="course-{{ section.id }}"
+                data-bs-parent="#courseAccordion"
+                >
+                <div
+                  class="py-4 nav"
+                  id="course-tab-{{ section.id }}"
+                  role="tablist"
+                  aria-orientation="vertical"
+                  style="display: inherit"
+                >
+                  {% for lecture in section.lectures.all %}
+                    <a
+                    class="
+                      mb-2
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                      text-decoration-none
+                    "
+                    id="{{lecture.slug}}-tab"
+                
+                    href="{% url 'current_lecture' object.slug lecture.id %}"
+                    
+                    aria-controls="{{lecture.slug}}"
+                    aria-selected="true"
+                    >
+                    <div class="text-truncate">
+                      <span
+                      class="
+                        icon-shape
+                        bg-light
+                        text-primary
+                        icon-sm
+                        rounded-circle
+                        me-2
+                      "
+                      ><i class="fe fe-play fs-6"></i
+                      ></span>
+                      <span>{{ lecture.title }}</span>
+                    </div>
+                    <div class="text-truncate">
+                      <span>{{ lecture.get_duration }}</span>
+                    </div>
+                    </a>
+                  {% endfor %}
+              
+                </div>
+                </div>
+              </li>
+             {% endfor %}
+           
+              </ul>
+            </div>
+          </div>
+          <div class="card col-12 col-xl-9 col-lg-9 col-md-12">
+            <div
+            class="embed-container">
+           
+            {{ current_lecture.get_vimeo_url.html | safe }}
+          </div>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Card -->
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="newCatgory"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="newCatgoryLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title mb-0" id="newCatgoryLabel">
+              Rate this course
+            </h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true"><i class="fe fe-x-circle"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="{% url 'submit_review' object.id %}">
+              {% csrf_token %}
+              <div class="card">
+                <div class="card-body text-center"> <span class="myratings">4.5</span>
+
+                    
+                    <div id='display' class="display 5">Awesome</div>
+                    <div class="rating  d-flex flex-row-reverse justify-content-center"> 
+                      
+                      <input type="radio" id="star5" name="rating" value="5" />
+                      <label class="full" for="star5" title="Amazing/Awesome"></label>
+                      <input type="radio" id="star4half" name="rating" value="4.5" />
+                      <label class="half" for="star4half" title="Good"></label>
+                      <input type="radio" id="star4" name="rating" value="4" />
+                      <label class="full" for="star4" title="Above Average"></label> 
+                      <input type="radio" id="star3half" name="rating" value="3.5" />
+                      <label class="half" for="star3half" title="Average"></label> 
+                      <input type="radio" id="star3" name="rating" value="3" />
+                      <label class="full" for="star3" title="Below Average"></label> 
+                      <input type="radio" id="star2half" name="rating" value="2.5" />
+                      <label class="half" for="star2half" title="Bad"></label>
+                      <input type="radio" id="star2" name="rating" value="2" />
+                      <label class="full" for="star2" title="Poor"></label> 
+                      <input type="radio" id="star1half" name="rating" value="1.5" />
+                      <label class="half" for="star1half" title="Very Poor"></label> 
+                      <input type="radio" id="star1" name="rating" value="1" />
+                      <label class="full" for="star1" title="Awful"></label>
+                      <input type="radio" id="starhalf" name="rating" value="0.5" />
+                      <label class="half" for="starhalf" title="Sucks"></label> 
+                      <input type="radio" class="reset-option" name="rating" value="reset" /> 
+                    </div>
+                </div>
+            </div>
+              <div class="mb-3 mb-3">
+                
+                <textarea class="form-control" name="review" placeholder="Tell us about your experience through the project. Is the project a great fit for your needs?"></textarea>
+              </div>
+              
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  Submit Rating
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-white"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    {% include 'base/js.html' %}
+
+    <script>
+      $(document).ready(function() {
+        var options = {
+          responsive: true,
+          width: 1000,
+          height: 600,
+          loop: true
+        }
+        var iframe = document.querySelector('iframe');
+        console.log(iframe)
+        var iframePlayer = new Vimeo.Player(iframe, options);
+        // console.log(iframePlayer)
+        $("input[type='radio']").click(function(){
+        var sim = $("input[type='radio']:checked").val();
+         
+         var $label = $("label[for='"+this.id+"']").attr('title')
+         console.log("Label: ", $label)
+         
+         $('.display').text($label)
+
+         if (sim<3){ 
+           $('.myratings').css('color','red'); $(".myratings").text(sim); 
+          }
+         else{ 
+           $('.myratings').css('color','green'); 
+           $(".myratings").text(sim); } }); 
+
+
+      })
+    </script>
+  </body>
+</html>

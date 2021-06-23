@@ -2,6 +2,7 @@ from django.urls import path
 from .views import CreateCourseView, CourseDetailView, CourseEditView, CourseSubmitReview, CourseLectureDetailView
 from files.views import UploadCoursePolicy, DownloadCourseView
 from lectures.views import CreateSectionView, CreateLectureView, upload_video, CreateVideoView
+from reviews.views import submit_review
 urlpatterns = [
     path('create/', CreateCourseView.as_view(), name='course-create'),
     path('<slug:slug>/', CourseDetailView.as_view() ),
@@ -13,5 +14,6 @@ urlpatterns = [
     path('section/create/', CreateSectionView.as_view()),
     path('lecture/create/', CreateLectureView.as_view()),
     path('lecture/video_upload/', CreateVideoView.as_view()),
+    path('<int:id>/rate', submit_review, name='submit_review')
 
 ]

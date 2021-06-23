@@ -24,8 +24,13 @@ SECRET_KEY = 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '659e1bdcb7d2.ngrok.io',
+    'localhost',
+    '127.0.0.1',
+]
 
 # EMAIL_HOST = 'smtp.mandrillapp.com'
 # EMAIL_HOST_USER = 'Readuced AI'
@@ -36,12 +41,12 @@ ALLOWED_HOSTS = []
 
 # GMAIL
 
-EMAIL_HOST = 'www.readuced.com'
-EMAIL_HOST_USER = 'support@readuced.com'
-EMAIL_MAIN = 'support@readuced.com'
-EMAIL_HOST_PASSWORD = 'Some67new$2wsx!QAZ'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'readingfo@gmail.com'
+EMAIL_MAIN = 'akrahsam@gmail.com'
+EMAIL_HOST_PASSWORD = '2wsx!QAZ'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = True
 
 # Application definition
 
@@ -57,6 +62,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
     'storages',
     'rest_framework',
 
@@ -79,12 +86,48 @@ INSTALLED_APPS = [
     'instructors',
     'accounts',
     'blogs',
+    'reviews',
     'orders',
     'files',
 
 ]
 
 SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'en_US',
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v7.0',
+    }
+}
 
 WISTIA_API_KEY = "0e689ffc12f3301907b32a286a4b61e473a8eb7edb2b464250a32ab38c3b963b"
 WISTIA_PUB_TOKEN ="32rhsq7ev3"
@@ -124,6 +167,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -168,6 +212,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
