@@ -1,0 +1,133 @@
+<div
+  aria-labelledby="myModalLabel"
+  class="modal fade"
+  data-first-name-missing="false"
+  data-user-course-id=""
+  data-user-id="7227613"
+  id="complete-your-profile"
+  role="dialog"
+  tabindex="-1"
+  style="display: block; padding-left: 0px"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content cf-invert">
+      <div class="modal-header">
+        <button
+          aria-label="Close"
+          class="close"
+          data-dismiss="modal"
+          id="cyp-dismiss"
+          type="button"
+        >
+          <span aria-hidden="true"> ×</span>
+        </button>
+        <div class="cf-text--center">
+          <h4 class="cf-text-h4 cf-mb-2">Please complete your profile.</h4>
+          <p>Introduce yourself to your fellow students.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <form
+          class="new_user_info"
+          id="new_user_info"
+          action="/user_info"
+          accept-charset="UTF-8"
+          data-remote="true"
+          method="post"
+          novalidate="novalidate"
+        >
+          <input
+            id="user_info_user_course_id"
+            name="user_info[user_course_id]"
+            type="hidden"
+            value=""
+          /><input
+            id="user_info_user_id"
+            name="user_info[user_id]"
+            type="hidden"
+            value="7227613"
+          /><input
+            id="user_info_profile_id"
+            name="user_info[profile_id]"
+            type="hidden"
+            value="7250212"
+          />
+          <div class="pre-comment__col-user-container">
+            <div class="pre-comment__col-user-avatar-container">
+              <div class="pre-comment__col-user-avatar-edit-holder">
+                <img
+                  class="pre-comment__user-avatar profile-photo"
+                  src="/assets/default-avatar@2x-0100c6c0afbe335f1caadcee06d53a4e60cb122babe176a0b30770af08e93d21.png"
+                />
+                <div
+                  class="c-button c-button--tertiary upload-photo"
+                  data-module="FilePickerUpload"
+                  data-photo-url=""
+                  data-profile-id="7250212"
+                  data-store-options='{"path": "/user-uploads/profiles/7250212/"}'
+                  data-user-id="7227613"
+                  id="cyp-picker-trigger"
+                >
+                  Upload Photo
+                </div>
+                <a
+                  class="
+                    c-button c-button--primary c-button--facebook
+                    btn-facebook
+                  "
+                  href="/auth/facebook?link_facebook=true&amp;redirect=profile"
+                  id="facebook-connect"
+                  >Import from Facebook</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="fields-container">
+            <ul>
+              <li>
+                <p>Name:</p>
+                <div class="cyp-name first">
+                  <input
+                    value="Samuel"
+                    placeholder="First Name"
+                    class="name first"
+                    type="text"
+                    name="user_info[first_name]"
+                    id="user_info_first_name"
+                  />
+                </div>
+                <div class="cyp-name">
+                  <input
+                    value="Akrah"
+                    placeholder="Last Name"
+                    class="name"
+                    type="text"
+                    name="user_info[last_name]"
+                    id="user_info_last_name"
+                  />
+                </div>
+              </li>
+              <li>
+                <p>Location:</p>
+                <input
+                  value="Duluth"
+                  placeholder="Your Location"
+                  type="text"
+                  name="user_info[location]"
+                  id="user_info_location"
+                />
+              </li>
+            </ul>
+            <button
+              class="cf-mt-3 c-button c-button--primary c-button--full-width"
+              id="cyp-submit"
+              type="submit"
+            >
+              Continue
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

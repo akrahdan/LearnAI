@@ -1,0 +1,179 @@
+{% extends 'students/base.html' %} 
+{% load static %} 
+{% load widget_tweaks %}
+
+{% block css %}
+<link rel="stylesheet" href='{% static "css/home.css" %}'>
+<link rel="stylesheet" href='{% static "css/students.css" %}'>
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<link rel="stylesheet" href='{% static "css/card.css" %}'>
+<link rel="stylesheet" href='{% static "css/settings.css" %}'>
+
+
+{% endblock css %}
+  
+{% block header %}
+  {% include 'header/home.html' %}
+{% endblock header %}
+
+{% block content %}
+<div class="col-lg-9 col-md-8 col-12">
+  {% include 'accounts/profile.html' %}
+</div>
+
+{% endblock content %} {% block javascript %}
+<script>
+  $(document).ready(function () {
+    $("#img-uploaded").click(function () {
+      $("#avatar-files").trigger("click");
+    });
+  });
+  // $('#avatar-files').on('change', inputChanged)
+  $("#avatar-files").change(function () {
+    inputChanged(this);
+  });
+
+  $("#upload-btn").click(() => {
+    if (selectedFile) {
+      getPolicy(selectedFile);
+    }
+  });
+
+  var baseURL = "http://127.0.0.1:8000";
+  var policyURL = baseURL + "/upload/policy/";
+  var crsfToken = document.querySelector(
+    "#uploadDiv input[name=csrfmiddlewaretoken]"
+  ).value;
+  var fileInput = document.getElementById("files");
+  var selectedFile;
+  fileInput.addEventListener("change", fileInputChanged);
+
+  function validateFileType(fileItem) {
+    var fileType = fileItem.type; // image/png image/jpeg
+    var rootType = fileType.split("/")[0];
+    switch (rootType) {
+      case "image": // rootType === "image"
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function inputChanged(event) {
+    var fileList = event.files;
+    console.log(fileList);
+    var isValid = validateFileType(fileList[0]);
+    if (isValid) {
+      if (fileList && fileList.length && fileList[0]) {
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          $("#img-uploaded").attr("src", ev.target.result);
+        };
+        reader.readAsDataURL(fileList[0]);
+      }
+      this.selectedFile = fileList[0];
+    }
+  }
+
+  function getPolicy(fileItem) {
+    var data = {
+      name: fileItem.name,
+      raw_filename: fileItem.name,
+      filetype: fileItem.type,
+    };
+    var jsonData = JSON.stringify(data);
+    fetch(policyURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFTOKEN": crsfToken,
+      },
+      body: jsonData,
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        usePolicyAndUpload(fileItem, data)
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  }
+
+  function constructFormData(policy) {
+    var fd = new FormData(); // multipart form
+    var policyFields = policy.fields;
+    var objectEntries = Object.entries(policyFields);
+    for (const [key, value] of objectEntries) {
+      fd.append(key, value);
+    }
+    return fd;
+  }
+
+  
+  function usePolicyAndUpload(fileItem, policyData){
+    var fd = constructFormData(policyData)
+    fd.append('file', fileItem)
+    var awsEndpoint = policyData.url
+    var objectId = policyData.object_id
+    var awsUploadKey = policyData.fields.key
+
+    var xhr = new XMLHttpRequest()
+    fileItem.xhr = xhr
+    // fileItem.xhr.abort()
+    
+
+    xhr.open('POST', awsEndpoint, true)
+
+    xhr.upload.onloadstart = function (event) {
+        console.log("Uploading started.")
+    }
+    xhr.upload.onprogress = function (event) {
+        var loaded = event.loaded
+        var total = event.total
+        var progress = Math.floor(loaded / total * 100)
+        console.log("progress", Math.floor(loaded / total * 100))
+
+        // var listElementId = fileItem.uploadListElID
+        // var liItem = document.getElementById(listElementId)
+        // liItem.innerText = fileItem.name + " " + fileItem.size + " " + progress + "%"
+        // liItem.setAttribute('class', 'w-' + progress)
+    }
+
+    xhr.upload.onload = function() {
+        console.log(xhr.status, xhr.responseText, awsUploadKey)
+        // let django know that it's done.
+        // put request, key
+        var djHR = new XMLHttpRequest()
+        var method = 'PUT'
+        var djUpdateData = {key: awsUploadKey}
+        var djJsonUpdateData = JSON.stringify(djUpdateData)
+        djHR.open(method, policyURL, true)
+        djHR.setRequestHeader('Content-Type', 'application/json')
+        djHR.setRequestHeader('X-CSRFTOKEN', crsfToken)
+        djHR.onload = function() {
+            if (djHR.status === 200) {
+                // do something
+                var listElementId = fileItem.uploadListElID
+                // var liItem = document.getElementById(listElementId)
+                // liItem.innerText = fileItem.name + " " + fileItem.size + " done. 100%"
+                // liItem.setAttribute('class', 'w-done')
+            } else {
+                alert("Django update failed")
+            }
+        }
+        
+        djHR.send(djJsonUpdateData)
+
+    }
+
+    xhr.upload.addEventListener("error", function(event){
+        alert("An error occurred on upload.")
+    })
+    // xhr.abort()
+    xhr.upload.onabort = function (event) {
+        console.log("File aborted")
+    }
+    xhr.send(fd)
+}
+</script>
+{% endblock javascript %}

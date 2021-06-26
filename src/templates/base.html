@@ -19,7 +19,13 @@
 
     <!-- Libs CSS -->
      {% include 'base/css.html' %} 
+      
+      {% block css %}
+        
+      {% endblock css %}
 
+      
+        
      <title>{% block head_title %}{% endblock %}</title>
      {% block extra_head %}
      {% endblock %}
@@ -27,8 +33,13 @@
 
   <body>
     {% block body %}
+    
+    {% block header %}
+     {% include 'base/navbar.html' %}
+    {% endblock header %}
+      
     <!-- Navbar -->
-    {% include 'base/navbar.html' %}
+   
     {% if messages %}
     <div class="row">
       <div class="col-xl-12 col-lg-12 col-md-12">
@@ -65,13 +76,14 @@
       <div class="container">
         <div class="row align-items-center g-0 border-top py-2">
           <!-- Desc -->
-          <div class="col-md-6 col-12 text-center text-md-start">
+          <div class="col-md-6 col-12 text-center text-white-50 text-md-start">
             <span>© 2021 READuced. All Rights Reserved.</span>
           </div>
           <!-- Links -->
           <div class="col-12 col-md-6">
             <nav
               class="
+               text-white-50 
                 nav nav-footer
                 justify-content-center justify-content-md-end
               "
@@ -85,7 +97,159 @@
         </div>
       </div>
     </div>
+    {% include 'account/auth_login_modal.html' %}
+    {% include 'account/auth_modal.html' %}
+    {% include 'account/password_reset_modal.html' %}
+    {% include 'base/cf-dropdown.html' %}
+
     {% include 'base/js.html' %}
+
+    <script>
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          var cookies = document.cookie.split(";");
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      var csrftoken = getCookie("csrftoken");
+
+      function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
+      }
+      $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        },
+      });
+
+      $(document).ready(function() {
+        $('#login_btn').click((event => {
+          $('#loginModal').toggle()
+        })
+        )
+
+        $('#login-close').click((event => {
+          $('#loginModal').toggle()
+        })
+        )
+
+        $('#signup_btn').click((event => {
+          $('#signupModal').toggle()
+        })
+        )
+
+        $('#signup-close').click((event => {
+          $('#signupModal').toggle()
+        }))
+
+        $('#signup_modal').click((event => {
+          $('#signupModal').toggle()
+          $('#loginModal').toggle()
+        }))
+
+        $('#signin_modal').click((event => {
+          $('#loginModal').toggle()
+          $('#signupModal').toggle()
+        }))
+
+        $('#reset-password').click((event => {
+          $('#loginModal').toggle()
+          $('#resetModal').toggle()
+        }))
+
+        $('#reset-login').click((event => {
+          $('#loginModal').toggle()
+          $('#resetModal').toggle()
+        }))
+
+        $('#reset-close').click((event => {
+          $('#resetModal').toggle()
+        }))
+
+        $('#nav_more_menu').click((event => {
+          $('#cf-dropdown').toggle()
+        }))
+
+        $(window).resize(() => {
+          console.log($(window).width())
+        })
+
+        
+
+
+
+        var $loginForm = $('#login-form')
+        var $loginURL = $loginForm.attr('data-url')
+
+        $loginForm.submit(event => {
+          event.preventDefault()
+          var login = $('input[name="login"]').val()
+          var data = $loginForm.serialize()
+          $.ajax({
+            method: 'POST',
+            url: $loginURL,
+            data: data,
+            success: handleFormSuccess,
+            error: handleFormError
+          })
+        })
+
+        $loginForm.validate({
+          rules: {
+            validationField: {
+              
+              required: true,
+              }
+            },
+   
+         errorClass: 'cf-form-element--error'
+    
+        })
+
+        function handleFormSuccess(data, textStatus, jqXHR) {
+            console.log(data);
+          
+            
+          }
+
+          function handleFormError(jqXHR, textStatus, errorThrown) {
+            if(textStatus == 'error') {
+              var errors = jqXHR.responseJSON.form.errors;
+             $.each(errors, (index, err) => {
+               $("#login-error").append(errorFunction(err))
+             })
+            }
+            
+            console.log(textStatus);
+            console.log(errorThrown);
+            
+          }
+
+          const errClass = 'cf-form-element--error'
+
+          function errorFunction(err) {
+            var errorHtml = `<p class="cf-text--error cf-text--center cf-mb-4">${err}</p>`
+            return errorHtml
+            
+          }
+      })
+    </script>
+
     {% endblock %}
     
     {% block extra_body %}

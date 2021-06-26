@@ -199,6 +199,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'files.context_processors.avatar_processor',
+                'accounts.context_processors.login_ctx.login_form_ctx',
             ],
         },
     },

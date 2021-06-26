@@ -1,0 +1,325 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% load widget_tweaks %}
+
+{% block css %}
+<link rel="stylesheet" href='{% static "css/home.css" %}'>
+<link rel="stylesheet" href='{% static "css/students.css" %}'>
+<link rel="stylesheet" href='{% static "css/main.css" %}'>
+<link rel="stylesheet" href='{% static "css/card.css" %}'>
+
+
+{% endblock css %}
+  
+{% block header %}
+  {% include 'header/home.html' %}
+{% endblock header %}
+
+
+{% block content %}
+<div class="cf-page__content">
+    <div class="visual visual-block">
+      <div class="user-info">
+        <div class="navigation-links-module">
+          <a
+            class="navigation-links-module__link-white left"
+            href="javascript:history.back()"
+            ><span
+              class="icon-svg3 navigation-links-module__icon-arrow-left"
+            ></span
+            >back</a
+          ><a
+            class="navigation-links-module__link-white right edit-profile"
+            alt="Edit your profile content"
+            href="#"
+            ><i class="iconn-pencil navigation-links-module__icon-pencil-left"></i
+            >edit profile</a
+          >
+        </div>
+        <div class="container">
+          <div class="photo">
+            <img
+              alt="Your MasterClass student profile photo"
+              width="150"
+              height="150"
+              class="profile-photo"
+              src="{% static 'images/avatar/profile-avatar.png' %}"
+            />
+          </div>
+          <div class="about">
+            <div class="headline-info profiles__headline-info">
+              <h1
+                class="display_name"
+                data-account-value=" "
+                data-default-value="A fellow student"
+                data-field-name="display_name"
+                data-profile-value="Samuel Akrah"
+              >
+                Samuel Akrah
+              </h1>
+              <p class="profiles__student-info">
+                <span
+                  class="student-info"
+                  data-default-value="A lifelong learner"
+                  data-field-name="tagline"
+                  data-profile-value="A lifelong learner"
+                  >A lifelong learner • Duluth</span
+                ><span
+                  class="city"
+                  data-field-name="city"
+                  data-profile-value=""
+                ></span
+                ><span
+                  class="country"
+                  data-field-name="country"
+                  data-profile-value=""
+                ></span>
+              </p>
+            </div>
+            <div class="headline-form" style="display: none">
+              <form
+                class="edit-form"
+                id="edit_profile_7250212"
+                action="/students/7227613"
+                accept-charset="UTF-8"
+                data-remote="true"
+                method="post"
+              >
+                <input type="hidden" name="_method" value="patch" />
+                <div class="form-row">
+                  <div class="col-full">
+                    <div class="form-group">
+                      <input
+                        class="form-control default"
+                        placeholder="Your Name"
+                        maxlength="50"
+                        size="50"
+                        type="text"
+                        name="profile[display_name]"
+                        id="profile_display_name"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-full">
+                    <div class="form-group">
+                      <input
+                        class="form-control default"
+                        value="A lifelong learner"
+                        data-original-value="A lifelong learner"
+                        placeholder="e.g. Runner &amp; Aspiring Author"
+                        maxlength="30"
+                        size="30"
+                        type="text"
+                        name="profile[tagline]"
+                        id="profile_tagline"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-half">
+                    <div class="form-group">
+                      <input
+                        class="form-control default"
+                        placeholder="City"
+                        maxlength="18"
+                        size="18"
+                        type="text"
+                        name="profile[city]"
+                        id="profile_city"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-half">
+                    <div class="form-group">
+                      <input
+                        class="form-control default"
+                        placeholder="Country"
+                        maxlength="18"
+                        size="18"
+                        type="text"
+                        name="profile[country]"
+                        id="profile_country"
+                      /><!--<span class="char-counter">15</span-->
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row submit-holder">
+                  <div class="col-half">
+                    <input class="button reset" type="reset" value="cancel" />
+                  </div>
+                  <div class="col-half">
+                    <input
+                      class="button submit headline-submit"
+                      type="submit"
+                      value="update"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!--end about-->
+          <ul class="user-stat">
+            <li>
+              <span
+                ><span
+                  alt="View your progress in classes and lessons on MasterClass"
+                  class="icon"
+                  ><i class="iconn-class"></i></span
+                ><strong class="number">0</strong>classes</span
+              >
+            </li>
+          </ul>
+        </div>
+        <!--end container-->
+      </div>
+      <!--end user-info-->
+    </div>
+    <section>
+      <div class="container">
+        <h2 class="cf-text-h2 cf-text--uppercase">My classes</h2>
+      </div>
+    </section>
+    <div
+      aria-labelledby="myModalLabel"
+      class="modal fade"
+      data-first-name-missing="false"
+      data-user-course-id=""
+      data-user-id="7227613"
+      id="complete-your-profile"
+      role="dialog"
+      tabindex="-1"
+      style="display: none"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content cf-invert">
+          <div class="modal-header">
+            <button
+              aria-label="Close"
+              class="close"
+              data-dismiss="modal"
+              id="cyp-dismiss"
+              type="button"
+            >
+              <span aria-hidden="true"> ×</span>
+            </button>
+            <div class="cf-text--center">
+              <h4 class="cf-text-h4 cf-mb-2">Please complete your profile.</h4>
+              <p>Introduce yourself to your fellow students.</p>
+            </div>
+          </div>
+          <div class="modal-body">
+            <form
+              class="new_user_info"
+              id="new_user_info"
+              action="/user_info"
+              accept-charset="UTF-8"
+              data-remote="true"
+              method="post"
+              novalidate="novalidate"
+            >
+              <input
+                id="user_info_user_course_id"
+                name="user_info[user_course_id]"
+                type="hidden"
+                value=""
+              /><input
+                id="user_info_user_id"
+                name="user_info[user_id]"
+                type="hidden"
+                value="7227613"
+              /><input
+                id="user_info_profile_id"
+                name="user_info[profile_id]"
+                type="hidden"
+                value="7250212"
+              />
+              <div class="pre-comment__col-user-container">
+                <div class="pre-comment__col-user-avatar-container">
+                  <div class="pre-comment__col-user-avatar-edit-holder">
+                    <img
+                      class="pre-comment__user-avatar profile-photo"
+                      src="/assets/default-avatar@2x-0100c6c0afbe335f1caadcee06d53a4e60cb122babe176a0b30770af08e93d21.png"
+                    />
+                    <div
+                      class="c-button c-button--tertiary upload-photo"
+                      data-module="FilePickerUpload"
+                      data-photo-url=""
+                      data-profile-id="7250212"
+                      data-store-options='{"path": "/user-uploads/profiles/7250212/"}'
+                      data-user-id="7227613"
+                      id="cyp-picker-trigger"
+                    >
+                      Upload Photo
+                    </div>
+                    <a
+                      class="
+                        c-button c-button--primary c-button--facebook
+                        btn-facebook
+                      "
+                      href="/auth/facebook?link_facebook=true&amp;redirect=profile"
+                      id="facebook-connect"
+                      >Import from Facebook</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="fields-container">
+                <ul>
+                  <li>
+                    <p>Name:</p>
+                    <div class="cyp-name first">
+                      <input
+                        value="Samuel"
+                        placeholder="First Name"
+                        class="name first"
+                        type="text"
+                        name="user_info[first_name]"
+                        id="user_info_first_name"
+                      />
+                    </div>
+                    <div class="cyp-name">
+                      <input
+                        value="Akrah"
+                        placeholder="Last Name"
+                        class="name"
+                        type="text"
+                        name="user_info[last_name]"
+                        id="user_info_last_name"
+                      />
+                    </div>
+                  </li>
+                  <li>
+                    <p>Location:</p>
+                    <input
+                      value="Duluth"
+                      placeholder="Your Location"
+                      type="text"
+                      name="user_info[location]"
+                      id="user_info_location"
+                    />
+                  </li>
+                </ul>
+                <button
+                  class="cf-mt-3 c-button c-button--primary c-button--full-width"
+                  id="cyp-submit"
+                  type="submit"
+                >
+                  Continue
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section data-p2h="skip" id="content">
+      <div class="container"><section class="class-section"></section></div>
+    </section>
+  </div>
+{% endblock content %}
+    
+

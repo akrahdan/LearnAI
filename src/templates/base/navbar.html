@@ -2,10 +2,10 @@
 
 {% load widget_tweaks %}
 {% load i18n %}
-<nav class="navbar navbar-expand-lg navbar-default">
+<nav class="navbar navbar-expand-lg navbar-default bg-dark">
     <div class="container-fluid px-0">
       <a class="navbar-brand" href="/"
-        ><img src='{% static "images/brand/logo/logo_sm.svg" %}' alt=""
+        ><img src='{% static "images/brand/logo/logo-sm-white.svg" %}' alt=""
       /></a>
       <!-- Mobile view nav wrap -->
       <ul
@@ -373,16 +373,6 @@
       <!-- Collapse -->
       <div class="collapse navbar-collapse" id="navbar-default">
        
-        <form class="mt-3 mt-lg-0 ms-lg-3 d-flex align-items-center home-search">
-          <span class="position-absolute ps-3 search-icon">
-            <i class="fe fe-search"></i>
-          </span>
-          <input
-            type="search"
-            class="form-control ps-6"
-            placeholder="Search Courses"
-          />
-        </form>
         {% if user.is_authenticated %}
         <ul class="navbar-nav navbar-right-wrap ms-auto d-none d-lg-block">
           <li class="d-inline-block">

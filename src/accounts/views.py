@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, DetailView, View, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from allauth.account.views import PasswordChangeView
+from allauth.account.views import PasswordChangeView, LoginView
 
 from accounts.models import Profile
 from .forms import ProfileDetailChangeForm
@@ -36,8 +36,34 @@ def editProfile(request):
 class ProfileEditView(UpdateView):
     form_class = ProfileDetailChangeForm
     model = Profile
-    template_name = 'accounts/profile-edit.html'
+    template_name = 'accounts/profile.html'
     success_url = reverse_lazy('account_profile')
+
+    def get_object(self):
+        qs = Profile.objects.filter(user=self.request.user)
+        return qs.first()
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ProfileEditView, self).get_context_data(*args, **kwargs)
+        user = self.request.user
+        qs = S3File.objects.filter(user=user)
+        if qs.exists():
+            avatar = qs.last().get_download_url()
+            context['avatar'] = avatar
+        
+        
+        return context
+    
+
+class SettingsEditView(UpdateView):
+    form_class = ProfileDetailChangeForm
+    model = Profile
+    template_name = 'accounts/profile-edit.html'
+    success_url = reverse_lazy('account_settings')
 
     def get_object(self):
         qs = Profile.objects.filter(user=self.request.user)
@@ -70,3 +96,6 @@ def privacy(request):
 
 def socialProfile(request):
     return render(request, 'accounts/social-profile.html')
+
+
+    
