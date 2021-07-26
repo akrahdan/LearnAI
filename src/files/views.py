@@ -11,10 +11,11 @@ from rest_framework import authentication, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from courses.models import Course
+from projects.models import Project
 
 from readux.aws.utils import AWS
-from .models import CourseFile, S3File
-from .serializers import FileSerializer, S3FileSerializer
+from .models import CourseFile, ProjectFile, S3File
+from .serializers import FileSerializer, ProjectFileSerializer, S3FileSerializer
 
 User = get_user_model()
 
@@ -127,5 +128,63 @@ class DownloadCourseView(View):
         file_obj = get_object_or_404(CourseFile, id=id)
         url  = file_obj.get_download_url()
         return HttpResponseRedirect(url)
+
+
+
+class UploadProjectPolicy(APIView): # RESTful API Endpoint
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Project.objects.get(pk=pk)
+        except Project.DoesNotExist:
+            raise Http404
+    
+    def put(self, request, *args, **kwargs):
+        #print(request.body)
+        data = request.data
+        try:
+            key             = data.get('key')
+        except:
+            return Response({'detail': "Invalid data"}, status=400)
+        qs = ProjectFile.objects.filter(key=key).update(uploaded=True)
+        return Response({"detail": "Success!"}, status=200)
+
+
+    def post(self, request, *args, **kwargs):
+        """
+        Requires Security
+        """
+        print(request.data)
+        project = self.get_object(pk = self.kwargs.get('id'))
+        data            = request.data
+        serializer      = ProjectFileSerializer(data=data) # ModelForm
+        if serializer.is_valid(raise_exception=True):
+            validated_data  = serializer.validated_data
+            raw_filename    = validated_data.pop("raw_filename")
+            
+            obj     = serializer.save(
+                    project=project,
+                    key='/'
+                )
+            key     = f'media/projects/{project.id}/files/{obj.id}/{raw_filename}'
+            obj.key = key
+            obj.save()
+            botocfe = AWS()
+            presigned_data = botocfe.presign_post_url(key=key)
+            presigned_data['object_id'] = obj.id
+            return Response(presigned_data)
+        return Response({"detail": "Invalid request"}, status=401)
+
+
+class DownloadProjectView(View):
+    def get(self, request, id, *args, **kwargs):
+        file_obj = get_object_or_404(ProjectFile, id=id)
+        url  = file_obj.get_download_url()
+        return HttpResponseRedirect(url)
+
+
+
 
 

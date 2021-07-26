@@ -15,7 +15,7 @@ from .models import Lecture, Section
 from .serializers import LectureSerializer, SectionSerializer, VideoSerializer
 
 class CreateSectionView(APIView):
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
@@ -36,7 +36,8 @@ class CreateSectionView(APIView):
 
 
 class CreateLectureView(APIView):
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.SessionAuthentication, 
+    authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):

@@ -14,8 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
+from allauth.account.views import confirm_email
 from django.conf.urls.static import static
 from .views import home_page, CourseLeadView, pricing
 from files.views import DownloadView, UploadPolicyView, UploadView, UploadCoursePolicy, DownloadCourseView
@@ -37,6 +38,13 @@ urlpatterns = [
     path('upload/policy/', UploadPolicyView.as_view()),
     path('files/<int:id>/download/', DownloadView.as_view()),
     path('orders/', include('orders.urls')),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('auth/', include('auths.urls')),
+    path('api/projects/', include('projects.urls')),
+    path('api/categories/', include('categories.urls')),
+    re_path(r"^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_',:&]+)/$", confirm_email,
+        name="account_confirm_email"),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
 
     path('cart/', include('carts.urls')),
 

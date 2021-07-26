@@ -31,6 +31,9 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
 ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
 
 # EMAIL_HOST = 'smtp.mandrillapp.com'
 # EMAIL_HOST_USER = 'Readuced AI'
@@ -66,6 +69,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'storages',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'rest_auth.registration',
+    'algoliasearch_django',
 
     'widget_tweaks',
     'phonenumber_field',
@@ -74,6 +81,7 @@ INSTALLED_APPS = [
 
     'lectures',
     'courses',
+    'projects',
     'tags',
     'ratings',
     'billing',
@@ -89,6 +97,8 @@ INSTALLED_APPS = [
     'reviews',
     'orders',
     'files',
+    'auths',
+    'corsheaders'
 
 ]
 
@@ -139,6 +149,11 @@ MAILCHIMP_API_KEY = "629b4f097db6f6223ce8fb689dab8048-us6"
 MAILCHIMP_DATA_CENTER = "us6"
 MAILCHIMP_EMAIL_LIST_ID = "937229c102"
 
+ALGOLIA = {
+    'APPLICATION_ID': 'B7L92X5LLP',
+    'API_KEY': 'e1725a8f66d9948c03c93bcfeeeea435',
+    'SEARCH_API_KEY': 'ae3851a6e1c6e04921189356712af9dd'
+}
 
 
 PAYPAL_ACCOUNT_ID = "support@readuced.com"
@@ -163,11 +178,12 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -177,6 +193,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'readux.urls'

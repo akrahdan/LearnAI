@@ -6,7 +6,7 @@ from tags.models import TaggedItem
 from readux.db.receivers import unique_slugify_pre_save
 # Create your models here.
 class Category(models.Model):
-
+    parent = models.ForeignKey('self', related_name='children', on_delete=models.SET_NULL, blank=True, null=True)
     title = models.CharField(max_length=220)
     slug = models.SlugField(blank=True, null=True)
     active = models.BooleanField(default=True)

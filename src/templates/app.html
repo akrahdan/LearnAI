@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href='{% static "images/favicon/favicon.ico" %}'
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    {% include 'app/css.html' %}
+  
+    <title>Codefluent</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    {% csrf_token %}
+    <div id="root"></div>
+    <div id="modal-root"></div>
+
+    <script id="cfdata">
+      var CFDATA = CFDATA || {};
+      CFDATA['current_user'] = {}
+    </script>
+   
+    {% include 'app/js.html' %}
+  </body>
+</html>

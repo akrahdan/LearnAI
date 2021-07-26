@@ -5,7 +5,7 @@ from taggit_serializer.serializers import (TagListSerializerField,
 
 import six
 
-class CreateCourseSerializer(serializers.ModelSerializer):
+class CreateVideoSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Course
@@ -15,8 +15,34 @@ class CreateCourseSerializer(serializers.ModelSerializer):
         ]
 
 
+class CreateCourseSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = Course
+        fields = [
+            'id',
+            'title',
+            'category',
+            'description',
+            
+        ]
 
+class LevelOptionsSerializer(serializers.Serializer):
+    levels = serializers.MultipleChoiceField(Course.CourseLevelOptions.choices)
 
+class CourseDetailSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = Course
+        fields = [
+            'id',
+            'title',
+            'category',
+            'description',
+            'level'
+        ]
+        depth = 2
+       
 class NewTagListSerializerField(TagListSerializerField):
     def to_internal_value(self, value):
         if isinstance(value, six.string_types):
@@ -40,5 +66,16 @@ class ReviewCourseSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = Course
         exclude = [
             'title'
+        ]
+    
+
+class SearchTagsSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
+    class Meta:
+        model = Course
+        fields = [
+            'title',
+            'tags'
         ]
 

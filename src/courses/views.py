@@ -1,5 +1,6 @@
 
 from django.contrib import messages
+from django.db.models import Q;
 from django.http.response import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,12 +8,13 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from rest_framework import authentication, permissions, status
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from django.conf import settings
 import vimeo
 from lectures.models import Lecture
 
-from .serializers import CreateCourseSerializer, ReviewCourseSerializer
+from .serializers import CreateCourseSerializer, ReviewCourseSerializer, CourseDetailSerializer, SearchTagsSerializer
 from courses.forms import CreateCourseForm, UpdateCourseForm
 from .models import Course
 from readux.db.models import PublishStateOptions
@@ -33,6 +35,36 @@ class CourseDetailView(CourseMixin, DetailView):
         return context
     # print(queryset)
 
+class CourseLevelOptions(APIView):
+
+    def get(self, request, format=None):
+        choice_values = dict(Course.CourseLevelOptions.choices)
+        
+        choices = [{ 'name':key, 'display': value} for key, value in choice_values.items()]
+
+        return Response(data=choices, status=status.HTTP_200_OK)
+
+
+class CourseDetailApiView(RetrieveAPIView):
+    authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Course.objects.all()
+    serializer_class = CourseDetailSerializer
+
+class CourseTagLabelView(APIView):
+
+    def get(self, request, format=None):
+        method_dict = self.request.GET
+        query = method_dict.get('q', None)
+        if query is not None:
+            lookups = Q(tags__name__icontains=query) | Q(title__icontains=query)
+            results = Course.objects.filter(lookups).distinct()
+            serializer = SearchTagsSerializer(results, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"detail": "Nothing"}, status=status.HTTP_204_NO_CONTENT)
+
+
+
 class CreateCourseView(LoginRequiredMixin, AjaxFormMixin, CreateView):
     form_class = CreateCourseForm
     template_name = 'courses/add-course.html'
@@ -45,6 +77,19 @@ class CreateCourseView(LoginRequiredMixin, AjaxFormMixin, CreateView):
         obj.save()
         return super().form_valid(form)
     
+class CreateCourseApiView(APIView):
+     authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
+     permission_classes = [permissions.IsAuthenticated]
+
+     def post(self, request, format=None):
+         instructor, created = Instructor.objects.get_or_create(user=request.user)
+         serializer = CreateCourseSerializer(data=request.data)
+         if serializer.is_valid():
+             serializer.save(
+                 instructor = instructor
+             )
+             return Response(serializer.data)
+         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateSectionView(APIView):
     authentication_classes = [authentication.SessionAuthentication]

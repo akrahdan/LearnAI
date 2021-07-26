@@ -161,6 +161,9 @@ class Course(models.Model):
     def get_video_id(self):
          pass
     
+    def tag_names(self):
+        return [str(tag) for tag in self.tags.all()]
+    
 
     
 class CourseItemQuerySet(models.QuerySet):

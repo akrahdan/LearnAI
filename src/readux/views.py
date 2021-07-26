@@ -6,7 +6,7 @@ from allauth.account.views import SignupView
 from courses.models import Course
 from carts.models import Cart
 def home_page(request):
-    return render(request, 'home_page.html', {})
+    return render(request, 'app.html', {})
 
 class CourseLeadView(SignupView):
     template_name = 'course_lead.html'
