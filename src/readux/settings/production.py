@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_serializer',
     'algoliasearch_django',
+    'ordered_model',
 
     'lectures',
     'courses',

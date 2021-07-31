@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'taggit',
     'taggit_serializer',
+    'ordered_model',
 
     'lectures',
     'courses',

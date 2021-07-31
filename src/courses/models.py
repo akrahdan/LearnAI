@@ -7,6 +7,7 @@ from taggit.managers import TaggableManager
 from readux.db.models import PublishStateOptions
 from tags.models import TaggedItem
 from ratings.models import Rating
+
 from categories.models import Category
 from instructors.models import Instructor
 from readux.db.receivers import publish_state_pre_save, slugify_pre_save, unique_slugify_pre_save
@@ -71,9 +72,11 @@ class Course(models.Model):
        DEEP = ('deep', 'Deep Dive')
        FEATURED = ('featured', "Featured" )
        
-
+    
     title = models.CharField(max_length=220)
     lead = models.BooleanField(default=False)
+    headline= models.CharField(max_length=220, blank=True, null=True)
+    cover_image = models.URLField(max_length=200, null=True, blank=True)
     summary = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
@@ -90,6 +93,7 @@ class Course(models.Model):
     tags = TaggableManager(blank=True)
     ratings = GenericRelation(Rating, related_query_name="course")
     category = models.ForeignKey(Category, related_name='courses', blank=True, null=True, on_delete=models.SET_NULL)
+    subcategory = models.ForeignKey(Category, related_name='catCourses', blank=True, null=True, on_delete=models.SET_NULL)
     updated = models.DateTimeField(auto_now=True)
     price  = models.DecimalField(decimal_places=2, max_digits=20, default=39.99,  blank=True, null=True)
   

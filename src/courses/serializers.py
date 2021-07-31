@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Course
+from files.models import CourseFile
 from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
 
@@ -30,7 +31,8 @@ class CreateCourseSerializer(serializers.ModelSerializer):
 class LevelOptionsSerializer(serializers.Serializer):
     levels = serializers.MultipleChoiceField(Course.CourseLevelOptions.choices)
 
-class CourseDetailSerializer(serializers.ModelSerializer):
+class CourseDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
     id = serializers.ReadOnlyField()
     class Meta:
         model = Course
@@ -39,9 +41,15 @@ class CourseDetailSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'description',
-            'level'
+            'headline',
+            'level',
+            'cover_image',
+            'video_url',
+            'subcategory',
+            'tags',
+            'price'
         ]
-        depth = 2
+        
        
 class NewTagListSerializerField(TagListSerializerField):
     def to_internal_value(self, value):
@@ -77,5 +85,19 @@ class SearchTagsSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = [
             'title',
             'tags'
+        ]
+
+
+class CourseFileSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = CourseFile
+        fields = [
+            'id',
+            'course',
+            'name',
+            'key',
+            'filetype',
+            'size'
         ]
 

@@ -57,6 +57,8 @@ class CourseFile(models.Model):
     updated     = models.DateTimeField(auto_now=True)# any changes
     timestamp   = models.DateTimeField(auto_now_add=True)# when added
     
+    def __str__(self) -> str:
+        return self.name
     def get_file_ext(self):
         return os.path.splitext(self.key)[1] # path/to/file/upload.png - > path/to/file/upload, .png
 

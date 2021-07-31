@@ -7,9 +7,12 @@ from courses.models import Course
 from django.conf import settings
 import datetime
 import vimeo
+from ordered_model.models import OrderedModel, OrderedModelManager
+from files.models import CourseFile
 from readux.db.models import PublishStateOptions
 from readux.db.receivers import publish_state_pre_save, slugify_pre_save, unique_slugify_pre_save
 from readux.db.utils import generate_lecture_id
+from instructors.models import Instructor
 # Create your models here.
 
 from django.conf import settings
@@ -24,25 +27,34 @@ class LectureQuerySet(models.QuerySet):
             publish_timestamp_lte = now
         )
 
-class LectureManager(models.Manager):
-    def get_queryset(self):
-        return LectureQuerySet(self.model, using=self._db)
-    
+class LectureManager(OrderedModelManager):
     def published(self):
         return self.get_queryset().published()
 
-class Section(models.Model):
+class SectionManager(OrderedModelManager):
+    pass
+
+
+
+class Section(OrderedModel):
     title = models.CharField(max_length=120)
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    instructor = models.ForeignKey(Instructor, blank=True, null=True, on_delete=models.SET_NULL)
     description = models.TextField(blank=True, null=True)
     course = models.ForeignKey(Course, related_name="sections", on_delete=models.CASCADE)
+    neighbor = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
+    position = models.CharField(max_length=20, null=True, blank=True)
+    objects = SectionManager()
+
+    class Meta(OrderedModel.Meta):
+        pass
 
     def __str__(self) -> str:
+        
         return self.title
     
-class Lecture(models.Model):
+class Lecture(OrderedModel):
     title = models.CharField(max_length=220)
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    instructor = models.ForeignKey(Instructor, blank=True, null=True, on_delete=models.SET_NULL)
     description = models.TextField(blank=True, null=True)
     section = models.ForeignKey(Section, related_name='lectures', blank=True, null=True, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=220, blank=True, null=True)
@@ -54,7 +66,14 @@ class Lecture(models.Model):
     state = models.CharField(max_length=4, choices=PublishStateOptions.choices, default=PublishStateOptions.DRAFT)
     publish_timestamp = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     video_url = models.CharField(max_length=300, blank=True, null=True)
+    video = models.ForeignKey(CourseFile, null=True,  blank=True, related_name='lecture', on_delete=models.SET_NULL)
+    resources = models.ManyToManyField(CourseFile, related_name="lectures", blank=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
+    neighbor = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
+    position = models.CharField(max_length=20, null=True, blank=True)
+    
+    class Meta(OrderedModel.Meta):
+        pass
 
     
     objects = LectureManager()

@@ -1,6 +1,6 @@
 
 from django.contrib import messages
-from django.db.models import Q;
+from django.db.models import Q
 from django.http.response import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,13 +8,14 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from rest_framework import authentication, permissions, status
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
 from django.conf import settings
 import vimeo
 from lectures.models import Lecture
 
-from .serializers import CreateCourseSerializer, ReviewCourseSerializer, CourseDetailSerializer, SearchTagsSerializer
+from .serializers import (CreateCourseSerializer, ReviewCourseSerializer,
+                          CourseDetailSerializer, SearchTagsSerializer, CourseFileSerializer)
 from courses.forms import CreateCourseForm, UpdateCourseForm
 from .models import Course
 from readux.db.models import PublishStateOptions
@@ -23,33 +24,39 @@ from .mixins import CourseMixin, AjaxFormMixin
 from instructors.models import Instructor
 from carts.models import Cart
 
+
 class CourseDetailView(CourseMixin, DetailView):
     template_name = 'courses/detail.html'
     model = Course
     queryset = Course.objects.all()
 
     def get_context_data(self, *args, **kwargs):
-        context = super(CourseDetailView, self).get_context_data(*args, **kwargs)
+        context = super(CourseDetailView, self).get_context_data(
+            *args, **kwargs)
         cart_obj, new_obj = Cart.objects.new_or_get(self.request)
         context['cart'] = cart_obj
         return context
     # print(queryset)
 
+
 class CourseLevelOptions(APIView):
 
     def get(self, request, format=None):
         choice_values = dict(Course.CourseLevelOptions.choices)
-        
-        choices = [{ 'name':key, 'display': value} for key, value in choice_values.items()]
+
+        choices = [{'name': key, 'display': value}
+                   for key, value in choice_values.items()]
 
         return Response(data=choices, status=status.HTTP_200_OK)
 
 
 class CourseDetailApiView(RetrieveAPIView):
-    authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
+    authentication_classes = [
+        authentication.SessionAuthentication, authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     queryset = Course.objects.all()
     serializer_class = CourseDetailSerializer
+
 
 class CourseTagLabelView(APIView):
 
@@ -57,12 +64,12 @@ class CourseTagLabelView(APIView):
         method_dict = self.request.GET
         query = method_dict.get('q', None)
         if query is not None:
-            lookups = Q(tags__name__icontains=query) | Q(title__icontains=query)
+            lookups = Q(tags__name__icontains=query) | Q(
+                title__icontains=query)
             results = Course.objects.filter(lookups).distinct()
             serializer = SearchTagsSerializer(results, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "Nothing"}, status=status.HTTP_204_NO_CONTENT)
-
 
 
 class CreateCourseView(LoginRequiredMixin, AjaxFormMixin, CreateView):
@@ -72,40 +79,52 @@ class CreateCourseView(LoginRequiredMixin, AjaxFormMixin, CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        inst, created = Instructor.objects.get_or_create(user=self.request.user)
+        inst, created = Instructor.objects.get_or_create(
+            user=self.request.user)
         obj.instructor = inst
         obj.save()
         return super().form_valid(form)
-    
-class CreateCourseApiView(APIView):
-     authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
-     permission_classes = [permissions.IsAuthenticated]
 
-     def post(self, request, format=None):
-         instructor, created = Instructor.objects.get_or_create(user=request.user)
-         serializer = CreateCourseSerializer(data=request.data)
-         if serializer.is_valid():
-             serializer.save(
-                 instructor = instructor
-             )
-             return Response(serializer.data)
-         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateCourseApiView(APIView):
+    authentication_classes = [
+        authentication.SessionAuthentication, authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, format=None):
+        instructor, created = Instructor.objects.get_or_create(
+            user=request.user)
+        serializer = CreateCourseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(
+                instructor=instructor
+            )
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CreateSectionView(APIView):
     authentication_classes = [authentication.SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+
+class CourseFileView(CreateAPIView):
+    authentication_classes = [
+        authentication.SessionAuthentication, authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CourseFileSerializer
+
+
 class CourseSubmitReview(APIView):
     authentication_classes = [authentication.SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
 
     def get_object(self, pk):
         try:
             return Course.objects.get(pk=pk)
         except Course.DoesNotExist:
             raise Http404
-    
+
     def put(self, request, pk, format=None):
         course = self.get_object(pk)
         try:
@@ -113,30 +132,30 @@ class CourseSubmitReview(APIView):
 
         except Instructor.DoesNotExist:
             raise Http404
-        
+
         if instructor == course.instructor:
             serializer = ReviewCourseSerializer(course, data=request.data)
             if serializer.is_valid(raise_exception=True):
                 obj = serializer.save(
-                   state = PublishStateOptions.PENDING
+                    state=PublishStateOptions.PENDING
                 )
                 obj.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)
-    
+
 
 class CourseEditView(APIView):
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.SessionAuthentication,
+                              authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
 
     def get_object(self, pk):
         try:
             return Course.objects.get(pk=pk)
         except Course.DoesNotExist:
             raise Http404
-    
+
     def put(self, request, pk, format=None):
         course = self.get_object(pk)
         try:
@@ -144,21 +163,22 @@ class CourseEditView(APIView):
 
         except Instructor.DoesNotExist:
             raise Http404
-        
+
         if instructor == course.instructor:
-            serializer = CreateCourseSerializer(course, data=request.data)
+            serializer = CourseDetailSerializer(course, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)
-  
+
 
 class CourseLectureDetailView(DetailView):
     template_name = 'courses/course-active.html'
     model = Course
     queryset = Course.objects.all()
     # print(queryset)
+
     def get_object(self):
         kwargs = self.kwargs
         slug = kwargs.get("slug")
@@ -168,22 +188,24 @@ class CourseLectureDetailView(DetailView):
             raise Http404
 
     def get_context_data(self, *args, **kwargs):
-        context = super(CourseLectureDetailView, self).get_context_data( *args, **kwargs)
+        context = super(CourseLectureDetailView,
+                        self).get_context_data(*args, **kwargs)
         pk = self.kwargs.get('id')
         v = vimeo.VimeoClient(
-                token= settings.VIMEO_ACCESS_TOKEN,
-                key= settings.VIMEO_CLIENT_ID,
-                secret= settings.VIMEO_SECRET_KEY
-            )
-        
+            token=settings.VIMEO_ACCESS_TOKEN,
+            key=settings.VIMEO_CLIENT_ID,
+            secret=settings.VIMEO_SECRET_KEY
+        )
+
         try:
-            
-            lecture = Lecture.objects.get(pk=pk )
+
+            lecture = Lecture.objects.get(pk=pk)
         except Lecture.DoesNotExist:
             raise Http404("Course Does Not Exist")
 
         context['current_lecture'] = lecture
         return context
+
 
 class CourseCheckoutView(LoginRequiredMixin, DetailView):
     template_name = 'courses/course-checkout.html'
@@ -191,24 +213,10 @@ class CourseCheckoutView(LoginRequiredMixin, DetailView):
     queryset = Course.objects.all()
 
     def get_object(self):
-        kwargs = self.kwargs 
+        kwargs = self.kwargs
         slug = kwargs["slug"]
-        try: 
+        try:
             obj = Course.objects.get(slug=slug)
         except Course.DoesNotExist():
             raise Http404
         return obj
-
-
-
-
-        
-  
-
-      
-    
-   
-
-
-    
-
