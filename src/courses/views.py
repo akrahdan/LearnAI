@@ -12,9 +12,9 @@ from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
 from django.conf import settings
 import vimeo
-from lectures.models import Lecture
+from lectures.models import Lecture, Section
 
-from .serializers import (CreateCourseSerializer, ReviewCourseSerializer,
+from .serializers import (CreateCourseSerializer, ReviewCourseSerializer, CourseSubmitReviewSerializer,
                           CourseDetailSerializer, SearchTagsSerializer, CourseFileSerializer)
 from courses.forms import CreateCourseForm, UpdateCourseForm
 from .models import Course
@@ -23,6 +23,15 @@ from readux.db.models import PublishStateOptions
 from .mixins import CourseMixin, AjaxFormMixin
 from instructors.models import Instructor
 from carts.models import Cart
+
+
+def get_instructor(user):
+    try:
+        instructor = Instructor.objects.get(user=user)
+
+    except Instructor.DoesNotExist:
+        raise Http404
+    return instructor
 
 
 class CourseDetailView(CourseMixin, DetailView):
@@ -38,7 +47,20 @@ class CourseDetailView(CourseMixin, DetailView):
         return context
     # print(queryset)
 
+class CourseListApiView(APIView):
+    authentication_classes = [
+        authentication.SessionAuthentication, authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request, format=None):
+
+        instructor = get_instructor(request.user)
+        query = Course.objects.filter(instructor = instructor)
+        if query.exists():
+            serializer = CourseDetailSerializer(query, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"detail": 'Request forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        
 class CourseLevelOptions(APIView):
 
     def get(self, request, format=None):
@@ -132,16 +154,23 @@ class CourseSubmitReview(APIView):
 
         except Instructor.DoesNotExist:
             raise Http404
-
         if instructor == course.instructor:
-            serializer = ReviewCourseSerializer(course, data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                obj = serializer.save(
-                    state=PublishStateOptions.PENDING
-                )
-                obj.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            obj = self.get_object(pk)
+            if obj.is_fully_filled():
+                sections = Section.objects.filter(course=obj)
+                if sections.exists():
+                    if all((section.is_fully_filled for section in sections)) is False:
+                        return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)
+                    if all([lecture.is_fully_filled() for section in sections for lecture in section.lectures.all()]) is True:
+
+                        serializer = CourseSubmitReviewSerializer(course, data=request.data)
+                        if serializer.is_valid(raise_exception=True):
+                            obj = serializer.save(
+                                state=PublishStateOptions.LIVE
+                            )
+                            obj.save()
+                            return Response(serializer.data)
+                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)
 
 

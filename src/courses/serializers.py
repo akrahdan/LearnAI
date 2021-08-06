@@ -16,6 +16,7 @@ class CreateVideoSerializer(serializers.ModelSerializer):
         ]
 
 
+
 class CreateCourseSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     class Meta:
@@ -47,7 +48,8 @@ class CourseDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             'video_url',
             'subcategory',
             'tags',
-            'price'
+            'price',
+            'state'
         ]
         
        
@@ -75,7 +77,18 @@ class ReviewCourseSerializer(TaggitSerializer, serializers.ModelSerializer):
         exclude = [
             'title'
         ]
-    
+
+class CourseSubmitReviewSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = Course
+        fields = [
+            'id',
+            'state',
+           
+        ]
+       
+  
 
 class SearchTagsSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()

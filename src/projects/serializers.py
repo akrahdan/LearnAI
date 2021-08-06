@@ -5,7 +5,7 @@ from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
 from .models import Project
 from courses.models import Course
-
+from .models import LearningOutCome, ProjectSection, Syllabus, TitleDescription
 
 class CourseSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
@@ -26,6 +26,8 @@ class CourseSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    id = serializers.ReadOnlyField()
+    slug = serializers.ReadOnlyField()
     thumbnail_url = serializers.CharField(
         source="files.last.get_download_url", read_only=True)
     courses = CourseSerializer(many=True)
@@ -46,6 +48,7 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
             'courses',
             'completion_time',
             'related',
+            'state',
             'header',
             'header_primary_color',
             'header_secondary_color',
@@ -67,3 +70,89 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
             return ProjectSerializer(obj.related, many=True).data
         else:
             return None
+
+
+class ProjectCreateSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    thumbnail_url = serializers.CharField(
+        source="files.last.get_download_url", read_only=True)
+
+    class Meta:
+        model = Project
+        fields = [
+            'id',
+            'title',
+            'description',
+            'goal',
+            'hero',
+            'experience',
+            'related',
+            'courses',
+            'header',
+            'state',
+            'header_primary_color',
+            'header_secondary_color',
+            'video_headline',
+            'difficulty',
+            'progress',
+            'related',
+            'price',
+            'outcomes',
+            'included',
+            'syllabuses',
+            'thumbnail_url'
+
+        ]
+      
+
+ 
+
+
+
+class OutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LearningOutCome
+        fields = [
+            'id',
+            'title',
+            'description',
+            'project',
+            
+        ]
+
+
+class SyllabusSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = Syllabus
+        fields = [
+            'id',
+            'title',
+            'description'
+            'project',
+            
+        ]
+
+class IncludedSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = TitleDescription
+        fields = [
+            'id',
+            'title',
+            'description',
+            'project',
+            
+        ]
+
+class HeaderSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = ProjectSection
+        fields = [
+            'id',
+            'heading',
+            'description',
+            'projects'
+            
+        ]

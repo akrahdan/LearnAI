@@ -8,7 +8,7 @@ class InstructorForm(forms.ModelForm):
         fields = [
             'first_name',
             'last_name',
-            'about_me',
+            'description',
             'phone',
             'tags'
         ]

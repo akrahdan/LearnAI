@@ -28,6 +28,8 @@ def get_instructor(user):
     return instructor
 
 
+
+
 class SectionView(APIView):
     authentication_classes = [
         authentication.SessionAuthentication, authentication.TokenAuthentication]

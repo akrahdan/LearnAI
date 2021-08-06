@@ -84,6 +84,8 @@ INSTALLED_APPS = [
     'courses',
     'projects',
     'tags',
+    'targets',
+    'pricing',
     'ratings',
     'billing',
     'categories',

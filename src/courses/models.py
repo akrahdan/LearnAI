@@ -19,7 +19,6 @@ COURSE_LEVEL_CHOICES = (
     ('advanced', 'Advanced'),
     ('deep', 'Deep Dive'),
 )
-# Create your models here.
 
 class CourseQuerySet(models.QuerySet):
     def published(self):
@@ -59,7 +58,6 @@ class CourseManager(models.Manager):
     def lead_course(self):
         return self.get_queryset().filter(lead=True)
 
-    
     def featured_courses(self):
         return self.get_queryset().filter(level=Course.CourseLevelOptions.FEATURED)
 
@@ -86,7 +84,7 @@ class Course(models.Model):
     video_url = models.URLField(max_length=200, null=True, blank=True)
     related = models.ManyToManyField("self", blank=True, related_name="related", through="CourseRelated")
     slug = models.SlugField(blank=True, null=True)
-    state = models.CharField(max_length=4, choices=PublishStateOptions.choices, default=PublishStateOptions.DRAFT)
+    state = models.CharField(max_length=8, choices=PublishStateOptions.choices, default=PublishStateOptions.DRAFT)
     publish_timestamp = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -97,8 +95,15 @@ class Course(models.Model):
     updated = models.DateTimeField(auto_now=True)
     price  = models.DecimalField(decimal_places=2, max_digits=20, default=39.99,  blank=True, null=True)
   
-    
     objects = CourseManager()
+   
+    def is_fully_filled(self):
+        field_names = [self.title, self.description,
+         self.category, self.headline, self.instructor, self.video_url, self.cover_image, self.level]
+        if any(field is None or field == '' for field in field_names) is True:
+            return False
+        else:
+            return True
 
     def __str__(self) -> str:
         return self.title
@@ -129,7 +134,6 @@ class Course(models.Model):
             return f"/featured/{self.slug}"
         
         return f"/courses/{self.slug}"
-    
 
 
     def get_rating_avg(self):

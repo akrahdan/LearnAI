@@ -2,47 +2,52 @@ from django.http import request
 from django.http.response import Http404
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView
-from .forms import InstructorForm
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Instructor
+from rest_framework.views import APIView
+from .serializers import InstructorSerializer, ProfileSerializer
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+
 # Create your views here.
-def dashboard(request):
-    return render(request, 'instructors/dashboard.html')
 
-def reviews(request):
-    return render(request, 'instructors/reviews.html')
+def get_instructor(user):
+    try:
+        instructor = Instructor.objects.get(user=user)
 
-def earnings(request):
-    return render(request, 'instructors/earning.html')
+    except Instructor.DoesNotExist:
+        raise Http404
+    return instructor
 
-def students(request):
-    return render(request, 'instructors/students.html')
+class UpdateProfileView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-def payouts(request):
-    return render(request, 'instructors/payouts.html')
+    def post(self, request, format=None):
+        
+        instructor = get_instructor(request.user)
+        serializer = InstructorSerializer(instructor, data=request.data)
+        if serializer.is_valid():
+            serializer.save(
+                user = request.user
+            )
+            profile_serializer = ProfileSerializer(instructor, context={'request': self.request})
+            return Response(profile_serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+    
+    def get(self, request, format=None):
 
-def orders(request):
-    return render(request, 'instructors/order.html')
+        instructor = get_instructor(request.user)
+        print('Inst',instructor)
+        serializer = ProfileSerializer(instructor, context={'request': self.request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+       
+            
 
-def courses(request):
-    return render(request, 'instructors/courses.html')
+        
 
-def addCourse(request):
-    return render(request, 'courses/add-course.html')
-
-class CreateInstructorProfile(LoginRequiredMixin,CreateView):
-    template_name = 'instructors/create_form.html'
-    model = Instructor
-    form_class = InstructorForm
-    success_url = reverse_lazy('instructors:dashboard')
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        user = self.request.user
-        obj.user = user
-        obj.save()
-        return super().form_valid(form)
 
 class DashboardList(LoginRequiredMixin,DetailView):
     template_name = 'instructors/dashboard.html'
