@@ -10,7 +10,8 @@ from .serializers import InstructorSerializer, ProfileSerializer
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from projects.models import Project
+from projects.serializers import ProjectSerializer
 # Create your views here.
 
 def get_instructor(user):
@@ -77,3 +78,17 @@ class CourseList(LoginRequiredMixin,DetailView):
         except Instructor.DoesNotExist():
             raise Http404
         return obj
+
+class ProjectListApiView(APIView):
+    authentication_classes = [
+        SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+
+        instructor = get_instructor(request.user)
+        query = Project.objects.filter(instructor = instructor)
+        if query.exists():
+            serializer = ProjectSerializer(query, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"detail": 'Request forbidden'}, status=status.HTTP_403_FORBIDDEN)

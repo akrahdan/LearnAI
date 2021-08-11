@@ -71,6 +71,16 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
         else:
             return None
 
+class CreateProjectSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = Project
+        fields = [
+            'id',
+            'title',
+            'description',
+            'category'
+        ]
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
@@ -128,7 +138,7 @@ class SyllabusSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'description'
+            'description',
             'project',
             
         ]
@@ -140,7 +150,6 @@ class IncludedSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'description',
             'project',
             
         ]

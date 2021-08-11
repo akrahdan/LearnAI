@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save, post_save, m2m_changed
 
-from courses.models import Course
+from projects.models import Project
 
 
 User = settings.AUTH_USER_MODEL
@@ -33,7 +33,7 @@ class CartManager(models.Manager):
 
 class Cart(models.Model):
     user        = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    courses    = models.ManyToManyField(Course, blank=True)
+    projects    = models.ManyToManyField(Project, blank=True)
     subtotal    = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     total       = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     updated     = models.DateTimeField(auto_now=True)
@@ -47,15 +47,15 @@ class Cart(models.Model):
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
-        courses = instance.courses.all()
+        projects = instance.projects.all()
         total = 0
-        for x in courses:
+        for x in projects:
             total += x.price
         if instance.subtotal != total:
             instance.subtotal = total
             instance.save()
 
-m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.courses.through)
+m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.projects.through)
 
 
 

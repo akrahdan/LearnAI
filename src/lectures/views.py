@@ -8,17 +8,19 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 from django.conf import settings
 import vimeo
+from moviepy.editor import VideoFileClip
 # Create your views here.
 from rest_framework import permissions, authentication, status
 from rest_framework.response import Response
+from analytics.models import ObjectViewed
 from files.models import CourseFile
 from instructors.models import Instructor
 from readux.settings.base import VIMEO_SECRET_KEY
 from .models import Lecture, Section
 from courses.models import Course
-from .serializers import LectureSerializer, SectionSerializer, VideoSerializer, MediaSerializer
-
-
+from .serializers import LectureSerializer, SectionSerializer, VideoSerializer, MediaSerializer, ObjectViewedSerializer
+from analytics.signals import object_viewed_signal
+from django.contrib.contenttypes.models import ContentType
 def get_instructor(user):
     try:
         instructor = Instructor.objects.get(user=user)
@@ -26,8 +28,6 @@ def get_instructor(user):
     except Instructor.DoesNotExist:
         raise Http404
     return instructor
-
-
 
 
 class SectionView(APIView):
@@ -110,6 +110,43 @@ class SectionView(APIView):
             return Response(data, status=status.HTTP_200_OK)
         return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)
 
+class VideoTrackView(APIView):
+
+    authentication_classes = [authentication.SessionAuthentication,
+                              authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self, pk):
+        try:
+            return Lecture.objects.get(pk=pk)
+        except Lecture.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk, format=None):
+
+        instance = self.get_object(pk)
+        if instance:
+            object_viewed_signal.send(instance.__class__, instance=instance, request=request)
+        content_type = ContentType.objects.get_for_model(instance.__class__)
+        view_query = ObjectViewed.objects.filter(user = request.user, content_type=content_type)
+        if view_query.exists():
+
+            serializer = ObjectViewedSerializer(view_query, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK )
+        return Response({ 'detail': 'No content'}, status=status.HTTP_204_NO_CONTENT)
+    
+    def get(self, request, format=None):
+
+        
+        content_type = ContentType.objects.get_for_model(Lecture)
+        view_query = ObjectViewed.objects.filter(user = request.user, content_type=content_type)
+        if view_query.exists():
+
+            serializer = ObjectViewedSerializer(view_query, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK )
+        return Response({ 'detail': 'No content'}, status=status.HTTP_204_NO_CONTENT)
+
+        
 
 class LectureView(APIView):
     authentication_classes = [authentication.SessionAuthentication,
@@ -169,11 +206,17 @@ class LectureView(APIView):
     def put(self, request, pk, format=None):
         instructor = get_instructor(request.user)
         lecture = self.get_object(pk)
+        video_url = request.data.get("video_url", None)
+        if video_url:
+            clip = VideoFileClip(video_url)
 
         if instructor == lecture.instructor:
             serializer = LectureSerializer(lecture, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
+            if serializer.is_valid(raise_exception=True):
+                obj = serializer.save()
+                if clip:
+                    obj.duration = clip.duration
+                    obj.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)

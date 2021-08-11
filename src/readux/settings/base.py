@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'taggit_serializer',
     'ordered_model',
 
+    'analytics',
     'lectures',
     'courses',
     'projects',
@@ -91,6 +92,7 @@ INSTALLED_APPS = [
     'ratings',
     'billing',
     'categories',
+    'project_categories',
     'marketing',
     'addresses',
     'carts',
@@ -160,7 +162,11 @@ PAYPAL_ACCOUNT_ID = "support@readuced.com"
 PAYPAL_CLIENT_ID = "AUj_QTk083Xh7ncvSyMDik4La6zALHWM83BEM5SLLkR5ME2nhANowpy1Xm7xc5GUzLXy7b0Wg8NawuPm"
 PAYPAL_SECRET_KEY = "EBqXgnp3v_lGVfYLQnk8MutLwr9-kv5bDAwerrEYvALztz-O-5aTC-_0V5qVu1zyLdLXrVkZv5PCKJv_"
 
+RAVE_SECRET_KEY = ''
+RAVE_PUB_KEY = ''
 
+RAVE_TEST_SECRET_KEY = "FLWSECK_TEST-c4d26dde110096feeb8ed3ada6fe9ac8-X"
+RAVE_TEST_PUB_KEY = "FLWPUBK_TEST-4b961393b29fe0236bb5a0e76351a99b-X"
 
 ALGOLIA = {
     'APPLICATION_ID': 'B7L92X5LLP',

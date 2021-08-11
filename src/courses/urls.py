@@ -7,7 +7,7 @@ CourseSubmitReview, CourseLectureDetailView, CreateCourseApiView,
  CourseDetailApiView, CourseLevelOptions, CourseTagLabelView, CourseFileView)
 from files.views import UploadCoursePolicy, DownloadCourseView
 from targets.views import GoalView, RequirementView, ExperienceView
-from lectures.views import SectionView, LectureView, upload_video, CreateVideoView, MediaResourceView
+from lectures.views import SectionView, LectureView, upload_video, CreateVideoView, MediaResourceView, VideoTrackView
 from reviews.views import submit_review
 
 urlpatterns = [
@@ -42,6 +42,8 @@ urlpatterns = [
     path('section/<int:pk>/lectures/', LectureView.as_view()),
     path('section/lectures/<int:pk>/', LectureView.as_view()),
     path('lecture/create/', LectureView.as_view()),
+    path('lecture/<int:pk>/views/', VideoTrackView.as_view()),
+    path('lecture/views/', VideoTrackView.as_view()),
     path('lecture/video_upload/', CourseFileView.as_view()),
     path('<int:id>/rate', submit_review, name='submit_review'),
     path('pricing/', include('pricing.urls')),

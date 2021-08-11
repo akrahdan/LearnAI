@@ -6,6 +6,7 @@ from instructors.models import Instructor
 from readux.db.models import PublishStateOptions
 from ordered_model.models import OrderedModel, OrderedModelManager
 from readux.db.receivers import unique_slugify_pre_save
+from project_categories.models import ProjectCategory
 # Create your models here.
 
 
@@ -17,6 +18,7 @@ class Testimonial(models.Model):
 class ProjectSection(models.Model):
     heading = models.CharField(max_length=120)
     description = models.TextField()
+    instructor = models.ForeignKey(Instructor, blank=True, null=True, on_delete=models.SET_NULL)
 
 
 
@@ -35,6 +37,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=200, blank=True, null=True)
     goal = models.CharField(max_length=120, blank=True, null=True)
     hero = models.CharField(max_length=120, blank=True, null=True)
+    category = models.ForeignKey(ProjectCategory, blank=True, null=True, on_delete=models.SET_NULL)
     instructor = models.ForeignKey(Instructor, related_name="projects", on_delete=models.CASCADE)
     experience = models.CharField(max_length=12, choices=ProjectLevelOptions.choices, default=ProjectLevelOptions.BEGINNER)
     courses = models.ManyToManyField(Course, related_name='projects', blank=True)
@@ -103,7 +106,7 @@ class LearningOutCome(OrderedModel):
     title = models.CharField(max_length=120)
     instructor = models.ForeignKey(Instructor, blank=True, null=True, on_delete=models.SET_NULL)
     project = models.ForeignKey(Project, related_name='outcomes', on_delete=models.CASCADE)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = LearningOutcomeManager()
 
@@ -115,7 +118,7 @@ class TitleDescription(OrderedModel):
     title = models.CharField(max_length=120)
     instructor = models.ForeignKey(Instructor, blank=True, null=True, on_delete=models.SET_NULL)
     project = models.ForeignKey(Project, related_name="included", on_delete=models.CASCADE)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = TitleDescriptionManager()

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Course
 from files.models import CourseFile
+from lectures.serializers import SectionPlayerSerializer
 from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
 
@@ -34,6 +35,28 @@ class LevelOptionsSerializer(serializers.Serializer):
 
 class CourseDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    sections = SectionPlayerSerializer(many=True)
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = Course
+        fields = [
+            'id',
+            'title',
+            'category',
+            'description',
+            'headline',
+            'level',
+            'cover_image',
+            'video_url',
+            'subcategory',
+            'sections',
+            'tags',
+            'price',
+            'state'
+        ]
+        
+class CourseUpdateSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
     id = serializers.ReadOnlyField()
     class Meta:
         model = Course
@@ -51,8 +74,7 @@ class CourseDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             'price',
             'state'
         ]
-        
-       
+
 class NewTagListSerializerField(TagListSerializerField):
     def to_internal_value(self, value):
         if isinstance(value, six.string_types):

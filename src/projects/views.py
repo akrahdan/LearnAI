@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .serializers import ProjectSerializer, ProjectCreateSerializer, OutcomeSerializer, HeaderSerializer, IncludedSerializer, SyllabusSerializer
+from .serializers import ProjectSerializer, CreateProjectSerializer, ProjectCreateSerializer, OutcomeSerializer, HeaderSerializer, IncludedSerializer, SyllabusSerializer
 from instructors.models import Instructor
 from .models import Project, ProjectRelated, ProjectSection, LearningOutCome, Syllabus, TitleDescription
 # Create your views here.
@@ -44,7 +44,7 @@ class ProjectView(APIView):
     def post(self, request, format=None):
         instructor, created = Instructor.objects.get_or_create(
             user=request.user)
-        serializer = ProjectCreateSerializer(data=request.data)
+        serializer = CreateProjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(
                 instructor=instructor
@@ -69,7 +69,8 @@ class ProjectView(APIView):
         if instructor == project.instructor:
             serializer = ProjectCreateSerializer(project, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                obj = serializer.save()
+                serializer = ProjectSerializer(obj)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)   
         return Response({ 'detail': 'Request denied'}, status=status.HTTP_400_BAD_REQUEST)

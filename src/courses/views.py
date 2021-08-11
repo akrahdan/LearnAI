@@ -15,7 +15,7 @@ import vimeo
 from lectures.models import Lecture, Section
 
 from .serializers import (CreateCourseSerializer, ReviewCourseSerializer, CourseSubmitReviewSerializer,
-                          CourseDetailSerializer, SearchTagsSerializer, CourseFileSerializer)
+                          CourseDetailSerializer, SearchTagsSerializer, CourseFileSerializer, CourseUpdateSerializer)
 from courses.forms import CreateCourseForm, UpdateCourseForm
 from .models import Course
 from readux.db.models import PublishStateOptions
@@ -194,7 +194,7 @@ class CourseEditView(APIView):
             raise Http404
 
         if instructor == course.instructor:
-            serializer = CourseDetailSerializer(course, data=request.data)
+            serializer = CourseUpdateSerializer(course, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)

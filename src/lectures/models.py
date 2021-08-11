@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.db.models.fields import related
 from django.utils import timezone
+from django.db.models import Avg
 from django.db.models.signals import pre_save
 from courses.models import Course
 from django.conf import settings
@@ -49,6 +50,10 @@ class Section(OrderedModel):
         "self", null=True, blank=True, on_delete=models.SET_NULL)
     position = models.CharField(max_length=20, null=True, blank=True)
     objects = SectionManager()
+    
+    @property
+    def duraton(self):
+        return self.lectures.aggregate(Avg("duration"))
 
     def is_fully_filled(self):
         field_names = [self.title,
@@ -77,7 +82,7 @@ class Lecture(OrderedModel):
     lecture_id = models.CharField(max_length=220, unique=True)
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    duration = models.DurationField(null=True, blank=True)
+    duration = models.FloatField(null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True)
     state = models.CharField(
         max_length=8, choices=PublishStateOptions.choices, default=PublishStateOptions.DRAFT)

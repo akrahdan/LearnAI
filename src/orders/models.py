@@ -17,7 +17,7 @@ from addresses.models import Address
 from billing.models import BillingProfile
 from carts.models import Cart
 from readux.db.utils import unique_order_id_generator
-from courses.models import Course
+from projects.models import Project
 
 
 
@@ -68,9 +68,9 @@ class OrderManagerQuerySet(models.query.QuerySet):
 
     def cart_data(self):
         return self.aggregate(
-                        Sum("cart__courses__price"), 
-                        Avg("cart__courses__price"), 
-                        Count("cart__courses")
+                        Sum("cart__projects__price"), 
+                        Avg("cart__projects__price"), 
+                        Count("cart__projects")
                                     )
 
     def by_status(self, status="paid"):
@@ -152,18 +152,18 @@ class Order(models.Model):
         billing_profile = self.billing_profile
         billing_address = self.address
         total   = self.total
-        if billing_profile and billing_address and total > 0:
+        if billing_profile  and float(total) > 0:
             return True
         return False
 
     def update_orders(self):
-        for p in self.cart.courses.all():
-            obj, created = CourseOrder.objects.get_or_create(
+        for p in self.cart.projects.all():
+            obj, created = ProjectOrder.objects.get_or_create(
                     order_id=self.order_id,
-                    course=p,
+                    project=p,
                     billing_profile=self.billing_profile
                 )
-        return CourseOrder.objects.filter(order_id=self.order_id).count()
+        return ProjectOrder.objects.filter(order_id=self.order_id).count()
 
     def mark_paid(self):
         if self.status != 'paid':
@@ -213,7 +213,7 @@ def post_save_order(sender, instance, created, *args, **kwargs):
 
 
 
-class CourseOrderQuerySet(models.query.QuerySet):
+class ProjectOrderQuerySet(models.query.QuerySet):
     def active(self):
         return self.filter(refunded=False)
 
@@ -223,9 +223,9 @@ class CourseOrderQuerySet(models.query.QuerySet):
 
 
 
-class CourseOrderManager(models.Manager):
+class ProjectOrderManager(models.Manager):
     def get_queryset(self):
-        return CourseOrderQuerySet(self.model, using=self._db)
+        return ProjectOrderQuerySet(self.model, using=self._db)
 
     def all(self):
         return self.get_queryset().active()
@@ -234,30 +234,30 @@ class CourseOrderManager(models.Manager):
     def by_request(self, request):
         return self.get_queryset().by_request(request)
 
-    def course_by_id(self, request):
+    def project_by_id(self, request):
         qs = self.by_request(request)
-        ids_ = [x.course.id for x in qs]
+        ids_ = [x.project.id for x in qs]
         return ids_
 
-    def courses_by_request(self, request):
-        ids_ = self.course_by_id(request)
-        courses_qs = Course.objects.filter(id__in=ids_).distinct()
-        return courses_qs
+    def projects_by_request(self, request):
+        ids_ = self.project_by_id(request)
+        projects_qs = Project.objects.filter(id__in=ids_).distinct()
+        return projects_qs
 
 
 
-class CourseOrder(models.Model):
+class ProjectOrder(models.Model):
     order_id            = models.CharField(max_length=120)
-    billing_profile     = models.ForeignKey(BillingProfile, on_delete=models.CASCADE) # billingprofile.courseorder_set.all()
-    course             = models.ForeignKey(Course, on_delete=models.CASCADE) # course.courseorder_set.count()
+    billing_profile     = models.ForeignKey(BillingProfile, on_delete=models.CASCADE) # billingprofile.projectorder_set.all()
+    project             = models.ForeignKey(Project, on_delete=models.CASCADE) # project.projectorder_set.count()
     refunded            = models.BooleanField(default=False)
     updated             = models.DateTimeField(auto_now=True)
     timestamp           = models.DateTimeField(auto_now_add=True)
 
-    objects = CourseOrderManager()
+    objects = ProjectOrderManager()
 
     def __str__(self):
-        return self.course.title
+        return self.project.title
 
 
 
