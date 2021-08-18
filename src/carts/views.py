@@ -185,31 +185,17 @@ class CheckoutPayView(APIView):
         billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(
             request)
 
-        billing_address_id = request.session.get("address_id", None)
         if billing_profile is not None:
 
             order_obj, order_obj_created = Order.objects.new_or_get(
                 billing_profile, cart_obj)
 
-            if billing_address_id:
-                order_obj.address = Address.objects.get(id=billing_address_id)
-            else:
-                billingAddress, address_created = Address.objects.get_or_create(
-                    billing_profile=billing_profile,
-                    address_line_1=resp.result.purchase_units[0].shipping.address.address_line_1,
-                    address_line_2=resp.result.purchase_units[0].shipping.address.admin_area_2,
-                    postal_code=resp.result.purchase_units[0].shipping.address.postal_code,
-                    country_code=resp.result.purchase_units[0].shipping.address.country_code
-                )
-
-                order_obj.address = billingAddress
-
-                request.session["address_id"] = billingAddress.id
 
         order_obj.total = resp.result.purchase_units[0].payments.captures[0].amount.value
         order_obj.save()
         is_prepared = order_obj.check_done()
         order_obj.mark_paid()
+        cart_obj.delete()
         serializer = CreateOrderSerializer(instance=order_obj)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -245,6 +231,7 @@ class CheckoutFlutterView(APIView):
             order_obj.save()
             is_prepared = order_obj.check_done()
             order_obj.mark_paid()
+            cart_obj.delete()
             serializer = CreateOrderSerializer(instance=order_obj)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(data=res, status=status.HTTP_402_PAYMENT_REQUIRED)

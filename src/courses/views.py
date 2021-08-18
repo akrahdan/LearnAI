@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
-from rest_framework import authentication, permissions, status
+from rest_framework import authentication, permissions, serializers, status
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
@@ -78,6 +78,23 @@ class CourseDetailApiView(RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Course.objects.all()
     serializer_class = CourseDetailSerializer
+
+class CourseDetailSlugView(APIView):
+    authentication_classes = [
+        authentication.SessionAuthentication, authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+   
+    def get_object(self, slug):
+        try:
+            return Course.objects.get(slug=slug)
+        except Course.DoesNotExist:
+            raise Http404
+    
+    def get(self, request, slug, format=None):
+        obj = self.get_object(slug=slug)
+        serializer = CourseDetailSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class CourseTagLabelView(APIView):

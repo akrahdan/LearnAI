@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Order, ProjectOrder
-
+from projects.serializers import ProjectSerializer
 class CreateOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -8,7 +8,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProjectOrderSerializzer(serializers.ModelSerializer):
+class ProjectOrderSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
     class Meta:
         model  = ProjectOrder
         fields = ['project']

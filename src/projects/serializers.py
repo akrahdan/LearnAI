@@ -5,7 +5,9 @@ from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
 from .models import Project
 from courses.models import Course
+from courses.serializers import CourseDetailSerializer
 from .models import LearningOutCome, ProjectSection, Syllabus, TitleDescription
+from instructors.serializers import InstructorSerializer
 
 class CourseSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
@@ -28,9 +30,9 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     id = serializers.ReadOnlyField()
     slug = serializers.ReadOnlyField()
-    thumbnail_url = serializers.CharField(
-        source="files.last.get_download_url", read_only=True)
-    courses = CourseSerializer(many=True)
+   
+    courses = CourseDetailSerializer(many=True)
+    instructor = InstructorSerializer()
     related = SerializerMethodField()
 
     class Meta:

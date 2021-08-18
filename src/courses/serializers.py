@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Course
 from files.models import CourseFile
+from instructors.models import Instructor
 from lectures.serializers import SectionPlayerSerializer
 from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
-
+from targets.serializers import GoalSerializer, ExperienceSerializer, RequirementSerializer                                        
+from categories.serializers import CategorySerializer
 import six
 
 class CreateVideoSerializer(serializers.ModelSerializer):
@@ -15,7 +17,6 @@ class CreateVideoSerializer(serializers.ModelSerializer):
         fields = [
             'video_url',  
         ]
-
 
 
 class CreateCourseSerializer(serializers.ModelSerializer):
@@ -33,9 +34,31 @@ class CreateCourseSerializer(serializers.ModelSerializer):
 class LevelOptionsSerializer(serializers.Serializer):
     levels = serializers.MultipleChoiceField(Course.CourseLevelOptions.choices)
 
+class InstructorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Instructor
+        
+        fields = [
+          
+          'first_name',
+          'last_name',
+          'email',
+          'courses',
+          'headline',
+          'avatar',
+          'description'
+        ]
+        depth = 1
+    
+
 class CourseDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    instructor = InstructorSerializer()
     sections = SectionPlayerSerializer(many=True)
+    requirements = RequirementSerializer(many=True)
+    goals = GoalSerializer(many=True)
+    experiences = ExperienceSerializer(many=True)
+    category = CategorySerializer()
     id = serializers.ReadOnlyField()
     class Meta:
         model = Course
@@ -47,14 +70,22 @@ class CourseDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             'headline',
             'level',
             'cover_image',
+            'instructor',
             'video_url',
             'subcategory',
             'sections',
+            'requirements',
+            'goals',
+            'slug',
+            'experiences',
             'tags',
             'price',
             'state'
         ]
-        
+
+
+
+      
 class CourseUpdateSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     id = serializers.ReadOnlyField()

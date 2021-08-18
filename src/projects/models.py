@@ -37,6 +37,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=200, blank=True, null=True)
     goal = models.CharField(max_length=120, blank=True, null=True)
     hero = models.CharField(max_length=120, blank=True, null=True)
+    thumbnail_url = models.URLField(blank=True, null=True)
     category = models.ForeignKey(ProjectCategory, blank=True, null=True, on_delete=models.SET_NULL)
     instructor = models.ForeignKey(Instructor, related_name="projects", on_delete=models.CASCADE)
     experience = models.CharField(max_length=12, choices=ProjectLevelOptions.choices, default=ProjectLevelOptions.BEGINNER)

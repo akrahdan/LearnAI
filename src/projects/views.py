@@ -20,6 +20,20 @@ class ProjectListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class ProjectDetailView(APIView):
+   
+    def get_object(self, slug):
+        try:
+            return Project.objects.get(slug=slug)
+        except Project.DoesNotExist:
+            raise Http404
+
+    def get(self, request, slug, format=None):
+        project = self.get_object(slug)
+        serializer = ProjectSerializer(project)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 def get_instructor(user):
     try:
         instructor = Instructor.objects.get(user=user)

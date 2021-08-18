@@ -5,14 +5,14 @@ from courses.models import Course
 class Experience(models.Model):
     name = models.CharField(max_length=220)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name='experiences', on_delete=models.CASCADE)
 
 class Goal(models.Model):
     name = models.CharField(max_length=220)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name='goals', on_delete=models.CASCADE)
 
 class Requirement(models.Model):
     name = models.CharField(max_length=220)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name='requirements', on_delete=models.CASCADE)

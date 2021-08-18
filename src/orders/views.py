@@ -12,7 +12,7 @@ from billing.models import BillingProfile
 from orders.models import Order, ProjectOrder
 from orders.payments.order import CaptureOrder
 from orders.payments.paypal import PayPalClient
-from .serializers import CreateOrderSerializer, ProjectOrderSerializzer
+from .serializers import CreateOrderSerializer, ProjectOrderSerializer
 
 
 class CompleteOrderView(APIView):
@@ -76,7 +76,7 @@ class MyProjectsView(APIView):
             project_qs = ProjectOrder.objects.filter(
                 billing_profile=billing_qs.first())
             if project_qs.exists():
-                serializer = ProjectOrderSerializzer(project_qs, many=True)
+                serializer = ProjectOrderSerializer(project_qs, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response({'detail': 'No project associated with your profile'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'detail': 'No billing profile associated with your account'}, status=status.HTTP_400_BAD_REQUEST)

@@ -18,6 +18,8 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from allauth.account.views import confirm_email
 from django.conf.urls.static import static
+from courses.views import CourseDetailSlugView
+from projects.views import ProjectDetailView
 from .views import home_page, CourseLeadView, pricing
 from files.views import DownloadView, UploadPolicyView, UploadView, UploadCoursePolicy, DownloadCourseView
 
@@ -28,6 +30,8 @@ urlpatterns = [
     path('pricing/', pricing, name='pricing'),
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace="dashboard")),
     path('courses/', include('courses.urls')),
+    path('course/<slug:slug>/', CourseDetailSlugView.as_view()),
+
     #path('auths/', include(('accounts.urls', 'auths'), 'auths')),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
@@ -40,8 +44,10 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('auth/', include('auths.urls')),
+    path('analytics/', include('analytics.urls')),
     path('api/projects/', include('projects.urls')),
-     path('projects/', include('projects.urls')),
+    path('projects/', include('projects.urls')),
+    path('project/<slug:slug>/', ProjectDetailView.as_view()),
     path('api/categories/', include('categories.urls')),
     path('api/project_categories/', include('project_categories.urls')),
     re_path(r"^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_',:&]+)/$", confirm_email,

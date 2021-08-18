@@ -7,7 +7,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'parent',
             'children'
         ]
-        depth = 1
+        depth = 2
 
