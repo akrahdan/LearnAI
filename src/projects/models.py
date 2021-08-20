@@ -20,6 +20,9 @@ class ProjectSection(models.Model):
     description = models.TextField()
     instructor = models.ForeignKey(Instructor, blank=True, null=True, on_delete=models.SET_NULL)
 
+    def __str__(self) -> str:
+        return self.heading
+
 
 
 
@@ -99,6 +102,9 @@ class Syllabus(OrderedModel):
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = SyllabusManager()
 
+    def __str__(self) -> str:
+        return self.title
+
     class Meta(OrderedModel.Meta):
         pass
 
@@ -110,6 +116,9 @@ class LearningOutCome(OrderedModel):
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = LearningOutcomeManager()
+
+    def __str__(self) -> str:
+        return self.title
 
     class Meta(OrderedModel.Meta):
         pass
@@ -123,6 +132,9 @@ class TitleDescription(OrderedModel):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = TitleDescriptionManager()
+
+    def __str__(self) -> str:
+        return self.title
 
     class Meta(OrderedModel.Meta):
         pass

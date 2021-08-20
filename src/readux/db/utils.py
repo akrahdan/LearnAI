@@ -43,10 +43,12 @@ def get_unique_slug(instance, new_slug=None, size=10, max_size=30):
         qs = Klass.objects.filter(parent=parent, slug=slug) # smaller
     else:
         qs = Klass.objects.filter(slug=slug) # larger
-    if qs.exists():
-        new_slug = slugify(title) + get_random_string(size=size)
-        return get_unique_slug(instance, new_slug=new_slug)
-    return slug
+    while True:
+        if not qs.exists():
+            return slug
+    
+        slug = slugify(title) + get_random_string(size=size)
+   
 
 
 def generate_lecture_id(instance):

@@ -16,29 +16,6 @@ class MediaSerializer(serializers.ModelSerializer):
             'course'
         ]
 
-class SectionSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    class Meta:
-        model = Section
-        fields = [
-            'id',
-            'instructor',
-            'title',
-            'description',
-            'course',
-            'order',
-            'neighbor',
-            'position'
-        ]
-
-
-class ObjectViewedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ObjectViewed
-        fields = [
-            'object_id'
-        ]
-
 class LectureSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
  
@@ -64,6 +41,34 @@ class LectureSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep['video'] = MediaSerializer(instance.video).data
         return rep
+
+class SectionSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    lectures = LectureSerializer(many=True)
+    class Meta:
+        model = Section
+        fields = [
+            'id',
+            'instructor',
+            'title',
+            'description',
+            'course',
+            'order',
+            'neighbor',
+            'position',
+            'lectures'
+        ]
+        read_only_fields = ['lectures']
+
+
+class ObjectViewedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ObjectViewed
+        fields = [
+            'object_id'
+        ]
+
+
 
 class SectionPlayerSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()

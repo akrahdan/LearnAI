@@ -1,4 +1,6 @@
+from django.conf.urls import include
 from django.urls import path
+from pricing.views import ProjectPricingView
 from .views import (
 ProjectListView, 
 LearningOutcomeView,
@@ -30,4 +32,6 @@ urlpatterns = [
     path('included/create/', ProjectContentView.as_view()),
     path('<int:pk>/included/', ProjectContentView.as_view()),
     path('included/<int:pk>/', ProjectContentView.as_view()),
+    path('pricing/', include('pricing.urls')),
+    path('<int:pk>/pricing/', ProjectPricingView.as_view()),
 ]

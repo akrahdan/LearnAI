@@ -84,11 +84,9 @@ class CreateProjectSerializer(serializers.ModelSerializer):
             'category'
         ]
 
-class ProjectCreateSerializer(serializers.ModelSerializer):
+class ProjectCreateSerializer(TaggitSerializer,serializers.ModelSerializer):
+    tags = TagListSerializerField()
     id = serializers.ReadOnlyField()
-    thumbnail_url = serializers.CharField(
-        source="files.last.get_download_url", read_only=True)
-
     class Meta:
         model = Project
         fields = [
@@ -109,6 +107,7 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             'progress',
             'related',
             'price',
+            'tags',
             'outcomes',
             'included',
             'syllabuses',

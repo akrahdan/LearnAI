@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ProjectSerializer, CreateProjectSerializer, ProjectCreateSerializer, OutcomeSerializer, HeaderSerializer, IncludedSerializer, SyllabusSerializer
@@ -43,6 +43,12 @@ def get_instructor(user):
     return instructor
 
 
+class InstructorProjectView(RetrieveAPIView):
+    authentication_classes = [
+        SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Project.objects.all()
+    serializer_class = ProjectCreateSerializer
 
 class ProjectView(APIView):
     authentication_classes = [
@@ -59,7 +65,7 @@ class ProjectView(APIView):
         instructor, created = Instructor.objects.get_or_create(
             user=request.user)
         serializer = CreateProjectSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save(
                 instructor=instructor
             )

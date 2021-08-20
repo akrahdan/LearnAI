@@ -79,6 +79,14 @@ class CourseDetailApiView(RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseDetailSerializer
 
+
+class InstructorCourseView(RetrieveAPIView):
+    authentication_classes = [
+        authentication.SessionAuthentication, authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Course.objects.all()
+    serializer_class = CourseUpdateSerializer
+
 class CourseDetailSlugView(APIView):
     authentication_classes = [
         authentication.SessionAuthentication, authentication.TokenAuthentication]
