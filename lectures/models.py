@@ -7,7 +7,7 @@ from django.db.models.signals import pre_save
 from courses.models import Course
 from django.conf import settings
 import datetime
-import vimeo
+
 from ordered_model.models import OrderedModel, OrderedModelManager
 from files.models import CourseFile
 from readux.db.models import PublishStateOptions
@@ -119,29 +119,7 @@ class Lecture(OrderedModel):
             return None
         return self.lecture_id
 
-    def get_duration(self):
-        vimeo_data = self.vimeo_data()
-        seconds = vimeo_data["duration"]
-        converted_time = datetime.timedelta(seconds=seconds)
-        return converted_time
-
-    def vimeo_data(self):
-        v = vimeo.VimeoClient(
-            token=settings.VIMEO_ACCESS_TOKEN,
-            key=settings.VIMEO_CLIENT_ID,
-            secret=settings.VIMEO_SECRET_KEY
-        )
-
-        video_url = self.video_url
-        if video_url is None:
-            return
-
-        data = v.get(video_url, jsonify=True).json()
-        return data
-
-    def get_vimeo_url(self):
-        vimeo_data = self.vimeo_data()
-        return vimeo_data.get("embed")
+    
 
     @property
     def is_published(self):
