@@ -10,7 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        
+        migrations.RemoveField(
+            model_name='lecture',
+            name='duration',
+        ),
+        migrations.AddField(
             model_name='lecture',
             name='duration',
             field=models.FloatField(blank=True, null=True),
