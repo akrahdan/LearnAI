@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.response import Response
 from django.conf import settings
-import vimeo
+
 from lectures.models import Lecture, Section
 
 from .serializers import (CreateCourseSerializer, ReviewCourseSerializer, CourseSubmitReviewSerializer,
@@ -241,24 +241,7 @@ class CourseLectureDetailView(DetailView):
         except Course.DoesNotExist:
             raise Http404
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(CourseLectureDetailView,
-                        self).get_context_data(*args, **kwargs)
-        pk = self.kwargs.get('id')
-        v = vimeo.VimeoClient(
-            token=settings.VIMEO_ACCESS_TOKEN,
-            key=settings.VIMEO_CLIENT_ID,
-            secret=settings.VIMEO_SECRET_KEY
-        )
-
-        try:
-
-            lecture = Lecture.objects.get(pk=pk)
-        except Lecture.DoesNotExist:
-            raise Http404("Course Does Not Exist")
-
-        context['current_lecture'] = lecture
-        return context
+    
 
 
 class CourseCheckoutView(LoginRequiredMixin, DetailView):
