@@ -7,7 +7,7 @@ from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from django.http import HttpResponse
 from django.conf import settings
-import vimeo
+
 from moviepy.editor import VideoFileClip
 # Create your views here.
 from rest_framework import permissions, authentication, status
@@ -274,45 +274,4 @@ class MediaResourceView(APIView):
         return Response({'detail': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
 
 
-class CreateVideoView(APIView):
 
-    def get_object(self, pk):
-        try:
-            return Lecture.objects.get(pk=pk)
-        except Lecture.DoesNotExist:
-            raise Http404
-
-    def post(self, request, format=None):
-
-        lectureId = request.POST.get('id')
-        lecture = self.get_object(lectureId)
-        if lecture.user == request.user:
-
-            tempFile = request.FILES.get('file')
-            file = tempFile.temporary_file_path()
-            v = vimeo.VimeoClient(
-                token=settings.VIMEO_ACCESS_TOKEN,
-                key=settings.VIMEO_CLIENT_ID,
-                secret=settings.VIMEO_SECRET_KEY
-            )
-            video_url = v.upload(file,
-                                 data={'name': lecture.title, 'description': lecture.description})
-            lecture.video_url = video_url
-            lecture.save()
-            return HttpResponse('courses/lecture/video_upload')
-        return Response({"detail": "Forbidden Request"}, status=status.HTTP_403_FORBIDDEN)
-
-
-def upload_video(request):
-    if request.method == "POST":
-        print(request.POST.get('id'))
-        tempFile = request.FILES.get('file')
-        file = tempFile.temporary_file_path()
-        v = vimeo.VimeoClient(
-            token=settings.VIMEO_ACCESS_TOKEN,
-            key=settings.VIMEO_CLIENT_ID,
-            secret=settings.VIMEO_SECRET_KEY
-        )
-        video_url = v.upload(file)
-    print(video_url)
-    return HttpResponse('courses/lecture/video_upload')

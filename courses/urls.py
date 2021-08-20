@@ -7,7 +7,7 @@ CourseSubmitReview, CourseLectureDetailView, CreateCourseApiView,
  CourseDetailApiView, CourseLevelOptions, CourseTagLabelView, CourseFileView)
 from files.views import UploadCoursePolicy, DownloadCourseView
 from targets.views import GoalView, RequirementView, ExperienceView
-from lectures.views import SectionView, LectureView, upload_video, CreateVideoView, MediaResourceView, VideoTrackView
+from lectures.views import SectionView, LectureView , MediaResourceView, VideoTrackView
 from reviews.views import submit_review
 
 urlpatterns = [
