@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from readux.aws.conf import *
+from readux.localstatic import *
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,9 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.environ.get('DEBUG')) == "1"
+DEBUG = True
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -34,7 +37,8 @@ ALLOWED_HOSTS = [
 # if not DEBUG:
 #     ALLOWED_HOSTS +=[os.environ.get('DJANGO_ALLOWED_HOST')]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+
 ]
 
 # EMAIL_HOST = 'smtp.mandrillapp.com'
@@ -81,7 +85,7 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_serializer',
     'ordered_model',
-    
+
     'analytics',
     'lectures',
     'courses',
@@ -113,7 +117,7 @@ SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        
+
         'SCOPE': [
             'profile',
             'email',
@@ -147,10 +151,10 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 WISTIA_API_KEY = "0e689ffc12f3301907b32a286a4b61e473a8eb7edb2b464250a32ab38c3b963b"
-WISTIA_PUB_TOKEN ="32rhsq7ev3"
+WISTIA_PUB_TOKEN = "32rhsq7ev3"
 
 VIMEO_API = "356a67ad65e98902fd98f903a6ec99eaf774bb33"
-VIMEO_SECRET_KEY= "4ePWqWcPYuFtalZs2gyv3JEbsi+P+NREWctOdWKhDNwjLYqsWN5oMbBsG+XFZwdqoKrmtqIuADgbo71h2YuwVenkNcKjXdpHBaEqTCicX2/UZcQSwlsLE6O4dZBai/1K"
+VIMEO_SECRET_KEY = "4ePWqWcPYuFtalZs2gyv3JEbsi+P+NREWctOdWKhDNwjLYqsWN5oMbBsG+XFZwdqoKrmtqIuADgbo71h2YuwVenkNcKjXdpHBaEqTCicX2/UZcQSwlsLE6O4dZBai/1K"
 
 MAILCHIMP_API_KEY = "629b4f097db6f6223ce8fb689dab8048-us6"
 MAILCHIMP_DATA_CENTER = "us6"
@@ -180,13 +184,13 @@ STRIPE_SECRET_KEY = "sk_test_51IuiBEEGT3FsopRecguN7VzWd4iLmEnz0OAJsoJpecdsoZIDPa
 STRIPE_PUB_KEY = 'pk_test_51IuiBEEGT3FsopReEwvQT7so89xIHyGsrQ1vPkFpSussBn31dBzm6K6lEccpTmPrT6YMBgSpr9aWUlBSYN6Fh4yX0089dFARIb'
 
 AUTHENTICATION_BACKENDS = [
-   
+
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
-   
+
 ]
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
@@ -233,19 +237,18 @@ TEMPLATES = [
 ]
 
 
-
 WSGI_APPLICATION = 'readux.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
@@ -253,26 +256,16 @@ POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 
-POSTGRES_READY = (
-    POSTGRES_DB is not None
-    and POSTGRES_PASSWORD is not None
-    and POSTGRES_USER is not None
-    and POSTGRES_HOST is not None
-    and POSTGRES_PORT is not None
-)
-
-if POSTGRES_READY:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": POSTGRES_DB,
-            "USER": POSTGRES_USER,
-            "PASSWORD": POSTGRES_PASSWORD,
-            "HOST": POSTGRES_HOST,
-            "PORT": POSTGRES_PORT,
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": 'codedb',
+        "USER": 'codedbadmin',
+        "PASSWORD": 'Some67new$',
+        "HOST": 'localhost',
+        "PORT": '',
     }
-
+}
 
 
 # Password validation
@@ -327,5 +320,3 @@ PROTECTED_ROOT = BASE_DIR.parent / "static_cdn" / "protected_media"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-from readux.localstatic import *
-from readux.aws.conf import *

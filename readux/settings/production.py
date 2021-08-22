@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.environ.get('DEBUG')) == "1"
+DEBUG = True
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -251,25 +251,24 @@ POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 
-POSTGRES_READY = (
-    POSTGRES_DB is not None
-    and POSTGRES_PASSWORD is not None
-    and POSTGRES_USER is not None
-    and POSTGRES_HOST is not None
-    and POSTGRES_PORT is not None
-)
+# POSTGRES_READY = (
+#     POSTGRES_DB is not None
+#     and POSTGRES_PASSWORD is not None
+#     and POSTGRES_USER is not None
+#     and POSTGRES_HOST is not None
+#     and POSTGRES_PORT is not None
+# )
 
-if POSTGRES_READY:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": POSTGRES_DB,
-            "USER": POSTGRES_USER,
-            "PASSWORD": POSTGRES_PASSWORD,
-            "HOST": POSTGRES_HOST,
-            "PORT": POSTGRES_PORT,
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": 'codedb',
+        "USER": 'codedbadmin',
+        "PASSWORD": 'Some67new$',
+        "HOST": 'localhost',
+        "PORT": '',
     }
+}
 
 
 # Password validation
