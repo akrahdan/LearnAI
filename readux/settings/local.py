@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -37,8 +37,8 @@ ALLOWED_HOSTS = [
 # if not DEBUG:
 #     ALLOWED_HOSTS +=[os.environ.get('DJANGO_ALLOWED_HOST')]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-
+       'http://localhost:3000',
+       'https://codefluent.org'
 ]
 
 # EMAIL_HOST = 'smtp.mandrillapp.com'
