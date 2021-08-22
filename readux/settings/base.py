@@ -31,9 +31,11 @@ ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    '147.182.218.87',
+    '.codefluent.org'
 ]
-if not DEBUG:
-    ALLOWED_HOSTS +=[os.environ.get('DJANGO_ALLOWED_HOST')]
+# if not DEBUG:
+#     ALLOWED_HOSTS +=[os.environ.get('DJANGO_ALLOWED_HOST')]
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://codefluent.org'
