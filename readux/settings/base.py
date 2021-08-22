@@ -35,7 +35,8 @@ ALLOWED_HOSTS = [
 if not DEBUG:
     ALLOWED_HOSTS +=[os.environ.get('DJANGO_ALLOWED_HOST')]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://codefluent.org'
 ]
 
 # EMAIL_HOST = 'smtp.mandrillapp.com'
