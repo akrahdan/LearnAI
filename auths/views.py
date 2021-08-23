@@ -3,7 +3,7 @@ from django.http import request
 from django.utils.translation import gettext_lazy as _
 from django.http.response import Http404
 from allauth.account import adapter, app_settings as allauth_settings
-from rest_auth.views import LoginView, LogoutView
+from rest_auth.views import LoginView, LogoutView, PasswordResetView
 from rest_auth.registration.views import RegisterView
 from rest_framework import serializers, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -51,6 +51,8 @@ class AuthLoginView(LoginView):
         response = Response(data=tokenSerializer.data)
         return response
 
+class AuthPassResetView(PasswordResetView):
+    pass
 
 class AuthLogoutView(LogoutView):
     pass

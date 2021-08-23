@@ -1,7 +1,7 @@
 from django.urls import path
 from allauth.socialaccount.providers.google import views as google_views
 from allauth.socialaccount.providers.facebook import views as facebook_views
-from .views import (AuthLoginView, 
+from .views import (AuthLoginView, AuthPassResetView, 
 SignupView, FacebookConnect, GoogleConnect, 
 FacebookLogin, GoogleLogin, UpdateProvileView, UpdateUserView, AuthLogoutView )
 
@@ -9,6 +9,7 @@ FacebookLogin, GoogleLogin, UpdateProvileView, UpdateUserView, AuthLogoutView )
 urlpatterns = [
     path('login/', AuthLoginView.as_view()),
     path('logout/', AuthLogoutView.as_view()),
+    path('password_reset/', AuthPassResetView.as_view()),
     path('signup/', SignupView.as_view()),
     path('update_profile/', UpdateUserView.as_view()),
     path('profile/', UpdateProvileView.as_view()),
