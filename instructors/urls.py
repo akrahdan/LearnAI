@@ -17,6 +17,6 @@ urlpatterns = [
     path('projects/<int:pk>/', InstructorProjectView.as_view()),
     path('profile/', UpdateProfileView.as_view()),
     path('edit-info/', UpdateProfileView.as_view(), name='onboard'),
-    path('add-course', CreateCourseView.as_view(), name='add-course'),
+    path('add-course/', CreateCourseView.as_view(), name='add-course'),
   
 ]
