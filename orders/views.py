@@ -72,9 +72,12 @@ class MyProjectsView(APIView):
     def get(self, request, format=None):
 
         billing_qs = BillingProfile.objects.filter(user=request.user)
+        print('billing:', billing_qs)
         if billing_qs.exists():
+            print('billingExists:', billing_qs.exists())
             project_qs = ProjectOrder.objects.filter(
                 billing_profile=billing_qs.first())
+            print('projectQS:', project_qs)
             if project_qs.exists():
                 serializer = ProjectOrderSerializer(project_qs, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)

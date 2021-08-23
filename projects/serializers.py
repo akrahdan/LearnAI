@@ -8,7 +8,7 @@ from courses.models import Course
 from courses.serializers import CourseDetailSerializer
 from .models import LearningOutCome, ProjectSection, Syllabus, TitleDescription
 from instructors.serializers import InstructorSerializer
-
+from pricing.serializers import ProjectPricingSerializer
 class CourseSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     url = serializers.CharField(
@@ -30,7 +30,7 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     id = serializers.ReadOnlyField()
     slug = serializers.ReadOnlyField()
-   
+    pricing = ProjectPricingSerializer()
     courses = CourseDetailSerializer(many=True)
     instructor = InstructorSerializer()
     related = SerializerMethodField()
@@ -62,7 +62,8 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
             'outcomes',
             'included',
             'syllabuses',
-            'thumbnail_url'
+            'thumbnail_url',
+            'pricing'
 
         ]
         depth = 1
@@ -86,6 +87,7 @@ class CreateProjectSerializer(serializers.ModelSerializer):
 
 class ProjectCreateSerializer(TaggitSerializer,serializers.ModelSerializer):
     tags = TagListSerializerField()
+    
     id = serializers.ReadOnlyField()
     class Meta:
         model = Project
@@ -111,7 +113,8 @@ class ProjectCreateSerializer(TaggitSerializer,serializers.ModelSerializer):
             'outcomes',
             'included',
             'syllabuses',
-            'thumbnail_url'
+            'thumbnail_url',
+            
 
         ]
       

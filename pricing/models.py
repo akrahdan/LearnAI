@@ -16,8 +16,8 @@ class PricingTierOptions(models.TextChoices):
 
 class CurrencyOptions(models.TextChoices):
         CEDIS = ('GHS', 'GHS')
-        DOLLAR = ('USD', 'USD')
-        POUND = ('GBP', 'GBP')
+        DOLLAR = ('$', 'USD')
+        POUND = ('£', 'GBP')
 
 
 class Pricing(models.Model):

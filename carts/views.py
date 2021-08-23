@@ -100,8 +100,8 @@ class CartUpdateView(APIView):
                 # cart_obj.projects.add(project_id)
                 cart_obj.projects.add(project_obj)
                 added = True
-            request.session['cart_items'] = cart_obj.projects.count()
-            return Response({'detail': 'added'}, status=status.HTTP_201_CREATED)
+            # request.session['cart_items'] = cart_obj.projects.count()
+            return Response({'detail': { 'added': added, 'cart_id': cart_obj.id }}, status=status.HTTP_201_CREATED)
         return Response({'detail': 'Project id was not supplied'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -178,17 +178,21 @@ class CheckoutPayView(APIView):
         cart_obj, cart_created = Cart.objects.new_or_get(request)
         order_obj = None
         if cart_created or cart_obj.projects.count() == 0:
+            print("What is happening")
+            cart_obj.delete()
             return Response({'detail': 'Error'}, status=status.HTTP_403_FORBIDDEN)
 
         resp = CaptureOrder().capture_order(order_id=request.data.get('orderID'))
-
+        print("What is Capture")
         billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(
             request)
 
         if billing_profile is not None:
+            print("What", billing_profile)
 
             order_obj, order_obj_created = Order.objects.new_or_get(
                 billing_profile, cart_obj)
+            print("Order", order_obj)
 
 
         order_obj.total = resp.result.purchase_units[0].payments.captures[0].amount.value
@@ -210,6 +214,7 @@ class CheckoutFlutterView(APIView):
         cart_obj, cart_created = Cart.objects.new_or_get(request)
         order_obj = None
         if cart_created or cart_obj.projects.count() == 0:
+            cart_obj.delete()
             return Response({'detail': 'Error'}, status=status.HTTP_403_FORBIDDEN)
 
         rave = Rave(settings.RAVE_TEST_PUB_KEY,
