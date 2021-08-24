@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -40,6 +40,12 @@ CORS_ALLOWED_ORIGINS = [
        'http://localhost:3000',
        'https://codefluent.org'
 ]
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'https://codefluent.org'
+]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ['DELETE','GET','OPTIONS','PATCH','POST','PUT']
 
 # EMAIL_HOST = 'smtp.mandrillapp.com'
 # EMAIL_HOST_USER = 'Readuced AI'

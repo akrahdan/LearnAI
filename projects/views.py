@@ -44,15 +44,15 @@ def get_instructor(user):
 
 
 class InstructorProjectView(RetrieveAPIView):
-    authentication_classes = [
-        SessionAuthentication, TokenAuthentication]
+    authentication_classes = [TokenAuthentication,
+        SessionAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Project.objects.all()
     serializer_class = ProjectCreateSerializer
 
 class ProjectView(APIView):
     authentication_classes = [
-        SessionAuthentication, TokenAuthentication]
+        TokenAuthentication,SessionAuthentication ]
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):

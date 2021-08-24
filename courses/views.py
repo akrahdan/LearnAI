@@ -134,15 +134,15 @@ class CreateCourseView(LoginRequiredMixin, AjaxFormMixin, CreateView):
 
 
 class CreateCourseApiView(APIView):
-    authentication_classes = [
-        authentication.SessionAuthentication, authentication.TokenAuthentication]
+    authentication_classes = [authentication.TokenAuthentication,
+        authentication.SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, format=None):
         instructor, created = Instructor.objects.get_or_create(
             user=request.user)
         serializer = CreateCourseSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save(
                 instructor=instructor
             )
