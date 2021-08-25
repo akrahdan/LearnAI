@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -112,7 +112,8 @@ INSTALLED_APPS = [
     'blogs',
     'files',
     'auths',
-    'corsheaders'
+    'corsheaders',
+    'chats',
 
 ]
 
@@ -332,3 +333,13 @@ PROTECTED_ROOT = BASE_DIR.parent / "static_cdn" / "protected_media"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+        # "symmetric_encryption_keys": [SECRET_KEY],
+    },
+}

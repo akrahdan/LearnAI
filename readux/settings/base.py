@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = str(os.environ.get('DEBUG')) == "1"
-DEBUG = True
+DEBUG = False
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -119,7 +119,8 @@ INSTALLED_APPS = [
     'reviews',
     'files',
     'auths',
-    'corsheaders'
+    'corsheaders',
+    'chats',
 
 ]
 
@@ -260,7 +261,7 @@ REST_FRAMEWORK = {
     )
 }
 
-
+ASGI_APPLICATION = 'readux.routing.application'
 
 WSGI_APPLICATION = 'readux.wsgi.application'
 
