@@ -17,14 +17,19 @@ class ThreadManager(models.Manager):
 
     def get_or_new(self, user, other_username): # get_or_create
         username = user.username
+       
         if username == other_username:
             return None
         qlookup1 = Q(first__username=username) & Q(second__username=other_username)
         qlookup2 = Q(first__username=other_username) & Q(second__username=username)
         qs = self.get_queryset().filter(qlookup1 | qlookup2).distinct()
+  
         if qs.count() == 1:
+            
             return qs.first(), False
+        
         elif qs.count() > 1:
+            
             return qs.order_by('timestamp').first(), False
         else:
             Klass = user.__class__
@@ -35,6 +40,7 @@ class ThreadManager(models.Manager):
                         second=user2
                     )
                 obj.save()
+               
                 return obj, True
             return None, False
 
@@ -72,7 +78,7 @@ post_save.connect(new_user_receiver, sender=settings.AUTH_USER_MODEL)
 
 
 class ChatMessage(models.Model):
-    thread      = models.ForeignKey(Thread, null=True, blank=True, on_delete=models.SET_NULL)
+    thread      = models.ForeignKey(Thread, null=True, blank=True, on_delete=models.SET_NULL, related_name="messages")
     user        = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='sender', on_delete=models.CASCADE)
     message     = models.TextField()
     timestamp   = models.DateTimeField(auto_now_add=True)

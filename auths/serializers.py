@@ -43,6 +43,6 @@ class UserAvatarSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = [ 'avatar', 'user']
 
-    def get_user(self, obj):
-      user_data = UserDetailsSerializer(obj['user'], context=self.context).data
-      return user_data
+    # def get_user(self, obj):
+    #   user_data = UserDetailsSerializer(obj['user'], context=self.context).data
+    #   return user_data

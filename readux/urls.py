@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/orders/', include('orders.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('api/auth/', include('auths.urls')),
+    path('api/messages/', include('chats.urls')),
     path('api/analytics/', include('analytics.urls')),
     path('api/projects/', include('projects.urls')),
     path('api/projects/', include('projects.urls')),

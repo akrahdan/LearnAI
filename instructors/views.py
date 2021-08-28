@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Instructor
 from rest_framework.views import APIView
-from .serializers import InstructorSerializer, ProfileSerializer
+from .serializers import InstructorSerializer, ProfileSerializer, InstructorSearchSerializer
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,6 +21,16 @@ def get_instructor(user):
     except Instructor.DoesNotExist:
         raise Http404
     return instructor
+
+
+class InstructorSearchView(APIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        instructors = Instructor.objects.all()
+        serializer = InstructorSearchSerializer(instructors, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UpdateProfileView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]

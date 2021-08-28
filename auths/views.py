@@ -87,7 +87,7 @@ class UpdateUserView(APIView):
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class UpdateProvileView(APIView):
+class UpdateProfileView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 

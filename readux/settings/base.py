@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_serializer',
     'ordered_model',
+    'channels',
 
     'analytics',
     'lectures',
