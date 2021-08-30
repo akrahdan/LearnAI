@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -42,12 +42,12 @@ ALLOWED_HOSTS = [
 
 # GMAIL
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'readingfo@gmail.com'
-EMAIL_MAIN = 'akrahsam@gmail.com'
-EMAIL_HOST_PASSWORD = '2wsx!QAZ'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'readingfo@gmail.com'
+# EMAIL_MAIN = 'akrahsam@gmail.com'
+# EMAIL_HOST_PASSWORD = '2wsx!QAZ'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 # Application definition
 
@@ -115,6 +115,7 @@ INSTALLED_APPS = [
     'auths',
     'corsheaders',
     'chats',
+    'notifications',
 
 ]
 

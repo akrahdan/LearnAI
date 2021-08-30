@@ -14,6 +14,15 @@ class ThreadManager(models.Manager):
         qlookup2 = Q(first=user) & Q(second=user)
         qs = self.get_queryset().filter(qlookup).exclude(qlookup2).distinct()
         return qs
+    
+    def get_thread_object(self, room_id, user):
+        qlookup = Q(first=user) & Q(id=room_id)
+        qlookup2 = Q(second=user) & Q(id=room_id)
+        qs = self.get_queryset().filter(qlookup | qlookup2).distinct()
+        if qs.count() == 1:
+            return qs.first(), False
+        else:
+            return None, False
 
     def get_or_new(self, user, other_username): # get_or_create
         username = user.username

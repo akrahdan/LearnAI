@@ -59,6 +59,7 @@ class AuthLogoutView(LogoutView):
 class SignupView(RegisterView):
 
     def get_response_data(self, user):
+        print('user:', user)
 
         if allauth_settings.EMAIL_VERIFICATION == \
                 allauth_settings.EmailVerificationMethod.MANDATORY:

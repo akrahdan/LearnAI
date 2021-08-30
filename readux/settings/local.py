@@ -116,7 +116,8 @@ INSTALLED_APPS = [
     'orders',
     'files',
     'auths',
-    'corsheaders'
+    'corsheaders',
+    'notifications'
 
 ]
 

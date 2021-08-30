@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 from channels.consumer import SyncConsumer, AsyncConsumer
 from channels.db import database_sync_to_async
 from django.http.response import Http404
-
+from rest_framework import serializers
+from .serializers import ChatSerializer
 from .models import Thread, ChatMessage
 
 
@@ -42,21 +43,23 @@ class ChatConsumer(AsyncConsumer):
         # self.kwargs.get("username")
         self.roomId = self.scope['url_route']['kwargs']['room_id']
         user = self.scope['user']
-        
-        thread_obj = await self.get_object(user, self.roomId)
-        if user == thread_obj.first or thread_obj.second:
-
+        self.room_group_name = None
+        if self.roomId and user:
+            
+            thread_obj = await self.get_object(self.roomId, user)
             self.chat_thread = thread_obj
             self.room_group_name = thread_obj.room_group_name # group
 
             await self.channel_layer.group_add(
-                self.room_group_name, 
-                self.channel_name
+                    self.room_group_name, 
+                    self.channel_name
             )
             self.rando_user = await self.get_name()
             await self.send({
-                "type": "websocket.accept"
+                    "type": "websocket.accept"
             })
+
+            
 
 
     async def websocket_receive(self, event): # websocket.receive
@@ -67,8 +70,10 @@ class ChatConsumer(AsyncConsumer):
         if user.is_authenticated:
             username = user.username
         message_data["user"] = username
-        await self.create_chat_message(user, message_data['msg'])
-        final_message_data = json.dumps(message_data)
+        msg = await self.create_chat_message(user, message_data['msg'])
+        serializer = ChatSerializer(msg)
+
+        final_message_data = json.dumps(serializer.data)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -97,10 +102,11 @@ class ChatConsumer(AsyncConsumer):
     async def websocket_disconnect(self, event):
         # when the socket connects
         #print(event)
-        await self.channel_layer.group_discard(
-            self.room_group_name, 
-            self.channel_name
-        )
+        if self.room_group_name:
+            await self.channel_layer.group_discard(
+                self.room_group_name, 
+                self.channel_name
+            )
 
     @database_sync_to_async
     def get_name(self):
@@ -111,11 +117,8 @@ class ChatConsumer(AsyncConsumer):
         return Thread.objects.get_or_new(user, other_username)[0]
     
     @database_sync_to_async
-    def get_object(self, roomId):
-        try:
-            obj = Thread.objects.get(id=roomId)
-        except Thread.DoesNotExist:
-            raise Http404
+    def get_object(self, roomId, user):
+        return Thread.objects.get_thread_object(roomId, user)[0]
 
     @database_sync_to_async
     def create_chat_message(self, user, message):

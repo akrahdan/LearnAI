@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-u6v9ldfcj@5(jvz@&%#j&%4t$6vjin3lynb#i)ue#&r=gr)5)g'
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = str(os.environ.get('DEBUG')) == "1"
-DEBUG = False
+DEBUG = True
 
 ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 
@@ -50,21 +50,21 @@ CSRF_TRUSTED_ORIGINS = [
 # CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['DELETE','GET','OPTIONS','PATCH','POST','PUT']
 
-# EMAIL_HOST = 'smtp.mandrillapp.com'
-# EMAIL_HOST_USER = 'Readuced AI'
-# EMAIL_MAIN = 'support@readuced.com'
-# EMAIL_HOST_PASSWORD = 'BoIsMTtOhFmKjnEQCfjz8w'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mandrillapp.com'
+EMAIL_HOST_USER = 'Codefluent'
+EMAIL_MAIN = 'noreply@codefluent.org'
+EMAIL_HOST_PASSWORD = 'aHuP_2-SZIBJl97qOOnuUg'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # GMAIL
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'readingfo@gmail.com'
-EMAIL_MAIN = 'akrahsam@gmail.com'
-EMAIL_HOST_PASSWORD = '2wsx!QAZ'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'readingfo@gmail.com'
+# EMAIL_MAIN = 'akrahsam@gmail.com'
+# EMAIL_HOST_PASSWORD = '2wsx!QAZ'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 # Application definition
 
@@ -122,6 +122,7 @@ INSTALLED_APPS = [
     'auths',
     'corsheaders',
     'chats',
+    'notifications',
 
 ]
 
