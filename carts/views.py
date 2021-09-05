@@ -25,7 +25,7 @@ from billing.models import BillingProfile
 from orders.models import Order, ProjectOrder
 from orders.payments.order import CaptureOrder
 from orders.payments.paypal import PayPalClient
-
+from pypaystack import Transaction, errors
 from orders.serializers import CreateOrderSerializer
 
 
@@ -178,7 +178,6 @@ class CheckoutPayView(APIView):
         cart_obj, cart_created = Cart.objects.new_or_get(request)
         order_obj = None
         if cart_created or cart_obj.projects.count() == 0:
-            print("What is happening")
             cart_obj.delete()
             return Response({'detail': 'Error'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -213,33 +212,34 @@ class CheckoutFlutterView(APIView):
     def post(ref, request, format=None):
         cart_obj, cart_created = Cart.objects.new_or_get(request)
         order_obj = None
-        if cart_created or cart_obj.projects.count() == 0:
+        if cart_obj.projects.count() == 0:
             cart_obj.delete()
             return Response({'detail': 'Error'}, status=status.HTTP_403_FORBIDDEN)
-
-        rave = Rave(settings.RAVE_TEST_PUB_KEY,
-                    settings.RAVE_TEST_SECRET_KEY, usingEnv=False)
+        
+        payStack = Transaction(authorization_key=settings.PAYSTACK_AUTHORIZATION_KEY)
+       
         billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(
             request)
         
         try:
-
-            res = rave.Card.verify(request.data["txRef"])
+            status_code, statusResult, message, data = payStack.verify(request.data["txRef"])
+            # print("Res: ", res)
+            # res = rave.Card.verify(request.data["txRef"])
         
-        except RaveExceptions.TransactionVerificationError as e:
+        except errors.PyPaystackError as e:
             return Response(e, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
        
-        if res["chargecode"] == '00':
+        if statusResult == True:
             order_obj, order_obj_created = Order.objects.new_or_get(
                 billing_profile, cart_obj)
-            order_obj.total = float(res["amount"])
+            order_obj.total = float(data["amount"])
             order_obj.save()
             is_prepared = order_obj.check_done()
             order_obj.mark_paid()
             cart_obj.delete()
             serializer = CreateOrderSerializer(instance=order_obj)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(data=res, status=status.HTTP_402_PAYMENT_REQUIRED)
+        return Response(data=data, status=status.HTTP_402_PAYMENT_REQUIRED)
 
 
 def checkout_done_view(request):
