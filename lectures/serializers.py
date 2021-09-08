@@ -63,7 +63,6 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class SectionCreateSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    lectures = LectureSerializer(many=True)
     class Meta:
         model = Section
         fields = [
