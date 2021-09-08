@@ -18,7 +18,7 @@ from instructors.models import Instructor
 from readux.settings.base import VIMEO_SECRET_KEY
 from .models import Lecture, Section
 from courses.models import Course
-from .serializers import LectureSerializer, SectionSerializer, VideoSerializer, MediaSerializer, ObjectViewedSerializer
+from .serializers import LectureSerializer, SectionSerializer, SectionCreateSerializer, MediaSerializer, ObjectViewedSerializer
 from analytics.signals import object_viewed_signal
 from django.contrib.contenttypes.models import ContentType
 def get_instructor(user):
@@ -74,7 +74,7 @@ class SectionView(APIView):
 
         instructor = get_instructor(request.user)
 
-        serializer = SectionSerializer(data=request.data)
+        serializer = SectionCreateSerializer(data=request.data)
         if serializer.is_valid():
             instance = serializer.save(
                 instructor=instructor

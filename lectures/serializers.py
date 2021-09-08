@@ -61,6 +61,23 @@ class SectionSerializer(serializers.ModelSerializer):
         read_only_fields = ['lectures']
 
 
+class SectionCreateSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    lectures = LectureSerializer(many=True)
+    class Meta:
+        model = Section
+        fields = [
+            'id',
+            'instructor',
+            'title',
+            'description',
+            'course',
+            'order',
+            'neighbor',
+            'position',
+          
+        ]
+       
 class ObjectViewedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ObjectViewed
